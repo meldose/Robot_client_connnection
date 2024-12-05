@@ -1,0 +1,9 @@
+# Ignore virtual environment directory
+venv/
+
+# Ignore JetBrains IDE configuration directory
+.idea/
+
+# Ignore Python cache directory
+__pycache__/
+
