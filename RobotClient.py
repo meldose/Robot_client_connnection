@@ -27,19 +27,17 @@ def test_ls():
     time.sleep(2)
     robot.pho_request_get_running_solution()
     time.sleep(2)
-<<<<<<< HEAD
     robot.pho_request_stop_solution()
     time.sleep(2)
     robot.pho_request_get_available_solution()
 
     robot.close_connection()  #communication needs to be closed
-=======
+
     # robot.pho_request_stop_solution()
     time.sleep(2)
     robot.pho_request_get_available_solution()
 
     # robot.close_connection()  #communication needs to be closed
->>>>>>> b7085ab81cf7d4dca87113362355dc47de2380a1
     time.sleep(2)
 
 
@@ -126,11 +124,10 @@ def calibration_handeye():
         robot.pho_request_add_calibration_point(tool_pose)
         time.sleep(2)
 
-<<<<<<< HEAD
+
     #robot.pho_request_save_automatic_calibration()
-=======
+
     robot.pho_request_save_automatic_calibration()
->>>>>>> b7085ab81cf7d4dca87113362355dc47de2380a1
     time.sleep(2)
     robot.pho_request_stop_automatic_calibration()
 
@@ -143,8 +140,6 @@ def load_json_file(file_path):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-
     #calibration_handeye()
     #calibration_extrinsic()
     #test_ls()
@@ -154,7 +149,7 @@ if __name__ == '__main__':
         #test_ls()
         #test_bps()
 
-=======
+
 
     # calibration_handeye()
     # calibration_extrinsic()
@@ -165,5 +160,3 @@ if __name__ == '__main__':
         test_ls()
         #test_bps()
 
-
->>>>>>> b7085ab81cf7d4dca87113362355dc47de2380a1
