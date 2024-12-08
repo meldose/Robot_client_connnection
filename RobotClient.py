@@ -52,7 +52,7 @@ def test_bps():
     time.sleep(2)
     robot.pho_request_trajectory(1)
     time.sleep(1)
-    robot.pho_request_get_object(1)
+    robot.pho_request_get_object(1) # command for getting the robot poses
     time.sleep(2)
     robot.pho_request_bsp_get_vision_system_status(1)
     time.sleep(2)
@@ -142,19 +142,8 @@ def load_json_file(file_path):
 if __name__ == '__main__':
     #calibration_handeye()
     #calibration_extrinsic()
-    #test_ls()
-    test_bps()
-
-    #while True:
-        #test_ls()
-        #test_bps()
-
-
-
-    # calibration_handeye()
-    # calibration_extrinsic()
     test_ls()
-    # test_bps()
+    #test_bps()
 
     while True:
         test_ls()
