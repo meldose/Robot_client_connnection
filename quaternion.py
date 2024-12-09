@@ -332,9 +332,6 @@ def get_target_pose(x, y, z, roll, pitch, yaw):
 # Get the target pose
 target_pose = get_target_pose(x, y, z, roll, pitch, yaw)
 
-# Compute inverse kinematics
-# The method to compute IK may vary based on the library
-# Here's a generic example
 ik_solution = robot.arm.inverse_kinematics(target_pose)
 
 if ik_solution is not None:
@@ -401,3 +398,238 @@ if __name__ == '__main__':
 
 
 ####################################################################################################
+
+from abc import ABC, abstractmethod
+import math
+from typing import List, Optional
+from scipy.spatial.transform import Rotation as R
+import numpy as np
+
+
+class Camera(ABC):
+
+    def __init__(self):
+        self.message = None
+        self.error_type = None
+
+    @abstractmethod
+    def get_pose(self, *args, **kwargs) -> list:
+        """
+        Function to get robot pose from the camera
+        """
+        pass
+
+    def active_matrix_from_angle(self, basis, angle):
+        """Compute active rotation matrix from rotation about basis vector.
+
+        With the angle :math:`\alpha` and :math:`s = \sin{\alpha}, c=\cos{\alpha}`,
+        we construct rotation matrices about the basis vectors as follows:
+
+        .. math::
+
+            \boldsymbol{R}_x(\alpha) =
+            \left(
+            \begin{array}{ccc}
+            1 & 0 & 0\\
+            0 & c & -s\\
+            0 & s & c
+            \end{array}
+            \right)
+
+        .. math::
+
+            \boldsymbol{R}_y(\alpha) =
+            \left(
+            \begin{array}{ccc}
+            c & 0 & s\\
+            0 & 1 & 0\\
+            -s & 0 & c
+            \end{array}
+            \right)
+
+        .. math::
+
+            \boldsymbol{R}_z(\alpha) =
+            \left(
+            \begin{array}{ccc}
+            c & -s & 0\\
+            s & c & 0\\
+            0 & 0 & 1
+            \end{array}
+            \right)
+
+        Parameters
+        ----------
+        basis : int from [0, 1, 2]
+            The rotation axis (0: x, 1: y, 2: z)
+
+        angle : float
+            Rotation angle
+
+        Returns
+        -------
+        R : array, shape (3, 3)
+            Rotation matrix
+
+        Raises
+        ------
+        ValueError
+            If basis is invalid
+        """
+        c = np.cos(angle)
+        s = np.sin(angle)
+
+        if basis == 0:
+            R = np.array([[1.0, 0.0, 0.0],
+                        [0.0, c, -s],
+                        [0.0, s, c]])
+        elif basis == 1:
+            R = np.array([[c, 0.0, s],
+                        [0.0, 1.0, 0.0],
+                        [-s, 0.0, c]])
+        elif basis == 2:
+            R = np.array([[c, -s, 0.0],
+                        [s, c, 0.0],
+                        [0.0, 0.0, 1.0]])
+        else:
+            raise ValueError("Basis must be in [0, 1, 2]")
+
+        return R
+    
+    def active_matrix_from_intrinsic_euler_xyz(self, e):
+        """Compute active rotation matrix from intrinsic xyz Cardan angles.
+
+        Parameters
+        ----------
+        e : array-like, shape (3,)
+            Angles for rotation around x-, y'-, and z''-axes (intrinsic rotations)
+
+        Returns
+        -------
+        R : array, shape (3, 3)
+            Rotation matrix
+        """
+        alpha, beta, gamma = e
+        R = self.active_matrix_from_angle(0, alpha).dot(
+            self.active_matrix_from_angle(1, beta)).dot(
+            self.active_matrix_from_angle(2, gamma))
+        return R
+    
+    def frame_from_rotation_translation(self, r, t):
+        """
+        Given rotation matrix and translation vector, calculate the transformation matrix.
+        
+        Parameters:
+        r (list): rotation matrix of shape (3,3)
+        t (list): translation vector of shape (3,)
+        
+        Returns:
+        numpy.ndarray: transformation matrix of shape (4,4)
+        """
+        arr = np.array(
+            [
+                [r[0][0], r[0][1], r[0][2], t[0]],
+                [r[1][0], r[1][1], r[1][2], t[1]],
+                [r[2][0], r[2][1], r[2][2], t[2]],
+                [0, 0, 0, 1],
+            ])
+        return arr
+
+    def pose_euler_to_mat(self, pose: List[float]) -> np.ndarray:
+        rot = R.from_euler('xyz', pose[3:], degrees=False)
+        pose_mat = np.eye(4)
+        pose_mat[:3, 3] = np.array(pose[:3])
+        pose_mat[:3, :3] = rot.as_matrix()
+        return pose_mat
+
+    def rotate_local(
+        self,
+        pose: List[float],
+        x: Optional[float] = 0.0,
+        y: Optional[float] = 0.0,
+        z: Optional[float] = 0.0
+        ) -> List[float]:
+        """
+        Rotate the pose in local coordinate frame (current pose coordinate frame)
+
+        Parameters
+        ----------
+        pose : list
+            The current pose
+        x : float, optional
+            The rotation angle around local axis x in rad, by default 0.0
+        y : float, optional
+            The rotation angle around local axis y in rad, by default 0.0
+        z : float, optional
+            The rotation angle around local axis z in rad, by default 0.0
+
+        Returns
+        -------
+        Pose
+            Rotated pose
+        """
+        pose_mat = self.pose_euler_to_mat(pose)
+        rotation = self.active_matrix_from_intrinsic_euler_xyz([x, y, z])
+        transformation = self.frame_from_rotation_translation(rotation, [0, 0, 0])
+        transformed_mat = pose_mat.dot(transformation)
+        transformed_rot = R.from_matrix(transformed_mat[:3, :3])
+        transformed_pose = [*transformed_mat[:3, 3], *transformed_rot.as_euler('xyz', degrees=False)]
+        return transformed_pose
+
+    def check_camera_output(self, pose_from_camera: list) -> bool:
+        """Function to check the format of camera output. It can be List[Float] or List[List[Float]].
+
+        Arguments:
+            pose_from_camera -- output from the camera 
+
+        Returns:
+            bool if format is correct or not
+        """
+        if all(isinstance(item, list) for item in pose_from_camera):
+            return all([len(res)==6 and all(isinstance(x, (float, int)) for x in res) for res in pose_from_camera])
+        else:
+            return len(pose_from_camera)==6 and all(isinstance(x, (float, int)) for x in pose_from_camera)
+
+
+    def reorient_camera_points(self, camera_point_list:list) -> list:
+        """Function to rotate the given poses by 180 degrees to check for IK solution in order to avoid out of limit condition for last axis.
+
+        Arguments:
+            camera_point_list -- list of poses from the camera 
+
+        Returns:
+            Double the length of input list containing rotated poses
+        """
+        camera_points = []
+        
+        for pose in camera_point_list:
+            camera_points.append(pose)
+            if pose[5] >= 0:
+                pose2 = self.rotate_local(pose, z=-math.pi)
+            else:
+                pose2 = self.rotate_local(pose, z=math.pi)
+            camera_points.append(pose2)
+        
+        return camera_points
+
+    def set_error_message(self, message:str, error_type:str) -> None:
+        """
+        Function to set error message to be send to GUI.
+
+        Arguments:
+            message -- The string you want to emit to GUI
+            type -- Error or Warning
+        """
+        pass
+    
+    def get_error_message(self):
+        """
+        Function to get error message with type to be sent to GUI.
+
+        Returns the type and the error message 
+        """
+        pass
+
+
+######################################################################################################################
+
