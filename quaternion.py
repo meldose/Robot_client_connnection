@@ -700,13 +700,7 @@ class RobotController:
 def main():
     # Initialize the robot (replace 'your_robot' with your actual robot name)
     robot = Robot('your_robot')
-    
-    # Initialize the camera
-    # For real camera:
-    # camera_interface = YourCameraInterface()
-    # camera = RealCamera(camera_interface)
-    
-    # For simulated camera:
+
     sample_poses = [
         [0.5, 0.0, 0.2, 0.0, 0.0, 0.0],
         [0.6, 0.1, 0.3, 0.1, 0.0, 0.0],
