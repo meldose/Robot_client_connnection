@@ -974,4 +974,404 @@ r.move_linear(target_pose = [place_pos,offset_place_pos])
 #default position
 r.move_joint('Home')
 
+<<<<<<< HEAD
 r.power_off()
+=======
+    r.power_off()
+
+############################# Servo J ################################################################
+    
+
+
+    from neurapy.robot import Robot
+    import time
+    from ruckig import InputParameter, OutputParameter, Result, Ruckig
+
+    r = Robot()
+
+    #Switch to external servo mode
+    r.activate_servo_interface('position')
+
+    dof = 6
+
+    otg = Ruckig(dof, 0.001)  # DoFs, control cycle
+    inp = InputParameter(dof)
+    out = OutputParameter(dof)
+
+    inp.current_position = r.get_current_joint_angles()
+    inp.current_velocity = [0.]*dof
+    inp.current_acceleration = [0.]*dof
+
+    inp.target_position = [0., 0., 0., 0., 0., 0.]
+    inp.target_velocity = [0.]*dof
+    inp.target_acceleration = [0.]*dof
+
+    inp.max_velocity = [0.5]*dof
+    inp.max_acceleration = [3]*dof
+    inp.max_jerk = [10.]*dof
+    res = Result.Working
+
+    while res == Result.Working:
+        '''
+        Error code is returned through Servo. 
+        '''
+        error_code = 0
+        if(error_code < 3):
+
+            res = otg.update(inp, out)
+
+            position = out.new_position
+            velocity = out.new_velocity 
+            acceleration = out.new_acceleration
+
+            error_code = r.servo_j(position, velocity, acceleration)
+            scaling_factor = r.get_servo_trajectory_scaling_factor()
+            out.pass_to_input(inp)
+            time.sleep(0.001)
+        else:
+            print("Servo in error, error code, ", error_code)
+            break
+    r.deactivate_servo_interface()
+
+    r.stop()
+
+########################## Servo X ############################################################
+
+
+    from neurapy.robot import Robot
+    import time
+    from ruckig import InputParameter, OutputParameter, Result, Ruckig
+    import copy
+
+    r = Robot()
+
+    #Switch to external servo mode
+    r.activate_servo_interface('position')
+
+    cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz
+
+    otg = Ruckig(cart_pose_length, 0.001)  # control cycle
+    inp = InputParameter(cart_pose_length)
+    out = OutputParameter(cart_pose_length)
+
+    inp.current_position = r.get_current_cartesian_pose()
+    inp.current_velocity = [0.]*cart_pose_length
+    inp.current_acceleration = [0.]*cart_pose_length
+
+    target = copy.deepcopy(inp.current_position)
+    target[0] += 0.2 # Move 200mm in positive X direction
+    inp.target_position = target
+    inp.target_velocity = [0.]*cart_pose_length
+    inp.target_acceleration = [0.]*cart_pose_length
+
+    inp.max_velocity = [0.5]*cart_pose_length
+    inp.max_acceleration = [3]*cart_pose_length
+    inp.max_jerk = [10.]*cart_pose_length
+    res = Result.Working
+
+    servox_proportional_gain = 25
+
+    velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
+    acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
+
+    while res == Result.Working:
+        '''
+        Error code is returned through Servo. 
+        '''
+        error_code = 0
+        if(error_code < 3):
+
+            res = otg.update(inp, out)
+
+            position = out.new_position
+
+            for i in range(0,3): # Updating target translation velocity and accelerations
+                velocity[i] = out.new_velocity[i]
+                acceleration[i] = out.new_acceleration[i]
+
+            error_code = r.servo_x(position, velocity, acceleration, servox_proportional_gain)
+            scaling_factor = r.get_servo_trajectory_scaling_factor()
+            out.pass_to_input(inp)
+            time.sleep(0.001)
+        else:
+            print("Servo in error, error code, ", error_code)
+            break
+    r.deactivate_servo_interface()
+
+    r.stop()
+    
+    
+#################################################################################################################################
+
+
+#. Example using planner
+
+
+    from neurapy.robot import Robot
+    import numpy as np
+    import copy
+    import time
+
+    pick_pos = [0.32, 0.32, 0.2, np.pi, 0, np.pi]
+    place_pos = [0.32, -0.32, 0.2, np.pi, 0, np.pi]
+    offset_pick_pos = copy.deepcopy(pick_pos)
+    offset_pick_pos[2] = offset_pick_pos[2] + 0.1
+    offset_place_pos = copy.deepcopy(place_pos)
+    offset_place_pos[2] = offset_place_pos[2] + 0.1
+    r = Robot()
+    r.switch_to_automatic_mode()
+    home = r.get_point('Home', representation = 'Cartesian')
+
+    plan_id_1 = r.plan_move_linear(target_pose =[home,offset_pick_pos,pick_pos],store_id=1)
+    plan_id_2 = r.plan_move_linear(target_pose =[pick_pos,offset_pick_pos,offset_place_pos,place_pos],store_id=2)
+    plan_id_3 = r.plan_move_linear(target_pose =[place_pos,offset_place_pos,home],store_id=3)
+
+
+    execute_motion = r.executor([plan_id_1]) #To execute the planned id
+    r.grasp()
+    time.sleep(1)
+    execute_motion = r.executor([plan_id_2])
+    r.release()
+    time.sleep(1)
+    execute_motion = r.executor([plan_id_3])
+
+
+#. Example with pick and place function in 4 different position
+
+
+    from neurapy.robot import Robot
+    import numpy as np
+    import copy
+    import time
+
+    r = Robot()
+    r.switch_to_automatic_mode()
+    home = r.get_point('Home', representation = 'Cartesian')
+    pick_pos = [
+        [0.32, 0.32, 0.2, np.pi, 0, np.pi],
+        [0.31, 0.31, 0.2, np.pi, 0, np.pi],
+        [0.32, 0.31, 0.2, np.pi, 0, np.pi],
+        [0.31, 0.32, 0.2, np.pi, 0, np.pi]
+    ]
+
+    place_pos = [
+        [0.32, -0.32, 0.2, np.pi, 0, np.pi],
+        [0.31, -0.31, 0.2, np.pi, 0, np.pi],
+        [0.32, -0.31, 0.2, np.pi, 0, np.pi],
+        [0.31, -0.32, 0.2, np.pi, 0, np.pi]
+    ]
+
+
+
+    def planner(pick_pos,place_pos):
+        offset_pick_pos = copy.deepcopy(pick_pos)
+        offset_pick_pos[2] = offset_pick_pos[2] + 0.1
+        offset_place_pos = copy.deepcopy(place_pos)
+        offset_place_pos[2] = offset_place_pos[2] + 0.1
+        plan_id= [0,0,0]
+        plan_id[0] = r.plan_move_linear(target_pose =[home,offset_pick_pos,pick_pos])
+        plan_id[1] = r.plan_move_linear(target_pose =[pick_pos,offset_pick_pos,offset_place_pos,place_pos])
+        plan_id[2] =r.plan_move_linear(target_pose =[place_pos,offset_place_pos,home])
+        return plan_id
+
+    def execute_pp(plan_id):
+        execute_motion = r.executor([plan_id[0]]) #To execute the planned id
+        r.grasp()
+        time.sleep(1)
+        execute_motion = r.executor([plan_id[1]])
+        r.release()
+        time.sleep(1)
+        execute_motion = r.executor([plan_id[2]])
+        return True
+
+    for i in range(len(pick_pos)):
+        plan_id = planner(pick_pos[i],place_pos[i])
+        execute_pp(plan_id)
+
+#. Example with simultaneous planning and execution
+
+
+
+    import threading
+    from neurapy.robot import Robot
+    import numpy as np
+    import copy
+    import time
+    import random
+
+    # Initialize the robot
+    r = Robot()
+    r.switch_to_automatic_mode()
+    home = r.get_point('Home', representation='Cartesian')
+    home_joint = r.get_point('Home', representation='Joint')
+
+    # Define pick and place positions
+    pick_pos = [
+        [0.32, 0.32, 0.2, np.pi, 0, np.pi],
+        [0.31, 0.31, 0.2, np.pi, 0, np.pi],
+        [0.32, 0.31, 0.2, np.pi, 0, np.pi],
+        [0.31, 0.32, 0.2, np.pi, 0, np.pi]
+    ]
+
+    place_pos = [
+        [0.32, -0.32, 0.2, np.pi, 0, np.pi],
+        [0.31, -0.31, 0.2, np.pi, 0, np.pi],
+        [0.32, -0.31, 0.2, np.pi, 0, np.pi],
+        [0.31, -0.32, 0.2, np.pi, 0, np.pi]
+    ]
+
+    # Shared list to store plan IDs
+    plan_ids = []
+    plan_ids_lock = threading.Lock()
+
+    def planner(pick_pos, place_pos):
+        for i in range(len(pick_pos)):
+            offset_pick_pos = copy.deepcopy(pick_pos[i])
+            offset_pick_pos[2] = offset_pick_pos[2] + 0.1
+            offset_place_pos = copy.deepcopy(place_pos[i])
+            offset_place_pos[2] = offset_place_pos[2] + 0.1
+            
+            plan_id = [0, 0, 0]
+            base_number = random.randint(1000, 9999)
+            plan_id[0] = r.plan_move_linear(target_pose=[home, offset_pick_pos, pick_pos[i]],current_joint_angles= home_joint, store_id=base_number + (3 * i + 1))
+            plan_id[1] = r.plan_move_linear(target_pose=[pick_pos[i], offset_pick_pos, offset_place_pos, place_pos[i]],current_joint_angles= home_joint, store_id=base_number +1  + (3 * i + 1))
+            plan_id[2] = r.plan_move_linear(target_pose=[place_pos[i], offset_place_pos, home],current_joint_angles= home_joint, store_id=base_number +2 + (3 * i + 1))
+            
+            with plan_ids_lock:
+                plan_ids.append(plan_id)
+                print(f"\033[92mPlanned motion {i+1}/{len(pick_pos)}: {plan_id}\033[0m", flush=True)
+
+    def execute_plan():
+        idx = 0
+        while True:
+            with plan_ids_lock:
+                if plan_ids:
+                    plan_id = plan_ids.pop(0)
+                else:
+                    if planning_thread.is_alive():
+                        continue
+                    else:
+                        break
+            print(f"\033[92mExecuting plan {idx+1}: {plan_id}\033[0m", flush=True)
+            execute_motion = r.executor([plan_id[0]])  # To execute the planned id
+            print("Executed plan 1", flush=True)
+            r.grasp()
+            time.sleep(1)
+            execute_motion = r.executor([plan_id[1]])
+            print("Executed plan 2", flush=True)
+            r.release()
+            time.sleep(1)
+            execute_motion = r.executor([plan_id[2]])
+            print("Executed plan 3", flush=True)
+
+            idx = idx +1
+
+    # Create and start planning thread
+    planning_thread = threading.Thread(target=planner, args=(pick_pos, place_pos))
+    planning_thread.start()
+
+    # Create and start execution thread
+    execute_plan()
+
+    # Wait for thread to complete
+    planning_thread.join()
+    print("\033[92mAll motions planned and executed.\033[0m", flush=True)
+
+#. Example with reusing IDs for repeated motion.
+
+  
+
+    import threading
+    from neurapy.robot import Robot
+    import numpy as np
+    import copy
+    import time
+    import random
+
+    # Initialize the robot
+    r = Robot()
+    r.switch_to_automatic_mode()
+    home = r.get_point('Home', representation='Cartesian')
+    home_joint = r.get_point('Home', representation='Joint')
+
+    # Define pick and place positions
+    pick_pos = [
+        [0.32, 0.32, 0.2, np.pi, 0, np.pi],
+        [0.31, 0.31, 0.2, np.pi, 0, np.pi],
+        [0.32, 0.31, 0.2, np.pi, 0, np.pi],
+        [0.31, 0.32, 0.2, np.pi, 0, np.pi]
+    ]
+
+    place_pos = [
+        [0.32, -0.32, 0.2, np.pi, 0, np.pi],
+        [0.31, -0.31, 0.2, np.pi, 0, np.pi],
+        [0.32, -0.31, 0.2, np.pi, 0, np.pi],
+        [0.31, -0.32, 0.2, np.pi, 0, np.pi]
+    ]
+
+    # Shared list to store plan IDs
+    plan_ids = []
+    plan_ids_lock = threading.Lock()
+    planning_complete = threading.Event()
+
+    def planner(pick_pos, place_pos):
+        global planning_complete
+        for i in range(len(pick_pos)):
+            offset_pick_pos = copy.deepcopy(pick_pos[i])
+            offset_pick_pos[2] = offset_pick_pos[2] + 0.1
+            offset_place_pos = copy.deepcopy(place_pos[i])
+            offset_place_pos[2] = offset_place_pos[2] + 0.1
+            
+            plan_id = [0, 0, 0]
+            base_number = random.randint(1000, 9999)
+            plan_id[0] = r.plan_move_linear(target_pose=[home, offset_pick_pos, pick_pos[i]],current_joint_angles= home_joint, store_id=base_number + (3 * i + 1),reusable = True)
+            plan_id[1] = r.plan_move_linear(target_pose=[pick_pos[i], offset_pick_pos, offset_place_pos, place_pos[i]],current_joint_angles= home_joint, store_id=base_number +1  + (3 * i + 1),reusable = True)
+            plan_id[2] = r.plan_move_linear(target_pose=[place_pos[i], offset_place_pos, home],current_joint_angles= home_joint, store_id=base_number +2 + (3 * i + 1),reusable = True)
+            
+            with plan_ids_lock:
+                plan_ids.append(plan_id)
+                print(f"\033[92mPlanned motion {i+1}/{len(pick_pos)}: {plan_id}\033[0m", flush=True)
+        planning_complete.set()
+
+    def execute_plan():
+        idx = 0
+        while True:
+            with plan_ids_lock:
+                if idx<=3:
+                    if plan_ids:
+                        plan_id = plan_ids[idx]
+                    else:
+                        continue
+                else:
+                    break
+                    
+            print(f"\033[92mExecuting plan {idx+1}: {plan_id}\033[0m", flush=True)
+            execute_motion = r.executor([plan_id[0]])  # To execute the planned id
+            print("Executed motion 1", flush=True)
+            r.grasp()
+            time.sleep(1)
+            execute_motion = r.executor([plan_id[1]])
+            print("Executed motion 2", flush=True)
+            r.release()
+            time.sleep(1)
+            execute_motion = r.executor([plan_id[2]])
+            print("Executed motion 3", flush=True)
+
+            idx = idx +1
+
+    # Create and start planning thread
+    planning_thread = threading.Thread(target=planner, args=(pick_pos, place_pos))
+    planning_thread.start()
+
+    iter = 5 # number of loops,specify it as required
+
+    # Create and start execution thread
+    for i in range(iter):
+        execute_plan()
+        print(f'\033[92mExecuted the plan for {i+1} iteration.\033[0m')
+
+    # Wait for thread to complete
+    planning_thread.join()
+    print("\033[92mAll motions planned and executed.\033[0m", flush=True)
+
+>>>>>>> 3727da43dd55a7d862136b04489330dbe805bdc7
