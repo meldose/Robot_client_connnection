@@ -633,3 +633,94 @@ class Camera(ABC):
 
 ######################################################################################################################
 
+from abc import ABC, abstractmethod
+import math
+from typing import List, Optional
+from scipy.spatial.transform import Rotation as R
+import numpy as np
+# Import your robot control library
+# For example, using pyrobot
+from pyrobot import Robot
+
+# Assuming the Camera classes (RealCamera and SimulatedCamera) are defined as above
+
+class RobotController:
+    def __init__(self, robot: Robot, camera: Camera):
+        """
+        Initialize the RobotController with a robot and a camera.
+
+        Parameters:
+            robot (Robot): The robot instance.
+            camera (Camera): The camera instance.
+        """
+        self.robot = robot
+        self.camera = camera
+
+    def target_robot_to_camera_pose(self):
+        """
+        Target the robot to the pose obtained from the camera.
+        """
+        # Get pose from the camera
+        camera_pose = self.camera.get_pose()
+        
+        if not camera_pose:
+            error_message = self.camera.get_error_message()
+            print(f"Error retrieving pose: {error_message}")
+            return
+        
+        # Optionally, reorient the camera points to handle IK constraints
+        camera_pose_list = camera_pose if isinstance(camera_pose[0], list) else [camera_pose]
+        valid_poses = self.camera.reorient_camera_points(camera_pose_list)
+        
+        for pose in valid_poses:
+            if not self.camera.check_camera_output(pose):
+                print(f"Invalid pose format: {pose}")
+                continue
+            
+            # Convert pose to transformation matrix
+            target_pose_mat = self.camera.pose_euler_to_mat(pose)
+            
+            # Extract position and orientation
+            position = target_pose_mat[:3, 3]
+            rotation_matrix = target_pose_mat[:3, :3]
+            
+            # Compute inverse kinematics
+            ik_solution = self.robot.arm.inverse_kinematics(target_pose_mat)
+            
+            if ik_solution is not None:
+                try:
+                    # Move the robot's arm to the target joint angles
+                    self.robot.arm.set_joint_positions(ik_solution)
+                    print(f"Robot moved to pose: {pose}")
+                except Exception as e:
+                    print(f"Failed to move the robot: {e}")
+            else:
+                print(f"No IK solution found for pose: {pose}")
+
+def main():
+    # Initialize the robot (replace 'your_robot' with your actual robot name)
+    robot = Robot('your_robot')
+    
+    # Initialize the camera
+    # For real camera:
+    # camera_interface = YourCameraInterface()
+    # camera = RealCamera(camera_interface)
+    
+    # For simulated camera:
+    sample_poses = [
+        [0.5, 0.0, 0.2, 0.0, 0.0, 0.0],
+        [0.6, 0.1, 0.3, 0.1, 0.0, 0.0],
+        # Add more poses as needed
+    ]
+    camera = SimulatedCamera(predefined_poses=sample_poses)
+    
+    # Initialize the controller
+    controller = RobotController(robot, camera)
+    
+    # Target the robot to each pose from the camera
+    controller.target_robot_to_camera_pose()
+
+if __name__ == "__main__":
+    main()
+
+#################################################################################################################
