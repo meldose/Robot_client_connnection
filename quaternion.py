@@ -716,4 +716,208 @@ def main():
 if __name__ == "__main__":
     main()
 
-#################################################################################################################
+############################### EXAMPLE FOR TEST ###########################################
+
+import numpy as np
+from scipy.spatial.transform import Rotation as R
+import time
+
+# ----------------------------
+# Mock Classes for Simulation
+# ----------------------------
+
+class MockCamera:
+    """
+    Mock camera class to simulate capturing target pose.
+    In a real implementation, this would interface with actual camera hardware and processing algorithms.
+    """
+    def __init__(self):
+        # Initialize with a default target pose relative to the camera
+        self.target_pose = {
+            'x': 5.0,    # meters
+            'y': 3.0,    # meters
+            'z': 0.0,    # meters (assuming flat ground)
+            'roll': 0.0,   # radians
+            'pitch': 0.0,  # radians
+            'yaw': np.deg2rad(45)  # radians
+        }
+
+    def get_target_pose(self):
+        # In a real scenario, update this method to return dynamic target poses
+        return self.target_pose
+
+class MockRobot:
+    """
+    Mock robot class to simulate robot movement.
+    In a real implementation, this would interface with the robot's hardware or simulation environment.
+    """
+    def __init__(self, initial_pose=None):
+        if initial_pose is None:
+            # Initialize robot at origin with no rotation
+            self.pose = {
+                'x': 0.0,
+                'y': 0.0,
+                'z': 0.0,
+                'roll': 0.0,
+                'pitch': 0.0,
+                'yaw': 0.0
+            }
+        else:
+            self.pose = initial_pose
+
+    def get_current_pose(self):
+        return self.pose
+
+    def set_velocity(self, vel_x, vel_y, vel_yaw, dt):
+        """
+        Update the robot's pose based on the velocity commands and time step.
+        This is a simplified kinematic model.
+        """
+        # Update position
+        self.pose['x'] += vel_x * dt
+        self.pose['y'] += vel_y * dt
+        self.pose['yaw'] += vel_yaw * dt
+
+        # Normalize yaw to [-pi, pi]
+        self.pose['yaw'] = (self.pose['yaw'] + np.pi) % (2 * np.pi) - np.pi
+
+        # For simplicity, assume z, roll, and pitch remain constant
+        # In a real robot, these would be updated based on movement and actuators
+
+# ----------------------------
+# PID Controller Class
+# ----------------------------
+
+class PIDController:
+    def __init__(self, Kp, Ki, Kd, output_limits=(None, None)):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+        self.integral = 0.0
+        self.previous_error = 0.0
+        self.output_limits = output_limits  # (min, max)
+
+    def compute(self, setpoint, measurement, dt):
+        error = setpoint - measurement
+        self.integral += error * dt
+        derivative = (error - self.previous_error) / dt if dt > 0 else 0.0
+        output = self.Kp * error + self.Ki * self.integral + self.Kd * derivative
+
+        # Apply output limits
+        min_output, max_output = self.output_limits
+        if min_output is not None:
+            output = max(min_output, output)
+        if max_output is not None:
+            output = min(max_output, output)
+
+        self.previous_error = error
+        return output
+
+# ----------------------------
+# Transformation Functions
+# ----------------------------
+
+def rpy_to_quaternion(roll, pitch, yaw):
+    """
+    Convert roll, pitch, yaw angles to a quaternion.
+    """
+    rotation = R.from_euler('xyz', [roll, pitch, yaw])
+    return rotation.as_quat()  # [x, y, z, w]
+
+def quaternion_to_rpy(quat):
+    """
+    Convert a quaternion to roll, pitch, yaw angles.
+    """
+    rotation = R.from_quat(quat)
+    return rotation.as_euler('xyz')
+
+def transform_pose(camera_pose, transformation_matrix):
+    """
+    Transform a pose from the camera frame to the robot frame using a homogeneous transformation matrix.
+    """
+    camera_position = np.array([camera_pose['x'], camera_pose['y'], camera_pose['z'], 1.0])
+    robot_position = transformation_matrix @ camera_position
+
+    # Transform orientation
+    camera_quat = rpy_to_quaternion(camera_pose['roll'], camera_pose['pitch'], camera_pose['yaw'])
+    rotation_matrix = transformation_matrix[:3, :3]
+    transformed_quat = R.from_matrix(rotation_matrix).multiply(R.from_quat(camera_quat)).as_quat()
+
+    transformed_pose = {
+        'x': robot_position[0],
+        'y': robot_position[1],
+        'z': robot_position[2],
+        'roll': quaternion_to_rpy(transformed_quat)[0],
+        'pitch': quaternion_to_rpy(transformed_quat)[1],
+        'yaw': quaternion_to_rpy(transformed_quat)[2]
+    }
+    return transformed_pose
+
+# ----------------------------
+# Main Control Loop
+# ----------------------------
+
+def main():
+    # Initialize camera and robot
+    camera = MockCamera()
+    robot = MockRobot()
+
+    # Define transformation matrix from camera frame to robot frame
+    # For this example, assume the camera is mounted at (0.5, 0, 1.0) in robot frame with no rotation
+    translation = np.array([0.5, 0.0, 1.0])
+    rotation = R.from_euler('xyz', [0, 0, 0]).as_matrix()  # No rotation
+    transformation_matrix = np.eye(4)
+    transformation_matrix[:3, :3] = rotation
+    transformation_matrix[:3, 3] = translation
+
+    # Initialize PID controllers for x, y, and yaw
+    pid_x = PIDController(Kp=1.0, Ki=0.0, Kd=0.1, output_limits=(-1.0, 1.0))
+    pid_y = PIDController(Kp=1.0, Ki=0.0, Kd=0.1, output_limits=(-1.0, 1.0))
+    pid_yaw = PIDController(Kp=2.0, Ki=0.0, Kd=0.2, output_limits=(-np.pi/4, np.pi/4))  # Limits in radians/sec
+
+    # Control loop parameters
+    dt = 0.1  # Time step in seconds
+    max_iterations = 500  # Maximum number of iterations to prevent infinite loop
+    tolerance_position = 0.05  # meters
+    tolerance_yaw = np.deg2rad(2)  # radians
+
+    for iteration in range(max_iterations):
+        # Step 1: Capture Target Pose from Camera
+        camera_pose = camera.get_target_pose()
+
+        # Step 2: Transform Pose to Robot Frame
+        target_pose_robot = transform_pose(camera_pose, transformation_matrix)
+
+        # Step 3: Get Current Pose of Robot
+        current_pose = robot.get_current_pose()
+
+        # Step 4: Compute Control Commands using PID Controllers
+        cmd_vel_x = pid_x.compute(target_pose_robot['x'], current_pose['x'], dt)
+        cmd_vel_y = pid_y.compute(target_pose_robot['y'], current_pose['y'], dt)
+        cmd_vel_yaw = pid_yaw.compute(target_pose_robot['yaw'], current_pose['yaw'], dt)
+
+        # Step 5: Send Velocity Commands to Robot
+        robot.set_velocity(cmd_vel_x, cmd_vel_y, cmd_vel_yaw, dt)
+
+        # Step 6: Print Status
+        print(f"Iteration {iteration+1}:")
+        print(f"  Target Pose (Robot Frame): x={target_pose_robot['x']:.2f}, y={target_pose_robot['y']:.2f}, yaw={np.rad2deg(target_pose_robot['yaw']):.2f}°")
+        print(f"  Current Pose: x={current_pose['x']:.2f}, y={current_pose['y']:.2f}, yaw={np.rad2deg(current_pose['yaw']):.2f}°")
+        print(f"  Velocity Commands: vel_x={cmd_vel_x:.2f} m/s, vel_y={cmd_vel_y:.2f} m/s, vel_yaw={np.rad2deg(cmd_vel_yaw):.2f}°/s\n")
+
+        # Step 7: Check if Target is Reached
+        position_error = np.sqrt((target_pose_robot['x'] - current_pose['x'])**2 +
+                                 (target_pose_robot['y'] - current_pose['y'])**2)
+        yaw_error = abs(target_pose_robot['yaw'] - current_pose['yaw'])
+
+        if position_error < tolerance_position and yaw_error < tolerance_yaw:
+            print("Target pose reached successfully!")
+            break
+
+        # Step 8: Wait for next iteration
+        time.sleep(dt)
+    else:
+        print("Maximum iterations reached without reaching target pose.")
+
+if __name__ == "__main__":
+    main()
