@@ -974,10 +974,8 @@ r.move_linear(target_pose = [place_pos,offset_place_pos])
 #default position
 r.move_joint('Home')
 
-<<<<<<< HEAD
 r.power_off()
-=======
-    r.power_off()
+
 
 ############################# Servo J ################################################################
     
@@ -1373,5 +1371,3 @@ r.power_off()
     # Wait for thread to complete
     planning_thread.join()
     print("\033[92mAll motions planned and executed.\033[0m", flush=True)
-
->>>>>>> 3727da43dd55a7d862136b04489330dbe805bdc7
