@@ -294,4 +294,110 @@ target_angle = r.ik_fk("ik", target_pose = [0.140448, -0.134195, 1.197456, 3.139
 
 ##########################################################################################################
 
+from neurapy.robot import Robot
 
+r= Robot()
+
+import numpy as np
+from scipy.spatial.transform import Rotation as R
+
+def euler_to_rotation_matrix(roll, pitch, yaw):
+    """
+    Convert Euler angles to a rotation matrix.
+    Roll, pitch, yaw are in radians.
+    """
+    rotation = R.from_euler('xyz', [roll, pitch, yaw])
+    return rotation.as_matrix()
+
+
+# Initialize the robot
+robot = Robot('your_robot')
+
+# Define target coordinates and orientation (example values)
+x, y, z = 0.5, 0.0, 0.2  # Position in meters
+roll, pitch, yaw = 0.0, 0.0, 0.0  # Orientation in radians
+
+
+def get_target_pose(x, y, z, roll, pitch, yaw):
+    rotation_matrix = euler_to_rotation_matrix(roll, pitch, yaw)
+    position = np.array([x, y, z])
+    
+    # Create a 4x4 homogeneous transformation matrix
+    pose = np.eye(4)
+    pose[:3, :3] = rotation_matrix
+    pose[:3, 3] = position
+    return pose
+
+
+# Get the target pose
+target_pose = get_target_pose(x, y, z, roll, pitch, yaw)
+
+# Compute inverse kinematics
+# The method to compute IK may vary based on the library
+# Here's a generic example
+ik_solution = robot.arm.inverse_kinematics(target_pose)
+
+if ik_solution is not None:
+    try:
+        robot.arm.set_joint_positions(ik_solution)
+        print("Robot successfully moved to the target pose.")
+    except Exception as e:
+        print(f"Failed to move the robot: {e}")
+else:
+    print("No valid IK solution found for the target pose.")
+    
+    
+
+#########################################################################################
+
+import sys
+import rospy
+import moveit_commander
+import geometry_msgs.msg
+from math import radians
+from scipy.spatial.transform import Rotation as R
+
+def euler_to_quaternion(roll, pitch, yaw):
+    rotation = R.from_euler('xyz', [roll, pitch, yaw])
+    return rotation.as_quat()
+
+def main():
+    moveit_commander.roscpp_initialize(sys.argv)
+    rospy.init_node('robot_target_pose', anonymous=True)
+
+    robot = moveit_commander.RobotCommander()
+    scene = moveit_commander.PlanningSceneInterface()
+    group_name = "manipulator"  # Replace with your robot's MoveIt! group name
+    move_group = moveit_commander.MoveGroupCommander(group_name)
+
+    # Define target position and orientation
+    target_position = [0.5, 0.0, 0.2]
+    roll, pitch, yaw = 0.0, 0.0, 0.0
+    target_orientation = euler_to_quaternion(roll, pitch, yaw)
+
+    # Create a pose message
+    pose_target = geometry_msgs.msg.Pose()
+    pose_target.position.x = target_position[0]
+    pose_target.position.y = target_position[1]
+    pose_target.position.z = target_position[2]
+    pose_target.orientation.x = target_orientation[0]
+    pose_target.orientation.y = target_orientation[1]
+    pose_target.orientation.z = target_orientation[2]
+    pose_target.orientation.w = target_orientation[3]
+
+    move_group.set_pose_target(pose_target)
+
+    # Plan and execute
+    plan = move_group.go(wait=True)
+
+    # Ensure the robot has reached the goal
+    move_group.stop()
+    move_group.clear_pose_targets()
+
+    moveit_commander.roscpp_shutdown()
+
+if __name__ == '__main__':
+    main()
+
+
+####################################################################################################
