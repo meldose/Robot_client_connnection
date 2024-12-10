@@ -1,8 +1,8 @@
 # ################# QUATERNION TO ROLL PITCH YAW ##############
 
-from neurapy.robot import Robot
-r = Robot()
-rpy = r.quaternion_to_rpy(0.078,0.979,-0.061,-0.177)
+# from neurapy.robot import Robot
+# r = Robot()
+# rpy = r.quaternion_to_rpy(0.078,0.979,-0.061,-0.177)
 
 #  ################ ROLL PITCH YAW TO QUATERNION ##########################
 
@@ -1364,7 +1364,42 @@ rpy = r.quaternion_to_rpy(0.078,0.979,-0.061,-0.177)
 # # Create and start execution thread
 # for i in range(iter):
 #     execute_plan()
-#     print(f'\033[92mExecuted the plan for {i+1} iteration.\033[0m')
+#     print(f'\033[92mExecuted the plan for {i+1} iteration.\033[0m'
+# from neurapy.robot import Robot
+
+# r = Robot()
+# circular_property = {
+#     "speed": 0.25,
+#     "acceleration": 0.1,
+#     "target_pose": [
+#         [
+#             0.3744609827431085,
+#             -0.3391784988266481,
+#             0.23276604279256016,
+#             3.14119553565979,
+#             -0.00017731254047248513,
+#             -0.48800110816955566
+#         ],
+#         [
+#             0.37116786741831503,
+#             -0.19686307684994242,
+#             0.23300456855796453,
+#             3.141423225402832,
+#             -0.00020668463548645377,
+#             -0.48725831508636475
+#         ],
+#         [
+#             0.5190337951593321,
+#             -0.1969996948428492,
+#             0.23267853691809767,
+#             3.1414194107055664,
+#             -0.00017726201622281224,
+#             -0.48750609159469604
+#         ]
+#     ],
+#     "current_joint_angles": r.robot_status("jointAngles")
+# }
+# r.move_circular(**circular_property))
 
 # # Wait for thread to complete
 # planning_thread.join()
@@ -1466,41 +1501,69 @@ rpy = r.quaternion_to_rpy(0.078,0.979,-0.061,-0.177)
 
 ####### WORKING ##########
 
+# from neurapy.robot import Robot
+
+# r = Robot()
+# circular_property = {
+#     "speed": 0.25,
+#     "acceleration": 0.1,
+#     "target_pose": [
+#         [
+#             0.3744609827431085,
+#             -0.3391784988266481,
+#             0.23276604279256016,
+#             3.14119553565979,
+#             -0.00017731254047248513,
+#             -0.48800110816955566
+#         ],
+#         [
+#             0.37116786741831503,
+#             -0.19686307684994242,
+#             0.23300456855796453,
+#             3.141423225402832,
+#             -0.00020668463548645377,
+#             -0.48725831508636475
+#         ],
+#         [
+#             0.5190337951593321,
+#             -0.1969996948428492,
+#             0.23267853691809767,
+#             3.1414194107055664,
+#             -0.00017726201622281224,
+#             -0.48750609159469604
+#         ]
+#     ],
+#     "current_joint_angles": r.robot_status("jointAngles")
+# }
+# r.move_circular(**circular_property)
+
+############################################################################
+
+
+
 from neurapy.robot import Robot
 
-r = Robot()
-circular_property = {
-    "speed": 0.25,
-    "acceleration": 0.1,
-    "target_pose": [
-        [
-            0.3744609827431085,
-            -0.3391784988266481,
-            0.23276604279256016,
-            3.14119553565979,
-            -0.00017731254047248513,
-            -0.48800110816955566
-        ],
-        [
-            0.37116786741831503,
-            -0.19686307684994242,
-            0.23300456855796453,
-            3.141423225402832,
-            -0.00020668463548645377,
-            -0.48725831508636475
-        ],
-        [
-            0.5190337951593321,
-            -0.1969996948428492,
-            0.23267853691809767,
-            3.1414194107055664,
-            -0.00017726201622281224,
-            -0.48750609159469604
-        ]
-    ],
-    "current_joint_angles": r.robot_status("jointAngles")
-}
-r.move_circular(**circular_property)
+def convert_quaternion_to_euler_pose(self, cartesian_pose):
+    """
+    Convert a pose with quaternion representation to a pose with Euler angles.
+
+    If the input pose is already in Euler format (length 6), it is returned unchanged.
+
+    :param cartesian_pose: The pose to be converted to Euler angles ([X, Y, Z, W, EX, EY, EZ], required: Yes).
+    :type cartesian_pose: list
+
+    :return: The pose in Euler angle format ([X, Y, Z, R, P, Y]).
+    :rtype: list
+
+    **Sample Usage:**
+    
+    """
+
+
+    r = Robot()
+    quaternion_pose = [0.086,0.023,0.907,0.979,-0.058,-0.177,0.079]  # [X, Y, Z, W, EX, EY, EZ]
+    euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
+    print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
 
 # #################### Move composite ######################################################
