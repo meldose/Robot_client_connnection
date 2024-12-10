@@ -1570,7 +1570,6 @@ composite_motion_property = {
 }
 r.move_composite(**composite_motion_property)
         
-##############################################################################
 
 ##### MoveLinearOnline ####################
 
