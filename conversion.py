@@ -1,6 +1,6 @@
 from neurapy.robot import Robot
 
-def convert_quaternion_to_euler_pose(self, cartesian_pose):
+def convert_quaternion_to_euler_pose():
     """
     Convert a pose with quaternion representation to a pose with Euler angles.
 
@@ -21,3 +21,5 @@ def convert_quaternion_to_euler_pose(self, cartesian_pose):
     quaternion_pose = [0.086,0.023,0.907,0.979,-0.058,-0.177,0.079]  # [X, Y, Z, W, EX, EY, EZ]
     euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
     print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
+
+convert_quaternion_to_euler_pose()
