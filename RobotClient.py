@@ -27,17 +27,10 @@ def test_ls():
     time.sleep(2)
     robot.pho_request_get_running_solution()
     time.sleep(2)
-    robot.pho_request_stop_solution()
-    time.sleep(2)
-    robot.pho_request_get_available_solution()
-
-    robot.close_connection()  #communication needs to be closed
-
     # robot.pho_request_stop_solution()
-    time.sleep(2)
+    # time.sleep(2)
     robot.pho_request_get_available_solution()
-
-    # robot.close_connection()  #communication needs to be closed
+    robot.close_connection()  #communication needs to be closed
     time.sleep(2)
 
 
@@ -140,8 +133,8 @@ def load_json_file(file_path):
 
 
 if __name__ == '__main__':
-    #calibration_handeye()
-    #calibration_extrinsic()
+    # calibration_handeye()
+    calibration_extrinsic()
     test_ls()
     #test_bps()
 

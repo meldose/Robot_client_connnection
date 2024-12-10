@@ -1,8 +1,8 @@
 # ################# QUATERNION TO ROLL PITCH YAW ##############
 
-# from neurapy.robot import Robot
-# r = Robot()
-# rpy = r.quaternion_to_rpy(0.85,0,0.52,0)
+from neurapy.robot import Robot
+r = Robot()
+rpy = r.quaternion_to_rpy(0.078,0.979,-0.061,-0.177)
 
 #  ################ ROLL PITCH YAW TO QUATERNION ##########################
 
@@ -346,54 +346,54 @@
 
 # #########################################################################################
 
-import sys
-import rospy
-import moveit_commander
-import geometry_msgs.msg
-from math import radians
-from scipy.spatial.transform import Rotation as R
+# import sys
+# import rospy
+# import moveit_commander
+# import geometry_msgs.msg
+# from math import radians
+# from scipy.spatial.transform import Rotation as R
 
-def euler_to_quaternion(roll, pitch, yaw):
-    rotation = R.from_euler('xyz', [roll, pitch, yaw])
-    return rotation.as_quat()
+# def euler_to_quaternion(roll, pitch, yaw):
+#     rotation = R.from_euler('xyz', [roll, pitch, yaw])
+#     return rotation.as_quat()
 
-def main():
-    moveit_commander.roscpp_initialize(sys.argv)
-    rospy.init_node('robot_target_pose', anonymous=True)
+# def main():
+#     moveit_commander.roscpp_initialize(sys.argv)
+#     rospy.init_node('robot_target_pose', anonymous=True)
 
-    robot = moveit_commander.RobotCommander()
-    scene = moveit_commander.PlanningSceneInterface()
-    group_name = "manipulator"  # Replace with your robot's MoveIt! group name
-    move_group = moveit_commander.MoveGroupCommander(group_name)
+#     robot = moveit_commander.RobotCommander()
+#     scene = moveit_commander.PlanningSceneInterface()
+#     group_name = "manipulator"  # Replace with your robot's MoveIt! group name
+#     move_group = moveit_commander.MoveGroupCommander(group_name)
 
-    # Define target position and orientation
-    target_position = [0.5, 0.0, 0.2]
-    roll, pitch, yaw = 0.0, 0.0, 0.0
-    target_orientation = euler_to_quaternion(roll, pitch, yaw)
+#     # Define target position and orientation
+#     target_position = [0.5, 0.0, 0.2]
+#     roll, pitch, yaw = 0.0, 0.0, 0.0
+#     target_orientation = euler_to_quaternion(roll, pitch, yaw)
 
-    # Create a pose message
-    pose_target = geometry_msgs.msg.Pose()
-    pose_target.position.x = target_position[0]
-    pose_target.position.y = target_position[1]
-    pose_target.position.z = target_position[2]
-    pose_target.orientation.x = target_orientation[0]
-    pose_target.orientation.y = target_orientation[1]
-    pose_target.orientation.z = target_orientation[2]
-    pose_target.orientation.w = target_orientation[3]
+#     # Create a pose message
+#     pose_target = geometry_msgs.msg.Pose()
+#     pose_target.position.x = target_position[0]
+#     pose_target.position.y = target_position[1]
+#     pose_target.position.z = target_position[2]
+#     pose_target.orientation.x = target_orientation[0]
+#     pose_target.orientation.y = target_orientation[1]
+#     pose_target.orientation.z = target_orientation[2]
+#     pose_target.orientation.w = target_orientation[3]
 
-    move_group.set_pose_target(pose_target)
+#     move_group.set_pose_target(pose_target)
 
-    # Plan and execute
-    plan = move_group.go(wait=True)
+#     # Plan and execute
+#     plan = move_group.go(wait=True)
 
-    # Ensure the robot has reached the goal
-    move_group.stop()
-    move_group.clear_pose_targets()
+#     # Ensure the robot has reached the goal
+#     move_group.stop()
+#     move_group.clear_pose_targets()
 
-    moveit_commander.roscpp_shutdown()
+#     moveit_commander.roscpp_shutdown()
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
 
 # ####################################################################################################
@@ -1417,44 +1417,46 @@ if __name__ == '__main__':
 # from neurapy.robot import Robot
 
 # r = Robot()
+# target_pose=[79.39,24,246,909.109,0.078,0.979,-0.061,-0.177]
 # linear_property = {
 #     "speed": 0.25,
 #     "acceleration": 0.1,
 #     "blend_radius": 0.005,
-#     "target_pose": [
-#         [
-#             0.3287228886,
-#             -0.1903355329,
-#             0.4220780352,
-#             0.08535207028439847,
-#             -2.797181496822229,
-#             2.4713321627410485
-#         ],
-#         [
-#             0.2093363791501374,
-#             -0.31711250784165884,
-#             0.422149168855134,
-#             -3.0565555095672607,
-#             -0.3447442352771759,
-#             -1.1323236227035522
-#         ],
-#         [
-#             0.2090521916195534,
-#             -0.5246753336643587,
-#             0.4218773613553828,
-#             -3.0569007396698,
-#             -0.3448921740055084,
-#             -1.1323626041412354
-#         ],
-#         [
-#             0.3287228886,
-#             -0.1903355329,
-#             0.4220780352,
-#             0.08535207028439847,
-#             -2.797181496822229,
-#             2.4713321627410485
-#         ]
-#     ],
+#     # "target_pose": [
+#     #     [
+#     #         0.3287228886,
+#     #         -0.1903355329,
+#     #         0.4220780352,
+#     #         0.08535207028439847,
+#     #         -2.797181496822229,
+#     #         2.4713321627410485
+#     #     ],
+#     #     [
+#     #         0.2093363791501374,
+#     #         -0.31711250784165884,
+#     #         0.422149168855134,
+#     #         -3.0565555095672607,
+#     #         -0.3447442352771759,
+#     #         -1.1323236227035522
+#     #     ],
+#     #     [
+#     #         0.2090521916195534,
+#     #         -0.5246753336643587,
+#     #         0.4218773613553828,
+#     #         -3.0569007396698,
+#     #         -0.3448921740055084,
+#     #         -1.1323626041412354
+#     #     ],
+#     #     [
+#     #         0.3287228886,
+#     #         -0.1903355329,
+#     #         0.4220780352,
+#     #         0.08535207028439847,
+#     #         -2.797181496822229,
+#     #         2.4713321627410485
+#     #     ]
+#     # ],
+#     "target_pose": target_pose,
 #     "current_joint_angles": r.robot_status("jointAngles")
 # }
 # r.move_linear(**linear_property)
@@ -1508,6 +1510,8 @@ if __name__ == '__main__':
 # from neurapy.robot import Robot
 
 # r = Robot()
+
+
 # composite_motion_property = {
 #     "speed": 0.432,
 #     "acceleration": 0.2,
