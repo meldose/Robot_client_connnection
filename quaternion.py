@@ -1116,7 +1116,7 @@ if __name__ == '__main__':
 # offset_pick_pos[2] = offset_pick_pos[2] + 0.1
 # offset_place_pos = copy.deepcopy(place_pos)
 # offset_place_pos[2] = offset_place_pos[2] + 0.1
-# r = Robot()
+# r = Robot()target_position
 # r.switch_to_automatic_mode()
 # home = r.get_point('Home', representation = 'Cartesian')
 
@@ -1616,3 +1616,456 @@ if __name__ == '__main__':
 # print("Robot stopped")
 # r.deactivate_servo_interface()
 # r.stop()
+
+####################################################################################################
+
+from ...commands.import_commands import *
+from neurapy.exceptions import UnfeasibleMotion
+
+def move_linear(self,*args,**kwargs):
+    
+    """
+    To move the robot to specified poses in Cartesian/Task space. 
+
+    :param target_pose: List of 3 pose configurations (starting, middle, and end points). (type: Pose configuration - [X,Y,Z,R,P,Y], float, units: Position values in meters and rotation values in radians, required: Yes) Alternative: List of Strings (Type: [String], names of existing points)
+    :type target_pose: list
+    :param speed: Translation Speed. (units: m/sec, default_value: 0.25, required: No)
+    :type speed: float
+    :param acceleration: Translation Acceleration. (units: m/sec2, default_value: 0.25, required: No)
+    :type acceleration: float
+    :param jerk: Translation Jerk (units: m/sec3, default_value: 500.0, required: No)
+    :type jerk: float
+    :param rotation_speed: Rotational Speed. (units: rad/sec, default_value: 0.5, required: No)
+    :type rotation_speed: float
+    :param rotation_acceleration: Rotational Acceleration. (units: rad/sec2, default_value: 1.57, required: No)
+    :type rotation_acceleration: float
+    :param rotation_jerk: Rotational Jerk. (units: rad/sec3, default_value: 500.0, required: No)
+    :type rotation_jerk: float
+    :param blending: Blending. (units: N/A, default_value: False, required: No)
+
+        - True : Blending is turned on, motions inside are executed with given blending mode.
+        - False : Blending is turned off, motions stop at each point.
+
+    :param blending_mode: The blending type that is selected to blend between points. (units: N/A, default_value: DYNAMIC_BLENDING, required: No)
+
+        - 0 : NO_BLENDING, if selected goes to the default blending mode.
+        - 1 : DYNAMIC_BLENDING, blending based on velocity and acceleration.
+        - 2 : STATIC_BLENDING, blending based on the given blend_radius.
+    :type blending_mode: enum
+    :param blend_radius: Blend Radius, if static blending is selected. (units: m, default_value: 0.01, required: No)
+    :type blend_radius: float
+    :param current_joint_angles: Current Robot Joint Configuration. (type: List of Joint Values - float, units: radians, default_value: Joint Configuration obtained from Robot Status method, required: No)
+    :type current_joint_angles: list
+    :param weaving: Toogle if Weaving should be used for the Motion(units: N/A, default_value: False, required: No)
+        
+        - True : Weaving is turned on, motion inside are exeuted with given weaving parameters
+        - False : Weaving is turned off, motion does not include Weaving
+    :type weaving: bool
+    :param pattern: The Pattern which should be used for the Weaving (units: N/A, default_value: 2, required: No)
+
+        - 1 : SINE, if selected uses a Sine wave, ignores dwell times
+        - 2 : TRAPEZOIDAL, if selected uses a trapezoidal wave, implements dwell times
+        - 3 : CIRCLE (experimental), if selected uses a circle wave, ignores dwell time and amplitude offset
+    :type pattern: int
+    :param amplitude_left: The amplitude on the left side (defined in motion direction) (units: m, default_value: 0.0, required: No)
+    :type amplitude_left: float
+    :param amplitude_right: The amplitude on the right side (defined in motion direction) (units: m, default_value: 0.0, required: No)
+    :type amplitude_right: float
+    :param frequency: the frequency for the wave form (units: Hz, default_value: 10.0, required: No)
+    :type frequency: float
+    :param dwell_time_left: the wait time, for trapezoidal waves at each peak (left defined by motion direction) (units: s, default_value: 0.0, required: No)
+    :type dwell_time_left: float
+    :param dwell_time_right: the wait time, for trapezoidal waves at each peak (right defined by motion direction) (units: s, default_value: 0.0, required: No)
+    :type dwell_time_right: float
+    :param elevation: the rotation around the velocity vector (units: rads, default_value: 0.0, required: No)
+    :type elevation: float
+    :param azimuth: the rotation around the z-Axis of the tool (units: rads, default_value: 0.0, required: No)
+    :type azimuth: float
+    :param safety_toggle: Safety toggle. (units: N/A, default_value: value of the safety toggle in Program screen if not set, required: No)
+
+        - True, Max speed is slashed to 25%.
+        - False - No reduction in already set max speed.
+    :type safety_toggle: bool
+    :param control_mode: Control strategy used to execute the motion (0: position control, 2: joint impedance, 4: admittance)
+    :type control_mode: int
+    :param force_vector: 6-dimensional vector containing the desired Cartesian forces [N] (first three elements) and desired moment [Nm] (last three elements) 
+    :type force_vector: list
+
+    :return: True if motion is executed successfully, False if motion is not executed successfully
+    :rtype: bool
+    
+    :raises WrongMode: If the robot is in Teach mode while executing this function.
+    :raises ConnectionError: If there is a failure to connect to the robot.
+    :raises UnfeasibleMotion: If motion is not possible with the given input parameters.
+    :raises InterruptedError: If there is any interruption during the execution of the motion.
+    
+    **Sample Usage:**
+    
+        Example 1:
+            .. code-block:: python
+
+                from neurapy.robot import Robot
+
+                r = Robot()
+                linear_property = {
+                    "speed": 0.25,
+                    "acceleration": 0.1,
+                    "rotation_speed": 0.5,
+                    "blending": True,
+                    "blending_mode": 2.
+                    "blend_radius": 0.005,
+                    "target_pose": [
+                        [
+                            0.3287228886,
+                            -0.1903355329,
+                            0.4220780352,
+                            0.08535207028439847,
+                            -2.797181496822229,
+                            2.4713321627410485
+                        ],
+                        [
+                            0.2093363791501374,
+                            -0.31711250784165884,
+                            0.422149168855134,
+                            -3.0565555095672607,
+                            -0.3447442352771759,
+                            -1.1323236227035522
+                        ],
+                        [
+                            0.2090521916195534,
+                            -0.5246753336643587,
+                            0.4218773613553828,
+                            -3.0569007396698,
+                            -0.3448921740055084,
+                            -1.1323626041412354
+                        ],
+                        [
+                            0.3287228886,
+                            -0.1903355329,
+                            0.4220780352,
+                            0.08535207028439847,
+                            -2.797181496822229,
+                            2.4713321627410485
+                        ]
+                    ],
+                    "current_joint_angles":  r.get_current_joint_angles(),
+                    "weaving":False,
+                    "pattern": 1,
+                    "amplitude_left": 0.003,
+                    "amplitude_right": 0.003,
+                    "frequency": 1.5,
+                    "dwell_time_left": 0.0,
+                    "dwell_time_right": 0.0,
+                    "elevation": 0.0,
+                    "azimuth": 0.0,
+                    "control_mode" : 0,
+                    "force_vector": [0.0,0.0,5.0,0.0,0.0,0.0]
+                    }
+                r.move_linear(**linear_property)
+                r.stop() # if there are multiple motions than,this needs to be called only once at the end of the script
+
+        Example 2:
+            .. code-block:: python
+
+                    from neurapy.robot import Robot
+
+                    r = Robot()
+                    r.move_linear(["P1", "P2"])
+                    r.stop()
+    """
+    self.logger.info(
+            "move_linear called with parameters {} {}".format(args, kwargs)
+        )
+    command = Linear(self)
+    command.set_parameter(*args,**kwargs)
+    return command.execute()
+    
+def move_linear_from_current_position(self,*args,**kwargs):
+    """ 
+    To move the robot from current position to the specified target pose/s.Unlike move_linear, current position is added as the first target in this function.
+    
+    :param target_pose: List of pose configurations. (type: Pose configuration - [X,Y,Z,R,P,Y], float, units: Position values in meters and rotation values in radians, required: Yes)
+    :type target_pose: list
+    :param speed: Translation Speed. (units: m/sec, default_value: 0.25, required: No)
+    :type speed: float
+    :param acceleration: Translation Acceleration. (units: m/sec2, default_value: 0.25, required: No)
+    :type acceleration: float
+    :param jerk: Translation Jerk (units: m/sec3, default_value: 500.0, required: No)
+    :type jerk: float
+    :param rotation_speed: Rotational Speed. (units: rad/sec, default_value: 0.5, required: No)
+    :type rotation_speed: float
+    :param rotation_acceleration: Rotational Acceleration. (units: rad/sec2, default_value: 1.57, required: No)
+    :type rotation_acceleration: float
+    :param rotation_jerk: Rotational Jerk. (units: rad/sec3, default_value: 500.0, required: No)
+    :type rotation_jerk: float
+    :param blending: Blending. (units: N/A, default_value: False, required: No)
+
+        - True : Blending is turned on, motions inside are executed with given blending mode.
+        - False : Blending is turned off, motions stop at each point.
+
+    :param blending_mode: The blending type that is selected to blend between points. (units: N/A, default_value: DYNAMIC_BLENDING, required: No)
+
+        - 0 : NO_BLENDING, if selected goes to the default blending mode.
+        - 1 : DYNAMIC_BLENDING, blending based on velocity and acceleration.
+        - 2 : STATIC_BLENDING, blending based on the given blend_radius.
+    :type blending_mode: enum
+    :param blend_radius: Blend Radius, if static blending is selected. (units: m, default_value: 0.01, required: No)
+    :type blend_radius: float
+    :param current_joint_angles: Current Robot Joint Configuration. (type: List of Joint Values - float, units: radians, default_value: Joint Configuration obtained from Robot Status method, required: No)
+    :type current_joint_angles: list
+    :param weaving: Toogle if Weaving should be used for the Motion(units: N/A, default_value: False, required: No)
+        
+        - True : Weaving is turned on, motion inside are exeuted with given weaving parameters
+        - False : Weaving is turned off, motion does not include Weaving
+    :type weaving: bool
+    :param pattern: The Pattern which should be used for the Weaving (units: N/A, default_value: 2, required: No)
+
+        - 1 : SINE, if selected uses a Sine wave, ignores dwell times
+        - 2 : TRAPEZOIDAL, if selected uses a trapezoidal wave, implements dwell times
+        - 3 : CIRCLE (experimental), if selected uses a circle wave, ignores dwell time and amplitude offset
+    :type pattern: int
+    :param amplitude_left: The amplitude on the left side (defined in motion direction) (units: m, default_value: 0.0, required: No)
+    :type amplitude_left: float
+    :param amplitude_right: The amplitude on the right side (defined in motion direction) (units: m, default_value: 0.0, required: No)
+    :type amplitude_right: float
+    :param frequency: the frequency for the wave form (units: Hz, default_value: 10.0, required: No)
+    :type frequency: float
+    :param dwell_time_left: the wait time, for trapezoidal waves at each peak (left defined by motion direction) (units: s, default_value: 0.0, required: No)
+    :type dwell_time_left: float
+    :param dwell_time_right: the wait time, for trapezoidal waves at each peak (right defined by motion direction) (units: s, default_value: 0.0, required: No)
+    :type dwell_time_right: float
+    :param elevation: the rotation around the velocity vector (units: rads, default_value: 0.0, required: No)
+    :type elevation: float
+    :param azimuth: the rotation around the z-Axis of the tool (units: rads, default_value: 0.0, required: No)
+    :type azimuth: float
+    :param safety_toggle: Safety toggle. (units: N/A, default_value: value of the safety toggle in Program screen if not set, required: No)
+
+        - True, Max speed is slashed to 25%.
+        - False - No reduction in already set max speed.
+    :type safety_toggle: bool
+
+    :param control_mode: Control strategy used to execute the motion (0: position control, 2: joint impedance, 4: admittance)
+    :type control_mode: int
+    :param force_vector: 6-dimensional vector containing the desired Cartesian forces [N] (first three elements) and desired moment [Nm] (last three elements) 
+    :type force_vector: list
+
+    :return: True if motion is executed successfully, False if motion is not executed successfully
+    :rtype: bool
+    
+    :raises WrongMode: If the robot is in Teach mode while executing this function.
+    :raises ConnectionError: If there is a failure to connect to the robot.
+    :raises UnfeasibleMotion: If motion is not possible with the given input parameters.
+    :raises InterruptedError: If there is any interruption during the execution of the motion.
+    
+    **Sample Usage:**
+    
+        .. code-block:: python
+
+            from neurapy.robot import Robot
+
+            r = Robot()
+            linear_property = {
+                "speed": 0.25,
+                "acceleration": 0.1,
+                "jerk": 100,
+                "rotation_speed": 1.57,
+                "rotation_acceleration": 5.0,
+                "rotation_jerk": 100,
+                "blending": True,
+                "blending_mode": 1,
+                "blend_radius": 0.005,
+                "target_pose": [
+                    [
+                        0.3287228886,
+                        -0.1903355329,
+                        0.4220780352,
+                        0.08535207028439847,
+                        -2.797181496822229,
+                        2.4713321627410485
+                    ]
+                ],
+                "current_joint_angles":  r.get_current_joint_angles(),
+                "weaving":False,
+                "pattern": 1,
+                "amplitude_left": 0.003,
+                "amplitude_right": 0.003,
+                "frequency": 1.5,
+                "dwell_time_left": 0.0,
+                "dwell_time_right": 0.0,
+                "elevation": 0.0,
+                "azimuth": 0.0,
+                "control_mode" : 0,
+                "force_vector": [0.0,0.0,5.0,0.0,0.0,0.0]
+            }
+            r.move_linear_from_current_position(**linear_property)
+            r.stop() # if there are multiple motions than,this needs to be called only once at the end of the script
+    """
+    quaternion_pose = self.robot_status("cartesianPosition")
+    rpy_pose = quaternion_pose[:3]+ self.quaternion_to_rpy(*quaternion_pose[3:])
+    if "target_pose" in kwargs:
+        kwargs["target_pose"].insert(0,rpy_pose)
+    elif args:
+        args[0].insert(0,rpy_pose)
+    self.move_linear(*args,**kwargs)
+    
+def plan_move_linear(self,*args,**kwargs):
+    """
+    To plan a move linear path across the given poses. 
+    
+    This method takes the following arguments/keyword arguments:
+
+    :param target_pose: List of 3 pose configurations (starting, middle, and end points). (type: Pose configuration - [X,Y,Z,R,P,Y], float, units: Position values in meters and rotation values in radians, required: Yes) Alternative: List of Strings (Type: [String], names of existing points)
+    :type target_pose: list
+    :param speed: Translation Speed. (units: m/sec, default_value: 0.25, required: No)
+    :type speed: float
+    :param acceleration: Translation Acceleration. (units: m/sec2, default_value: 0.25, required: No)
+    :type acceleration: float
+    :param jerk: Translation Jerk (units: m/sec3, default_value: 500.0, required: No)
+    :type jerk: float
+    :param rotation_speed: Rotational Speed. (units: rad/sec, default_value: 0.5, required: No)
+    :type rotation_speed: float
+    :param rotation_acceleration: Rotational Acceleration. (units: rad/sec2, default_value: 1.57, required: No)
+    :type rotation_acceleration: float
+    :param rotation_jerk: Rotational Jerk. (units: rad/sec3, default_value: 500.0, required: No)
+    :type rotation_jerk: float
+    :param blending: Blending. (units: N/A, default_value: False, required: No)
+
+        - True : Blending is turned on, motions inside are executed with given blending mode.
+        - False : Blending is turned off, motions stop at each point.
+
+    :param blending_mode: The blending type that is selected to blend between points. (units: N/A, default_value: DYNAMIC_BLENDING, required: No)
+
+        - 0 : NO_BLENDING, if selected goes to the default blending mode.
+        - 1 : DYNAMIC_BLENDING, blending based on velocity and acceleration.
+        - 2 : STATIC_BLENDING, blending based on the given blend_radius.
+    :type blending_mode: enum
+    :param blend_radius: Blend Radius, if static blending is selected. (units: m, default_value: 0.01, required: No)
+    :type blend_radius: float
+    :param current_joint_angles: Current Robot Joint Configuration. (type: List of Joint Values - float, units: radians, default_value: Joint Configuration obtained from Robot Status method, required: No)
+    :type current_joint_angles: list
+    :param weaving: Toogle if Weaving should be used for the Motion(units: N/A, default_value: False, required: No)
+        
+        - True : Weaving is turned on, motion inside are exeuted with given weaving parameters
+        - False : Weaving is turned off, motion does not include Weaving
+    :type weaving: bool
+    :param pattern: The Pattern which should be used for the Weaving (units: N/A, default_value: 2, required: No)
+
+        - 1 : SINE, if selected uses a Sine wave, ignores dwell times
+        - 2 : TRAPEZOIDAL, if selected uses a trapezoidal wave, implements dwell times
+        - 3 : CIRCLE (experimental), if selected uses a circle wave, ignores dwell time and amplitude offset
+    :type pattern: int
+    :param amplitude_left: The amplitude on the left side (defined in motion direction) (units: m, default_value: 0.0, required: No)
+    :type amplitude_left: float
+    :param amplitude_right: The amplitude on the right side (defined in motion direction) (units: m, default_value: 0.0, required: No)
+    :type amplitude_right: float
+    :param frequency: the frequency for the wave form (units: Hz, default_value: 10.0, required: No)
+    :type frequency: float
+    :param dwell_time_left: the wait time, for trapezoidal waves at each peak (left defined by motion direction) (units: s, default_value: 0.0, required: No)
+    :type dwell_time_left: float
+    :param dwell_time_right: the wait time, for trapezoidal waves at each peak (right defined by motion direction) (units: s, default_value: 0.0, required: No)
+    :type dwell_time_right: float
+    :param elevation: the rotation around the velocity vector (units: rads, default_value: 0.0, required: No)
+    :type elevation: float
+    :param azimuth: the rotation around the z-Axis of the tool (units: rads, default_value: 0.0, required: No)
+    :type azimuth: float
+    :param safety_toggle: Safety toggle. (units: N/A, default_value: value of the safety toggle in Program screen if not set, required: No)
+
+        - True, Max speed is slashed to 25%.
+        - False, No reduction in already set max speed.
+    :type safety_toggle: bool
+    :param store_id: identifier to store the plan. (if not provided a random will be assigned, which will be returned after the function execution)
+    :type store_id: int
+    :param reusable: to reuse the identifier for repeated motion. (type: Bool - True/False, default_value: False )
+    :type reusable: bool
+
+    :param control_mode: Control strategy used to execute the motion (0: position control, 2: joint impedance, 4: admittance)
+    :type control_mode: int
+    :param force_vector: 6-dimensional vector containing the desired Cartesian forces [N] (first three elements) and desired moment [Nm] (last three elements) 
+    :type force_vector: list
+    
+    :return: plan_id (equal to store_id if provided in inputs, else an identifier function has generated to store the plan)
+    :rtype: int
+
+    :raises WrongMode: If the robot is in Teach mode while executing this function.
+    :raises ConnectionError: If there is a failure to connect to the robot.
+    :raises UnfeasibleMotion: If motion is not possible with the given input parameters.
+    
+    **Sample Usage:**
+    
+        .. code-block:: python
+
+            from neurapy.robot import Robot
+
+            r = Robot()
+            linear_property = {
+                "speed": 0.25,
+                "acceleration": 0.1,
+                "jerk": 100,
+                "rotation_speed": 1.57,
+                "rotation_acceleration": 5.0,
+                "rotation_jerk": 100,
+                "blending": True,
+                "blending_mode": 2,
+                "blend_radius": 0.01,
+                "target_pose": [
+                    [
+                        0.3287228886,
+                        -0.1903355329,
+                        0.4220780352,
+                        0.08535207028439847,
+                        -2.797181496822229,
+                        2.4713321627410485
+                    ],
+                    [
+                        0.2093363791501374,
+                        -0.31711250784165884,
+                        0.422149168855134,
+                        -3.0565555095672607,
+                        -0.3447442352771759,
+                        -1.1323236227035522
+                    ],
+                    [
+                        0.2090521916195534,
+                        -0.5246753336643587,
+                        0.4218773613553828,
+                        -3.0569007396698,
+                        -0.3448921740055084,
+                        -1.1323626041412354
+                    ],
+                    [
+                        0.3287228886,
+                        -0.1903355329,
+                        0.4220780352,
+                        0.08535207028439847,
+                        -2.797181496822229,
+                        2.4713321627410485
+                    ]
+                ],
+                "store_id":234,
+                "current_joint_angles":  r.get_current_joint_angles(),
+                "weaving":False,
+                "pattern": 1,
+                "amplitude_left": 0.003,
+                "amplitude_right": 0.003,
+                "frequency": 1.5,
+                "dwell_time_left": 0.0,
+                "dwell_time_right": 0.0,
+                "elevation": 0.0,
+                "azimuth": 0.0,
+                "control_mode" : 0,
+                "force_vector": [0.0,0.0,5.0,0.0,0.0,0.0]
+            }
+            plan_id = r.plan_move_linear(**linear_property)
+            execute_motion = r.executor([plan_id]) #To execute the planned id
+
+    """
+    kwargs["only_send"] = True
+    if "store_id" in kwargs:
+        kwargs["cmd_id"] = kwargs["store_id"]
+    success, motion_id, last_config = self.move_linear(*args,**kwargs)
+    if success:
+        return motion_id
+    else:
+        raise UnfeasibleMotion("Failed to plan the motion, with the given inputs")
+    
+    ################################################################################################################################
