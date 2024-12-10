@@ -1570,4 +1570,49 @@
 # }
 # r.move_composite(**composite_motion_property)
         
-##############################################################################
+
+##### MoveLinearOnline ####################
+
+
+
+from neurapy.robot import Robot
+import time
+import copy
+
+r = Robot()
+
+target_1 = 0.3
+target_2 = 0.25
+
+#Switch to external servo mode
+r.activate_servo_interface('position')
+cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
+target = copy.deepcopy(r.get_current_cartesian_pose())
+print(target)
+
+# Move target_1 unit in -X direction
+target[0] -= target_1
+velocity = [0.15]*6 #Max velocities
+acceleration = [2.]*6 #Max accelerations
+error_code = r.movelinear_online(target, velocity, acceleration)
+
+#Sleep for 5 sec to complete the motion.
+time.sleep(5)
+
+target = copy.deepcopy(r.get_current_cartesian_pose())
+#Move target_2 units in +Z direction
+target[2] += target_2
+error_code = r.movelinear_online(target, velocity, acceleration)
+
+#Sleep for 5 sec to complete the motion
+time.sleep(5)
+
+#Stop MoveLinearOnline if robot is still in motion
+r.stop_movelinear_online()
+
+#Sleep for 1 sec to stop the robot motion
+time.sleep(1)
+
+print("Robot stopped")
+r.deactivate_servo_interface()
+r.stop()
