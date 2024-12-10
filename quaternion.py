@@ -346,54 +346,54 @@
 
 # #########################################################################################
 
-# import sys
-# import rospy
-# import moveit_commander
-# import geometry_msgs.msg
-# from math import radians
-# from scipy.spatial.transform import Rotation as R
+import sys
+import rospy
+import moveit_commander
+import geometry_msgs.msg
+from math import radians
+from scipy.spatial.transform import Rotation as R
 
-# def euler_to_quaternion(roll, pitch, yaw):
-#     rotation = R.from_euler('xyz', [roll, pitch, yaw])
-#     return rotation.as_quat()
+def euler_to_quaternion(roll, pitch, yaw):
+    rotation = R.from_euler('xyz', [roll, pitch, yaw])
+    return rotation.as_quat()
 
-# def main():
-#     moveit_commander.roscpp_initialize(sys.argv)
-#     rospy.init_node('robot_target_pose', anonymous=True)
+def main():
+    moveit_commander.roscpp_initialize(sys.argv)
+    rospy.init_node('robot_target_pose', anonymous=True)
 
-#     robot = moveit_commander.RobotCommander()
-#     scene = moveit_commander.PlanningSceneInterface()
-#     group_name = "manipulator"  # Replace with your robot's MoveIt! group name
-#     move_group = moveit_commander.MoveGroupCommander(group_name)
+    robot = moveit_commander.RobotCommander()
+    scene = moveit_commander.PlanningSceneInterface()
+    group_name = "manipulator"  # Replace with your robot's MoveIt! group name
+    move_group = moveit_commander.MoveGroupCommander(group_name)
 
-#     # Define target position and orientation
-#     target_position = [0.5, 0.0, 0.2]
-#     roll, pitch, yaw = 0.0, 0.0, 0.0
-#     target_orientation = euler_to_quaternion(roll, pitch, yaw)
+    # Define target position and orientation
+    target_position = [0.5, 0.0, 0.2]
+    roll, pitch, yaw = 0.0, 0.0, 0.0
+    target_orientation = euler_to_quaternion(roll, pitch, yaw)
 
-#     # Create a pose message
-#     pose_target = geometry_msgs.msg.Pose()
-#     pose_target.position.x = target_position[0]
-#     pose_target.position.y = target_position[1]
-#     pose_target.position.z = target_position[2]
-#     pose_target.orientation.x = target_orientation[0]
-#     pose_target.orientation.y = target_orientation[1]
-#     pose_target.orientation.z = target_orientation[2]
-#     pose_target.orientation.w = target_orientation[3]
+    # Create a pose message
+    pose_target = geometry_msgs.msg.Pose()
+    pose_target.position.x = target_position[0]
+    pose_target.position.y = target_position[1]
+    pose_target.position.z = target_position[2]
+    pose_target.orientation.x = target_orientation[0]
+    pose_target.orientation.y = target_orientation[1]
+    pose_target.orientation.z = target_orientation[2]
+    pose_target.orientation.w = target_orientation[3]
 
-#     move_group.set_pose_target(pose_target)
+    move_group.set_pose_target(pose_target)
 
-#     # Plan and execute
-#     plan = move_group.go(wait=True)
+    # Plan and execute
+    plan = move_group.go(wait=True)
 
-#     # Ensure the robot has reached the goal
-#     move_group.stop()
-#     move_group.clear_pose_targets()
+    # Ensure the robot has reached the goal
+    move_group.stop()
+    move_group.clear_pose_targets()
 
-#     moveit_commander.roscpp_shutdown()
+    moveit_commander.roscpp_shutdown()
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
 
 
 # ####################################################################################################
