@@ -16,22 +16,22 @@ def test_ls():
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(2)
+    time.sleep(1)
     robot.pho_request_ls_get_vision_system_status(1)
-    time.sleep(2)
+    time.sleep(1)
     robot.pho_request_change_solution(253)
-    time.sleep(2)
+    time.sleep(1)
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(2)
+    time.sleep(1)
     robot.pho_request_get_running_solution()
-    time.sleep(2)
+    time.sleep(1)
     # robot.pho_request_stop_solution()
     # time.sleep(2)
     robot.pho_request_get_available_solution()
     robot.close_connection()  #communication needs to be closed
-    time.sleep(2)
+    time.sleep(1)
 
 
 def test_bps():
