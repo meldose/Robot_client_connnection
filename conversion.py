@@ -18,8 +18,38 @@ def convert_quaternion_to_euler_pose():
 
 
     r = Robot()
-    quaternion_pose = [0.086,0.023,0.907,0.979,-0.058,-0.177,0.079]  # [X, Y, Z, W, EX, EY, EZ]
+    quaternion_pose = [-830,-196,-8,-0.132,-0.048,-0.132,0.9,0.22]  # [X, Y, Z, W, EX, EY, EZ]
     euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
     print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
 convert_quaternion_to_euler_pose()
+
+
+# from neurapy.robot import Robot
+
+# def convert_euler_to_quaternion_pose(self,cartesian_pose):
+
+
+#     """
+#     Convert a pose with Euler angles to quaternions.
+
+#     If the input pose is already in quaternion format (length 7), it is returned unchanged.
+
+#     :param cartesian_pose: The pose to be converted to quaternion format ([X, Y, Z, R, P, Y], required: Yes).
+#     :type cartesian_pose: list
+
+#     :return: The pose in quaternion format ([X, Y, Z, W, EX, EY, EZ]).
+#     :rtype: list
+
+#     """"
+
+#     r = Robot()
+#     euler_pose = [1.0, 2.0, 3.0, 0.1, 0.2, 0.3]  # [X, Y, Z, R, P, Y]
+#     quaternion_pose = r.convert_euler_to_quaternion_pose(euler_pose)
+#     print(quaternion_pose)  # Output: [X, Y, Z, W, EX, EY, EZ] with quaternion values.
+    
+#     if len(cartesian_pose) == 7:
+#         return cartesian_pose
+#     return cartesian_pose[:3] +  self.rpy_to_quaternion(cartesian_pose[3],cartesian_pose[4],cartesian_pose[5])
+
+# convert_euler_to_quaternion_pose()
