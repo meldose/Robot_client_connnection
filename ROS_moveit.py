@@ -23,9 +23,9 @@ def main(args=None):
 
     # Define the target pose
     target_pose = Pose()
-    target_pose.position.x = 0.5  # Replace with your target x
-    target_pose.position.y = 0.0  # Replace with your target y
-    target_pose.position.z = 0.5  # Replace with your target z
+    target_pose.position.x = -0.519  # Replace with your target x
+    target_pose.position.y = -0.362  # Replace with your target y
+    target_pose.position.z =  0.055  # Replace with your target z
     target_pose.orientation.x = q_normalized[0]
     target_pose.orientation.y = q_normalized[1]
     target_pose.orientation.z = q_normalized[2]
