@@ -26,7 +26,7 @@ class DeltaDMV(Camera):
 
     def trigger(self) -> bytes:
         self.sock.sendall("T1\r\n".encode())
-        time.sleep(1)   
+        time.sleep(0.3)   
 
     def generate_pose(self, camera_pose):
         theta = math.radians(camera_pose[2])

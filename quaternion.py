@@ -960,7 +960,7 @@
 # r.move_joint(joint_angle_offset_pick)
 # r.move_linear(target_pose = [offset_pick_pos,pick_pos])
 # r.grasp()
-# time.sleep(1)
+# time.sleep(0.3)
 # r.move_linear(target_pose = [pick_pos,offset_pick_pos])
 
 
@@ -968,7 +968,7 @@
 # r.move_joint(joint_angle_offset_place)
 # r.move_linear(target_pose = [offset_place_pos,place_pos])
 # r.release()
-# time.sleep(1)
+# time.sleep(0.3)
 # r.move_linear(target_pose = [place_pos,offset_place_pos])
 
 # #default position
@@ -1127,10 +1127,10 @@
 
 # execute_motion = r.executor([plan_id_1]) #To execute the planned id
 # r.grasp()
-# time.sleep(1)
+# time.sleep(0.3)
 # execute_motion = r.executor([plan_id_2])
 # r.release()
-# time.sleep(1)
+# time.sleep(0.3)
 # execute_motion = r.executor([plan_id_3])
 
 
@@ -1175,10 +1175,10 @@
 # def execute_pp(plan_id):
 #     execute_motion = r.executor([plan_id[0]]) #To execute the planned id
 #     r.grasp()
-#     time.sleep(1)
+#     time.sleep(0.3)
 #     execute_motion = r.executor([plan_id[1]])
 #     r.release()
-#     time.sleep(1)
+#     time.sleep(0.3)
 #     execute_motion = r.executor([plan_id[2]])
 #     return True
 
@@ -1252,11 +1252,11 @@
 #         execute_motion = r.executor([plan_id[0]])  # To execute the planned id
 #         print("Executed plan 1", flush=True)
 #         r.grasp()
-#         time.sleep(1)
+#         time.sleep(0.3)
 #         execute_motion = r.executor([plan_id[1]])
 #         print("Executed plan 2", flush=True)
 #         r.release()
-#         time.sleep(1)
+#         time.sleep(0.3)
 #         execute_motion = r.executor([plan_id[2]])
 #         print("Executed plan 3", flush=True)
 
@@ -1345,11 +1345,11 @@
 #         execute_motion = r.executor([plan_id[0]])  # To execute the planned id
 #         print("Executed motion 1", flush=True)
 #         r.grasp()
-#         time.sleep(1)
+#         time.sleep(0.3)
 #         execute_motion = r.executor([plan_id[1]])
 #         print("Executed motion 2", flush=True)
 #         r.release()
-#         time.sleep(1)
+#         time.sleep(0.3)
 #         execute_motion = r.executor([plan_id[2]])
 #         print("Executed motion 3", flush=True)
 
@@ -1678,7 +1678,7 @@ def convert_quaternion_to_euler_pose(self, cartesian_pose):
 # r.stop_movelinear_online()
 
 # #Sleep for 1 sec to stop the robot motion
-# time.sleep(1)
+# time.sleep(0.3)
 
 # print("Robot stopped")
 # r.deactivate_servo_interface()

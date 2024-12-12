@@ -54,7 +54,7 @@ class Sick(Camera):
             #         print("Couldn't find part")
             #         raise Exception("Couldn't find part")
             #     print("position_from_camera", position_from_camera)
-            #     time.sleep(1)
+            #     time.sleep(0.3)
             #     print("retrying %s time" % str(count+1))
             #     self.create_camera_connection('http://192.168.2.20/CmdChannel?TRIG', 4)
             #     response = self.set_camera_command('http://192.168.2.20/CmdChannel?gRES', 4)

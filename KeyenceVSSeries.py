@@ -57,7 +57,7 @@ class KeyenceVSSeries(Camera):
                 if count == 5:
                     print("Couldn't find part")
                     sys.exit()
-                time.sleep(1)
+                time.sleep(0.3)
                 print(f"Trying camera {count} times")
                 camera_res = self.set_camera_command(self.camera_cmd)
                 camera_res_decoded = pose_cmd.decode('utf-8').replace(';',' ').split(',')

@@ -56,7 +56,7 @@ class KeyenceCVSeries(Camera):
                 if count == 5:
                     print("Couldn't find part")
                     sys.exit()
-                time.sleep(1)
+                time.sleep(0.3)
                 print(f"Trying camera {count} times")
                 camera_res = self.set_camera_command(self.camera_cmd)
                 target_cmd = self.extract_pose_from_camera(camera_res)

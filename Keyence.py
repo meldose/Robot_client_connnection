@@ -50,7 +50,7 @@ class Keyence(Camera):
                 if count == 5:
                     message = "Couldn't find part"
                     self.emit_message_to_gui(message, "Error")
-                time.sleep(1)
+                time.sleep(0.3)
                 print("retrying %s time" % str(count))
                 pose_cmd = self.set_camera_command("T1;")
                 target_cmd = self.extract_pose_from_camera(pose_cmd)

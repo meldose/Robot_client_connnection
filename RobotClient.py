@@ -16,22 +16,22 @@ def test_ls():
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(1)
+    time.sleep(0.3)
     robot.pho_request_ls_get_vision_system_status(1)
-    time.sleep(1)
+    time.sleep(0.3)
     robot.pho_request_change_solution(253)
-    time.sleep(1)
+    time.sleep(0.3)
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(1)
+    time.sleep(0.3)
     robot.pho_request_get_running_solution()
-    time.sleep(1)
+    time.sleep(0.3)
     # robot.pho_request_stop_solution()
     # time.sleep(2)
     robot.pho_request_get_available_solution()
     robot.close_connection()  #communication needs to be closed
-    time.sleep(1)
+    time.sleep(0.3)
 
 
 def test_bps():
@@ -44,7 +44,7 @@ def test_bps():
     robot.pho_bps_wait_for_scan()
     time.sleep(2)
     robot.pho_request_trajectory(1)
-    time.sleep(1)
+    time.sleep(0.3)
     robot.pho_request_get_object(1) # command for getting the robot poses
     time.sleep(2)
     robot.pho_request_bsp_get_vision_system_status(1)
@@ -62,7 +62,7 @@ def test_bps():
     robot.pho_request_get_available_solution()
 
     robot.close_connection()  # communication needs to be closed
-    time.sleep(1)
+    time.sleep(0.3)
 
     # print(robot.response_data.trajectory_data)
     # print(robot.response_data.trajectory_data[1])
