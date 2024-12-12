@@ -3,7 +3,7 @@ from neurapy.robot import Robot
 r = Robot()
 r.set_mode("Automatic")
 r.set_override(0.5)
-target_pose=[-0.519, -0.362, 0.055, -2.058652790827435, -0.4735079207476136, 3.003083688264095]
+target_pose=[-467, -345, 208, 0.01983048297176661, -0.40805741106893023, 0.9124022983282218, -0.02485854424955123]
 linear_property = {
     "target_joint": target_pose,
 }
