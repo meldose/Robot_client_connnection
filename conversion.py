@@ -18,7 +18,7 @@ def convert_quaternion_to_euler_pose():
 
 
     r = Robot()
-    quaternion_pose = [-830,-196,-8,-0.132,-0.048,-0.132,0.9,0.22]  # [X, Y, Z, W, EX, EY, EZ]
+    quaternion_pose = [-0.519,-0.362,0.055,0.235,0.063,-0.839,0.486]  # [X, Y, Z, W, EX, EY, EZ]
     euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
     print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
