@@ -1,5 +1,7 @@
 # #Initially transfer the object poses [X,Y;Z from the python code] 
 
+# Whem adding the Z value there should be an offset of 0.12m in z direction
+
 # #conisder the roll, pitch and yaw values as : (-3.02,-0.06,1.41)
 
 # #Convert the cartesian to joint :
@@ -35,6 +37,11 @@ r = Robot()
 # Set robot mode to automatic and set override to 1 for full control
 r.set_mode("Automatic")
 r.set_override(1)
+
+# Tramsfer the X;Y;Z value to the robotic Controller
+
+# Whem adding the Z value there should be an offset of 0.12m in z direction (dont take the initial value from the camera)
+
 
 # Define the target pose (Position: X, Y, Z and Orientation: roll, pitch, yaw)
 target_pose = [-0.524, -0.352, 0.208, -3.02, -0.06, 1.41]  # [X, Y, Z, roll, pitch, yaw] in radians
