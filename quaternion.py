@@ -960,7 +960,7 @@
 # r.move_joint(joint_angle_offset_pick)
 # r.move_linear(target_pose = [offset_pick_pos,pick_pos])
 # r.grasp()
-# time.sleep(0.3)
+# time.sleep(1)
 # r.move_linear(target_pose = [pick_pos,offset_pick_pos])
 
 
@@ -968,7 +968,7 @@
 # r.move_joint(joint_angle_offset_place)
 # r.move_linear(target_pose = [offset_place_pos,place_pos])
 # r.release()
-# time.sleep(0.3)
+# time.sleep(1)
 # r.move_linear(target_pose = [place_pos,offset_place_pos])
 
 # #default position
@@ -1127,10 +1127,10 @@
 
 # execute_motion = r.executor([plan_id_1]) #To execute the planned id
 # r.grasp()
-# time.sleep(0.3)
+# time.sleep(1)
 # execute_motion = r.executor([plan_id_2])
 # r.release()
-# time.sleep(0.3)
+# time.sleep(1)
 # execute_motion = r.executor([plan_id_3])
 
 
@@ -1175,10 +1175,10 @@
 # def execute_pp(plan_id):
 #     execute_motion = r.executor([plan_id[0]]) #To execute the planned id
 #     r.grasp()
-#     time.sleep(0.3)
+#     time.sleep(1)
 #     execute_motion = r.executor([plan_id[1]])
 #     r.release()
-#     time.sleep(0.3)
+#     time.sleep(1)
 #     execute_motion = r.executor([plan_id[2]])
 #     return True
 
@@ -1252,11 +1252,11 @@
 #         execute_motion = r.executor([plan_id[0]])  # To execute the planned id
 #         print("Executed plan 1", flush=True)
 #         r.grasp()
-#         time.sleep(0.3)
+#         time.sleep(1)
 #         execute_motion = r.executor([plan_id[1]])
 #         print("Executed plan 2", flush=True)
 #         r.release()
-#         time.sleep(0.3)
+#         time.sleep(1)
 #         execute_motion = r.executor([plan_id[2]])
 #         print("Executed plan 3", flush=True)
 
@@ -1345,11 +1345,11 @@
 #         execute_motion = r.executor([plan_id[0]])  # To execute the planned id
 #         print("Executed motion 1", flush=True)
 #         r.grasp()
-#         time.sleep(0.3)
+#         time.sleep(1)
 #         execute_motion = r.executor([plan_id[1]])
 #         print("Executed motion 2", flush=True)
 #         r.release()
-#         time.sleep(0.3)
+#         time.sleep(1)
 #         execute_motion = r.executor([plan_id[2]])
 #         print("Executed motion 3", flush=True)
 
@@ -1541,101 +1541,79 @@
 
 
 
-from neurapy.robot import Robot
 
-def convert_quaternion_to_euler_pose(self, cartesian_pose):
-    """
-    Convert a pose with quaternion representation to a pose with Euler angles.
-
-    If the input pose is already in Euler format (length 6), it is returned unchanged.
-
-    :param cartesian_pose: The pose to be converted to Euler angles ([X, Y, Z, W, EX, EY, EZ], required: Yes).
-    :type cartesian_pose: list
-
-    :return: The pose in Euler angle format ([X, Y, Z, R, P, Y]).
-    :rtype: list
-
-    **Sample Usage:**
-    
-    """
-
-
-    r = Robot()
-    quaternion_pose = [0.086,0.023,0.907,0.979,-0.058,-0.177,0.079]  # [X, Y, Z, W, EX, EY, EZ]
-    euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
-    print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
 
 # #################### Move composite ######################################################
 
 ####### WORKING ##########
 
-# from neurapy.robot import Robot
+from neurapy.robot import Robot
 
-# r = Robot()
+r = Robot()
 
-
-# composite_motion_property = {
-#     "speed": 0.432,
-#     "acceleration": 0.2,
-#     "current_joint_angles": r.robot_status('jointAngles'),
-#     "commands": [
-#         {
-#             "linear": {
-#                 "blend_radius": 0.005,
-#                 "targets": [
-#                     [
-#                         -0.000259845199876027,
-#                         -0.5211437049195536,
-#                         0.4429382717719519,
-#                         3.14123272895813,
-#                         -0.0007908568368293345,
-#                         -1.570908784866333
-#                     ],
-#                     [
-#                         -0.16633498440272945,
-#                         -0.5201452059140722,
-#                         0.4427486025872017,
-#                         3.140937089920044,
-#                         -0.0005319403717294335,
-#                         -1.571555495262146
-#                     ]
-#                 ]
-#             }
-#         },
-#         {
-#             "circular": {
-#                 "targets": [
-#                     [
-#                         -0.16633498440272945,
-#                         -0.5201452059140722,
-#                         0.4427486025872017,
-#                         3.140937089920044,
-#                         -0.0005319403717294335,
-#                         -1.571555495262146
-#                     ],
-#                     [
-#                         -0.16540090985202305,
-#                         -0.3983552679378624,
-#                         0.44267608017426174,
-#                         3.1407113075256348,
-#                         -0.00036628879024647176,
-#                         -1.5714884996414185
-#                     ],
-#                     [
-#                         -0.33446498807559716,
-#                         -0.3989652352814891,
-#                         0.4421152856242009,
-#                         3.1402060985565186,
-#                         0.00030071483342908323,
-#                         -1.572899580001831
-#                     ]
-#                 ]
-#             }
-#         }
-#     ]
-# }
-# r.move_composite(**composite_motion_property)
+target_pos
+composite_motion_property = {
+    "speed": 0.432,
+    "acceleration": 0.2,
+    "current_joint_angles": r.robot_status('jointAngles'),
+    "commands": [
+        {
+            "linear": {
+                "blend_radius": 0.005,
+                "targets": [
+                    [
+                        -0.000259845199876027,
+                        -0.5211437049195536,
+                        0.4429382717719519,
+                        3.14123272895813,
+                        -0.0007908568368293345,
+                        -1.570908784866333
+                    ],
+                    [
+                        -0.16633498440272945,
+                        -0.5201452059140722,
+                        0.4427486025872017,
+                        3.140937089920044,
+                        -0.0005319403717294335,
+                        -1.571555495262146
+                    ]
+                ]
+            }
+        },
+        {
+            "circular": {
+                "targets": [
+                    [
+                        -0.16633498440272945,
+                        -0.5201452059140722,
+                        0.4427486025872017,
+                        3.140937089920044,
+                        -0.0005319403717294335,
+                        -1.571555495262146
+                    ],
+                    [
+                        -0.16540090985202305,
+                        -0.3983552679378624,
+                        0.44267608017426174,
+                        3.1407113075256348,
+                        -0.00036628879024647176,
+                        -1.5714884996414185
+                    ],
+                    [
+                        -0.33446498807559716,
+                        -0.3989652352814891,
+                        0.4421152856242009,
+                        3.1402060985565186,
+                        0.00030071483342908323,
+                        -1.572899580001831
+                    ]
+                ]
+            }
+        }
+    ]
+}
+r.move_composite(**composite_motion_property)
         
 
 ##### MoveLinearOnline ####################
@@ -1678,7 +1656,7 @@ def convert_quaternion_to_euler_pose(self, cartesian_pose):
 # r.stop_movelinear_online()
 
 # #Sleep for 1 sec to stop the robot motion
-# time.sleep(0.3)
+# time.sleep(1)
 
 # print("Robot stopped")
 # r.deactivate_servo_interface()
