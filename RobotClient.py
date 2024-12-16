@@ -5,7 +5,7 @@ import time
 import json
 import logging
 
-CONTROLLER_IP = "192.168.1.5"
+CONTROLLER_IP = "192.168.1.13"
 PORT = 11003
 
 
@@ -34,29 +34,38 @@ PORT = 11003
 #     robot.close_connection()  #communication needs to be closed
 #     time.sleep(0.3)
 
-def send_coordinates_to_robot(robot, coords):
+def extract_object_coordinates(robot):
     """
-    Sends the specified coordinates to the robot controller.
+    Extracts object coordinates from the robot's response data.
 
     Args:
         robot: The robot communication object.
-        coords (list): Coordinates to send [x, y, z].
 
     Returns:
-        bool: True if the command was sent successfully, False otherwise.
+        list: A list containing the [x, y, z] coordinates of the object.
+              Returns None if no objects are detected.
     """
     try:
-        x, y, z = coords
-        logging.info(f"Sending move command to position: x={x}, y={y}, z={z}")
-        robot.pho_request_move_to_position(x, y, z)  # Replace with actual method
-        return True
-    except AttributeError:
-        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.")
-        return False
-    except Exception as e:
-        logging.error(f"Failed to send coordinates to robot: {e}")
-        return False
+        # Replace 'objects' and 'coordinates' with actual attribute names from your response
+        objects = robot.response_data.objects  # Example attribute; adjust accordingly
 
+        if not objects:
+            logging.info("No objects detected.")
+            return None
+
+        # For simplicity, consider the first detected object
+        first_object = objects[0]
+        object_coords = first_object.coordinates  # Example attribute; adjust accordingly
+
+        logging.info(f"Extracted Object Coordinates: {object_coords}")
+        return object_coords
+
+    except AttributeError:
+        logging.error("Failed to extract object coordinates. Check the response data structure.")
+        return None
+    except Exception as e:
+        logging.error(f"An error occurred while extracting object coordinates: {e}")
+        return None
 
 def format_coordinates(coords_mm):
     """
@@ -78,60 +87,61 @@ def format_coordinates(coords_mm):
         logging.error(f"An error occurred while formatting coordinates: {e}")
         return None
 
-
-def extract_object_coordinates(robot):
+def send_coordinates_to_robot(robot, coords):
     """
-    Extracts object coordinates from the robot's response data.
+    Sends the specified coordinates to the robot controller.
 
     Args:
         robot: The robot communication object.
-
-    Returns:
-        list: A list containing the [x, y, z] coordinates of the object.
-              Returns None if no objects are detected.
+        coords (list): Coordinates to send [x, y, z].
     """
     try:
-        # Assuming 'response_data.objects' contains a list of detected objects
-        # and each object has 'coordinates' attribute as [x, y, z]
-        objects = robot.response_data.objects  # Adjust based on actual attribute name
-
-        if not objects:
-            logging.info("No objects detected.")
-            return None
-
-        # For simplicity, consider the first detected object
-        first_object = objects[0]
-        object_coords = first_object.coordinates  # Adjust based on actual structure
-
-        logging.info(f"Extracted Object Coordinates: {object_coords}")
-        return object_coords
-
+        # Replace 'pho_request_move_to_position' with the actual method name
+        # and adjust parameters as required by your CommunicationLibrary
+        robot.pho_request_move_to_position(coords[0], coords[1], coords[2])
+        logging.info(f"Sent move command to position: {coords}")
     except AttributeError:
-        logging.error("Failed to extract object coordinates. Check the response data structure.")
-        return None
+        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.")
     except Exception as e:
-        logging.error(f"An error occurred while extracting object coordinates: {e}")
-        return None
+        logging.error(f"An error occurred while sending move command: {e}")
 
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
+    """
+    Commands the robot to move to the target coordinates and waits until it reaches the position.
+
+    Args:
+        robot: The robot communication object.
+        target_coords (list): Target coordinates [x, y, z] in meters.
+        tolerance (float, optional): Acceptable distance in meters. Defaults to 0.01.
+        timeout (int, optional): Maximum wait time in seconds. Defaults to 30.
+
+    Raises:
+        TimeoutError: If the robot does not reach the position within the timeout.
+    """
+    try:
+        start_time = time.time()
+        while True:
+            # Replace 'get_current_position' with the actual method to retrieve the robot's current position
+            current_coords = robot.get_current_position()
+            distance = ((current_coords[0] - target_coords[0]) ** 2 +
+                        (current_coords[1] - target_coords[1]) ** 2 +
+                        (current_coords[2] - target_coords[2]) ** 2) ** 0.5
+            if distance <= tolerance:
+                logging.info(f"Robot reached target position: {current_coords}")
+                break
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Robot did not reach the target position in time.")
+            time.sleep(0.5)
+    except AttributeError:
+        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
+    except Exception as e:
+        logging.error(f"An error occurred while moving the robot: {e}")
 
 def test_ls():
     """
-    Tests the LS (Laser Scan?) functionality of the robot.
-    Extracts object coordinates from the camera and sends them to the robotic controller.
+    Tests the LS (Laser Scan) functionality of the robot.
+    Extracts object coordinates from the camera and sends them to the robotic controller to move the robot.
     """
-    import CommunicationLibrary
-    import time
-    import logging
-
-    # Configure logging for this function
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(message)s',
-        handlers=[
-            logging.StreamHandler()
-        ]
-    )
-
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # Create robot communication object
     try:
         logging.info(f"Connecting to robot at {CONTROLLER_IP}:{PORT}")
@@ -176,21 +186,17 @@ def test_ls():
         if object_coords:
             # Format coordinates (e.g., convert from mm to m)
             formatted_coords = format_coordinates(object_coords)
-            logging.info(f"Formatted Object Coordinates (meters): {formatted_coords}")
+            if formatted_coords:
+                logging.info(f"Formatted Object Coordinates (meters): {formatted_coords}")
 
-            # Send coordinates to the robot
-            send_success = send_coordinates_to_robot(robot, formatted_coords)
-            if send_success:
-                logging.info("Coordinates sent successfully.")
+                # Send coordinates to the robot to move
+                send_coordinates_to_robot(robot, formatted_coords)
+
+                # Optional: Command the robot to move to the coordinates and wait until it reaches
+                # Uncomment the line below if you wish to perform this action
+                # move_robot_to_position(robot, formatted_coords)
             else:
-                logging.error("Failed to send coordinates to the robot.")
-
-            # Optional: Command the robot to move to the coordinates
-            # move_success = move_robot_to_position(robot, formatted_coords)
-            # if move_success:
-            #     logging.info("Robot moved to the specified position successfully.")
-            # else:
-            #     logging.error("Robot failed to move to the specified position.")
+                logging.warning("Failed to format object coordinates.")
         else:
             logging.warning("No object coordinates found in the response.")
 
@@ -198,6 +204,8 @@ def test_ls():
         logging.error(f"Connection failed: {ce}")
     except CommunicationLibrary.CommandError as cmd_err:
         logging.error(f"Command failed: {cmd_err}")
+    except TimeoutError as te:
+        logging.error(f"Operation timed out: {te}")
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
     finally:
@@ -205,45 +213,6 @@ def test_ls():
         robot.close_connection()
         time.sleep(0.3)  # Short delay after closing the connection
 
-
-def test_bps():
-    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
-    robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
-
-    robot.pho_request_start_solution(254)
-    robot.pho_request_init(1, [3.14, 0.6, 1.13, 3.14, 0.6, 3.14], [3.14, 0.6, 1.13, 3.14, 0.6, 3.14])
-    robot.pho_request_bps_scan(1)
-    robot.pho_bps_wait_for_scan()
-    time.sleep(2)
-    robot.pho_request_trajectory(1)
-    time.sleep(0.3)
-    robot.pho_request_get_object(1) # command for getting the robot poses
-    time.sleep(2)
-    robot.pho_request_bsp_get_vision_system_status(1)
-    time.sleep(2)
-    robot.pho_request_pick_failed(1)
-    time.sleep(2)
-    robot.pho_request_change_scene_status(2)
-    time.sleep(2)
-    robot.pho_request_change_scene_status(1)
-    time.sleep(2)
-    robot.pho_request_get_running_solution()
-    time.sleep(2)
-    robot.pho_request_stop_solution()
-    time.sleep(2)
-    robot.pho_request_get_available_solution()
-
-    robot.close_connection()  # communication needs to be closed
-    time.sleep(0.3)
-
-    # print(robot.response_data.trajectory_data)
-    # print(robot.response_data.trajectory_data[1])
-    # print(robot.response_data.trajectory_data[2])
-    print(robot.response_data.gripper_command)
-    # Print each slice to verify
-    for i, segment in enumerate(robot.response_data.trajectory_data):
-        print(f"Segment {i}:")
-        print(segment)
 
 
 def calibration_extrinsic():
