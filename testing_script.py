@@ -63,5 +63,5 @@ linear_property = {
 # Move the robot to the calculated joint positions
 r.move_joint(**linear_property)
 
-# Optional: You can add a confirmation message once the robot has moved.
-print("Robot has moved to the target joint configuration.")
+# Optional: You can add a confirmation message once the robot has
+# Whem adding the Z value there should be an offset of 0.12m in z direction
