@@ -38,9 +38,9 @@ r = Robot()
 r.set_mode("Automatic")
 r.set_override(1)
 
-# Tramsfer the X;Y;Z value to the robotic Controller
+# Transfer the X;Y;Z value to the robotic Controller
 
-# Whem adding the Z value there should be an offset of 0.12m in z direction (dont take the initial value from the camera)
+# When adding the Z value there should be an offset of 0.12m in z direction (dont take the initial value from the camera)
 
 
 # Define the target pose (Position: X, Y, Z and Orientation: roll, pitch, yaw)
