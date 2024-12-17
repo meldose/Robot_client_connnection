@@ -137,7 +137,7 @@ class DeltaDMV(Camera):
 
 
     def get_pose(self) -> list:
-        self.connect("192.168.2.33", 502)
+        self.connect("192.168.1.5", 1103)
         self.trigger()
 
         try:
@@ -166,7 +166,7 @@ class DeltaDMV(Camera):
 
 if __name__ == "__main__":
     camera = DeltaDMV()
-    camera.connect("192.168.2.33", 502)
+    camera.connect("192.168.1.5", 1103)
     camera.trigger()
     print("final",camera.get_pose())
     camera.disconnect()
