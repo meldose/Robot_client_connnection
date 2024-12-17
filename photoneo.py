@@ -19,6 +19,8 @@ pose = pose_translation + pose_rotation
 #r.move_joint()
 
 
+############################### DUMMY CAMERA #################################################
+
 import os
 
 from neurapy.camera.camera import Camera
@@ -42,7 +44,7 @@ class DummyCamera(Camera):
     
     
 
-
+#################### PHOTONEO CAMERA ##########################################################
 
 from neurapy.camera.camera import Camera
 import requests
