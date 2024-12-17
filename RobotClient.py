@@ -34,17 +34,7 @@ PORT = 11003
 #     robot.close_connection()  #communication needs to be closed
 #     time.sleep(0.3)
 
-def extract_object_coordinates(robot):
-    """
-    Extracts object coordinates from the robot's response data.
-
-    Args:
-        robot: The robot communication object.
-
-    Returns:
-        list: A list containing the [x, y, z] coordinates of the object.
-              Returns None if no objects are detected.
-    """
+def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
         # Replace 'objects' and 'coordinates' with actual attribute names from your response
         objects = robot.response_data.objects  # Example attribute; adjust accordingly
