@@ -1,5 +1,4 @@
 from neurapy.camera.camera import Camera
-import re
 import requests
 from scipy.spatial.transform import Rotation
 import time
