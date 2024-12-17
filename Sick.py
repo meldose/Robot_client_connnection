@@ -3,7 +3,7 @@ import requests
 from scipy.spatial.transform import Rotation
 import time
 
-class Sick(Camera):
+class Photoneo(Camera):
 
     def create_camera_connection(self, address: str, timeout: int) -> None:
         try:
