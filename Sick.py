@@ -11,7 +11,7 @@ class Sick(Camera):
         except Exception as e:
             print("Couldn't connect with the socket-server: %s\n terminating program" % e)
             raise e
-
+        
     
     def set_camera_command(self, address: str, timeout: int)  -> None:
         return requests.get(address, timeout=timeout)
