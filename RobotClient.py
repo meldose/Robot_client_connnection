@@ -9,38 +9,42 @@ CONTROLLER_IP = "192.168.1.5"
 PORT = 11003
 
 
-# def test_ls():
-#     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
-#     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
+def test_ls():
+    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
+    robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
-#     robot.pho_request_start_solution(252)
-#     robot.pho_request_ls_scan(1)
-#     robot.pho_ls_wait_for_scan()
-#     robot.pho_request_get_objects(1, 5)
-#     time.sleep(0.3)
-#     robot.pho_request_ls_get_vision_system_status(1)
-#     time.sleep(0.3)
-#     robot.pho_request_change_solution(253)
-#     time.sleep(0.3)
-#     robot.pho_request_ls_scan(1)
-#     robot.pho_ls_wait_for_scan()
-#     robot.pho_request_get_objects(1, 5)
-#     time.sleep(0.3)
-#     robot.pho_request_get_running_solution()
-#     time.sleep(0.3)
-#     # robot.pho_request_stop_solution()
-#     # time.sleep(2)
-#     robot.pho_request_get_available_solution()
-#     robot.close_connection()  #communication needs to be closed
-#     time.sleep(0.3)
+    robot.pho_request_start_solution(252)
+    robot.pho_request_ls_scan(1)
+    robot.pho_ls_wait_for_scan()
+    robot.pho_request_get_objects(1, 5)
+    time.sleep(0.3)
+    robot.pho_get_current_position()
+    time.sleep(0.3)
+    robot.pho_request_ls_get_vision_system_status(1)
+    time.sleep(0.3)
+    robot.pho_request_change_solution(253)
+    time.sleep(0.3)
+    robot.pho_request_ls_scan(1)
+    robot.pho_ls_wait_for_scan()
+    robot.pho_request_get_objects(1, 5)
+    time.sleep(0.3)
+    robot.pho_request_get_running_solution()
+    time.sleep(0.3)
+    robot.pho_request_move_to_position()
+    time.sleep(0.2)
+    # robot.pho_request_stop_solution()
+    # time.sleep(2)
+    robot.pho_request_get_available_solution()
+    robot.close_connection()  #communication needs to be closed
+    time.sleep(0.3)
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
         # Replace 'objects' and 'coordinates' with actual attribute names from your response
         objects = robot.response_data.objects  # Example attribute; adjust accordingly
-
+        
         if not objects:
-            logging.info("No objects detected.")
+            logging.info("No objects are found")
             return None
 
         # For simplicity, consider the first detected object
@@ -58,15 +62,7 @@ def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
         return None
 
 def format_coordinates(coords_mm):
-    """
-    Converts coordinates from millimeters to meters.
 
-    Args:
-        coords_mm (list or tuple): Coordinates in millimeters [x, y, z].
-
-    Returns:
-        list: Coordinates in meters [x, y, z].
-    """
     try:
         coords_m = [x / 1000.0 for x in coords_mm]
         return coords_m
@@ -77,14 +73,8 @@ def format_coordinates(coords_mm):
         logging.error(f"An error occurred while formatting coordinates: {e}")
         return None
 
-def send_coordinates_to_robot(robot, coords):
-    """
-    Sends the specified coordinates to the robot controller.
-
-    Args:
-        robot: The robot communication object.
-        coords (list): Coordinates to send [x, y, z].
-    """
+def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
+    
     try:
         # Replace 'pho_request_move_to_position' with the actual method name
         # and adjust parameters as required by your CommunicationLibrary
@@ -95,24 +85,13 @@ def send_coordinates_to_robot(robot, coords):
     except Exception as e:
         logging.error(f"An error occurred while sending move command: {e}")
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
-    """
-    Commands the robot to move to the target coordinates and waits until it reaches the position.
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
 
-    Args:
-        robot: The robot communication object.
-        target_coords (list): Target coordinates [x, y, z] in meters.
-        tolerance (float, optional): Acceptable distance in meters. Defaults to 0.01.
-        timeout (int, optional): Maximum wait time in seconds. Defaults to 30.
-
-    Raises:
-        TimeoutError: If the robot does not reach the position within the timeout.
-    """
     try:
         start_time = time.time()
         while True:
             # Replace 'get_current_position' with the actual method to retrieve the robot's current position
-            current_coords = robot.get_current_position()
+            current_coords = robot.pho_get_current_position()
             distance = ((current_coords[0] - target_coords[0]) ** 2 +
                         (current_coords[1] - target_coords[1]) ** 2 +
                         (current_coords[2] - target_coords[2]) ** 2) ** 0.5
@@ -127,7 +106,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
     except Exception as e:
         logging.error(f"An error occurred while moving the robot: {e}")
 
-def test_ls():
+def test_ls(): # main function for calling every function.
     """
     Tests the LS (Laser Scan) functionality of the robot.
     Extracts object coordinates from the camera and sends them to the robotic controller to move the robot.
@@ -202,8 +181,6 @@ def test_ls():
         logging.info("Closing connection to the robot.")
         robot.close_connection()
         time.sleep(0.3)  # Short delay after closing the connection
-
-
 
 def calibration_extrinsic():
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
