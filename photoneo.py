@@ -155,7 +155,7 @@ class DeltaDMV(Camera):
 
             pose = self.generate_pose(values)
         except Exception as e:
-            print("Exception DMV: ", e)
+            print("Exception DMV error formed: ", e)
             # self.emit_message_to_gui(str(e), "Error")
             # raise e
         
