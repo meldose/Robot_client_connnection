@@ -1,5 +1,5 @@
 
-def movelinear_online(self,*args,**kwargs):
+
     
 
     # Method to do Servo in Cartesian Space
@@ -11,16 +11,15 @@ def movelinear_online(self,*args,**kwargs):
     # - gain parameter (double)             : ServoX gain parameter, used for Propotional controller (should be between [0.2, 100])
 
 
-    from neurapy.robot import Robot
-    import time
-    from ruckig import InputParameter, OutputParameter, Result, Ruckig
-    import copy
+from neurapy.robot import Robot
+import time
+from ruckig import InputParameter, OutputParameter, Result, Ruckig
+import copy
 
-    r = Robot()
+r = Robot()
+r.activate_servo_interface('position')
 
-    #Switch to external servo mode
-    r.activate_servo_interface('position')
-
+def movelinear_online():
     cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz
 
     otg = Ruckig(cart_pose_length, 0.001)  # control cycle
@@ -69,14 +68,14 @@ def movelinear_online(self,*args,**kwargs):
     r.stop()
 
     
-    self.logger.info(
-            "MOVELINEAR called with parameters {} {}".format(args, kwargs)
-        )
-    if("maira" in self.robot_name.lower()):
-        self.robot.logger.warning("MOVELINEAR not implemented for Maira. Stay tuned for updates.")
-        return False
+    # self.logger.info(
+    #         "MOVELINEAR called with parameters {} {}".format(args, kwargs)
+    #     )
+    # if("maira" in self.robot_name.lower()):
+    #     self.robot.logger.warning("MOVELINEAR not implemented for Maira. Stay tuned for updates.")
+    #     return False
     
-    command = Servo(self)
-    command.execute_visual_servoing(*args,**kwargs)
+    # command = Servo(self)
+    # command.execute_visual_servoing(*args,**kwargs)
 
 movelinear_online()
