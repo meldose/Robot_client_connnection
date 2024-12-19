@@ -77,8 +77,8 @@
 
 # movelinear_online()
 
+
 import time
-import copy
 from neurapy.robot import Robot
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 from scipy.spatial.transform import Rotation as R  # Import Rotation
@@ -94,7 +94,16 @@ def quaternion_to_rpy(qw, qx, qy, qz, degrees=False):
     Returns:
         tuple: (roll, pitch, yaw) angles.
     """
-    rotation = R.from_quat([qx, qy, qz, qw])  # Note the order: x, y, z, w
+    # Normalize the quaternion to ensure it's valid
+    norm = (qw**2 + qx**2 + qy**2 + qz**2) ** 0.5
+    if norm == 0:
+        raise ValueError("Zero-norm quaternion is invalid for conversion.")
+    qw_norm = qw / norm
+    qx_norm = qx / norm
+    qy_norm = qy / norm
+    qz_norm = qz / norm
+
+    rotation = R.from_quat([qx_norm, qy_norm, qz_norm, qw_norm])  # Note the order: x, y, z, w
     rpy = rotation.as_euler('xyz', degrees=degrees)
     return rpy  # Returns a tuple (roll, pitch, yaw)
 
@@ -221,11 +230,30 @@ def servo_cartesian(
 
 # Example usage
 if __name__ == "__main__":
-    # Define target parameters with 7 elements for position
-    target_position = [-0.502, -0.417, 0.234, -3.02, -0.06, 1.41, 0.0]  # Added qz = 0.0
+    from scipy.spatial.transform import Rotation as R
+    
+    # Desired RPY angles in degrees for target orientation
+    desired_roll = 30    # degrees
+    desired_pitch = 45   # degrees
+    desired_yaw = 60     # degrees
+    
+    # Create a Rotation object from RPY angles
+    rotation = R.from_euler('xyz', [desired_roll, desired_pitch, desired_yaw], degrees=True)
+    
+    # Extract quaternion components (scipy returns [x, y, z, w])
+    qx, qy, qz, qw = rotation.as_quat()
+    
+    # Define target position with orientation
+    target_position = [0.553, -0.417, 0.234, 0.804, -0.525, 0.227, 0.161]  # [X, Y, Z, qw, qx, qy, qz]
+    
+    # Define target velocity (all zeros if not moving)
     target_velocity = [0.0] * 7
+    
+    # Define target acceleration (all zeros if not used)
     target_acceleration = [0.0] * 7  # Not used currently
-    proportional_gain = 25.0  # Must be between 0.2 and 100
+    
+    # Define proportional gain (ensure it's within [0.2, 100])
+    proportional_gain = 25.0  # Example value
     
     try:
         # Execute servo control
