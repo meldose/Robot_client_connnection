@@ -13,6 +13,7 @@ import time
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 import copy
 
+
 r = Robot()
 r.activate_servo_interface('position')
 
@@ -77,3 +78,4 @@ def movelinear_online(self,*args,**kwargs):
     command.execute_visual_servoing(*args,**kwargs)
 
 movelinear_online()
+
