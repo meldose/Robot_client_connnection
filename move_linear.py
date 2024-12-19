@@ -1,6 +1,3 @@
-
-<<<<<<< HEAD
-
     
 
 # Method to do Servo in Cartesian Space
@@ -10,16 +7,6 @@
 # - servo_target_velocity ([int]*7)     : List of cartesian target velocity in m/s. Length of list should be equal to 7
 # - servo_target_acceleration ([int]*7) : List of cartesian target acceleration in m/s^2. Length of list should be equal 7. Not used in Current Version
 # - gain parameter (double)             : ServoX gain parameter, used for Propotional controller (should be between [0.2, 100])
-=======
-    # Method to do Servo in Cartesian Space
-    
-    # Args:
-    # - servo_target_position ([int]*7)     : List of cartesian target position in m. Length of list should be equal to 7 (X, Y, Z, qw, qx, qz, qz)
-    # - servo_target_velocity ([int]*7)     : List of cartesian target velocity in m/s. Length of list should be equal to 7
-    # - servo_target_acceleration ([int]*7) : List of cartesian target acceleration in m/s^2. Length of list should be equal 7. Not used in Current Version
-    # - gain parameter (double)             : ServoX gain parameter, used for Propotional controller (should be between [0.2, 100])
->>>>>>> f48c61bb0eafe392b1867924ad35dc271fea4fa6
-
 
 from neurapy.robot import Robot
 import time
