@@ -1,5 +1,3 @@
-form neurapy.robot import Robot
-r=Robot()
 
 def movelinear_online(self,*args,**kwargs):
     
@@ -81,3 +79,4 @@ def movelinear_online(self,*args,**kwargs):
     command = Servo(self)
     command.execute_visual_servoing(*args,**kwargs)
 
+movelinear_online()
