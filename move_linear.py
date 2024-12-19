@@ -1,7 +1,4 @@
 
-
-    
-
     # Method to do Servo in Cartesian Space
     
     # Args:
