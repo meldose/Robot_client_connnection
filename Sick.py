@@ -16,6 +16,7 @@ class Sick(Camera):
     def set_camera_command(self, address: str, timeout: int)  -> None:
         return requests.get(address, timeout=timeout)
     
+
     
     #This function can change based on how the output from camera is set in camera calibration
     def extract_pose_from_camera(self, cameraOut: bytes) -> list:
