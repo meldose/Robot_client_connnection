@@ -16,7 +16,7 @@ import copy
 r = Robot()
 r.activate_servo_interface('position')
 
-def movelinear_online():
+def movelinear_online(self,*args,**kwargs):
 
     cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz
 
@@ -66,14 +66,14 @@ def movelinear_online():
     r.stop()
 
     
-    # self.logger.info(
-    #         "MOVELINEAR called with parameters {} {}".format(args, kwargs)
-    #     )
-    # if("maira" in self.robot_name.lower()):
-    #     self.robot.logger.warning("MOVELINEAR not implemented for Maira. Stay tuned for updates.")
-    #     return False
+    self.logger.info(
+            "MOVELINEAR called with parameters {} {}".format(args, kwargs)
+        )
+    if("maira" in self.robot_name.lower()):
+        self.robot.logger.warning("MOVELINEAR not implemented for Maira. Stay tuned for updates.")
+        return False
     
-    # command = Servo(self)
-    # command.execute_visual_servoing(*args,**kwargs)
+    command = Servo(self)
+    command.execute_visual_servoing(*args,**kwargs)
 
 movelinear_online()
