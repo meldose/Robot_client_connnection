@@ -77,11 +77,26 @@
 
 # movelinear_online()
 
-
 import time
 import copy
 from neurapy.robot import Robot
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
+from scipy.spatial.transform import Rotation as R  # Import Rotation
+
+def quaternion_to_rpy(qw, qx, qy, qz, degrees=False):
+    """
+    Convert a quaternion into Roll, Pitch, and Yaw angles.
+
+    Args:
+        qw, qx, qy, qz (float): Quaternion components.
+        degrees (bool): If True, return angles in degrees. Otherwise, in radians.
+
+    Returns:
+        tuple: (roll, pitch, yaw) angles.
+    """
+    rotation = R.from_quat([qx, qy, qz, qw])  # Note the order: x, y, z, w
+    rpy = rotation.as_euler('xyz', degrees=degrees)
+    return rpy  # Returns a tuple (roll, pitch, yaw)
 
 def servo_cartesian(
     servo_target_position, 
@@ -95,7 +110,7 @@ def servo_cartesian(
     Args:
         servo_target_position (list of float): Cartesian target positions [X, Y, Z, qw, qx, qy, qz] in meters. Length must be 7.
         servo_target_velocity (list of float): Cartesian target velocities [X, Y, Z, qw, qx, qy, qz] in m/s. Length must be 7.
-        servo_target_acceleration (list of float): Cartesian target accelerations [X, Y, Z, qw, qx, qy, qz] in m/s². Length must be 7. Not used in current version.
+        servo_target_acceleration (list of float): Cartesian target accelerations [X, Y, Z, qw, qx, qy, qz] in m/s². Length must be 7. Not used currently.
         gain (float): ServoX proportional gain parameter. Should be between 0.2 and 100.
 
     Returns:
@@ -105,6 +120,10 @@ def servo_cartesian(
     # Validate input lengths
     if not (len(servo_target_position) == len(servo_target_velocity) == len(servo_target_acceleration) == 7):
         raise ValueError("All input lists must have exactly 7 elements [X, Y, Z, qw, qx, qy, qz].")
+    
+    # Validate gain
+    if not (0.2 <= gain <= 100):
+        raise ValueError("Gain must be between 0.2 and 100.")
     
     # Initialize robot and activate servo interface
     robot = Robot()
@@ -120,14 +139,29 @@ def servo_cartesian(
     output_param = OutputParameter(cartesian_dims)
     
     # Set current state
-    input_param.current_position = robot.get_current_cartesian_pose()
+    current_pose = robot.get_current_cartesian_pose()
+    input_param.current_position = current_pose
     input_param.current_velocity = [0.0] * cartesian_dims
     input_param.current_acceleration = [0.0] * cartesian_dims
+    
+    # Convert current quaternion to RPY for logging
+    current_rpy = quaternion_to_rpy(current_pose[3], current_pose[4], current_pose[5], current_pose[6], degrees=True)
+    print(f"Current Pose (RPY): Roll={current_rpy[0]:.2f}°, Pitch={current_rpy[1]:.2f}°, Yaw={current_rpy[2]:.2f}°")
     
     # Set target state
     input_param.target_position = servo_target_position
     input_param.target_velocity = servo_target_velocity
     input_param.target_acceleration = servo_target_acceleration  # Not used currently
+    
+    # Convert target quaternion to RPY for logging
+    target_rpy = quaternion_to_rpy(
+        servo_target_position[3], 
+        servo_target_position[4], 
+        servo_target_position[5], 
+        servo_target_position[6], 
+        degrees=True
+    )
+    print(f"Target Pose (RPY): Roll={target_rpy[0]:.2f}°, Pitch={target_rpy[1]:.2f}°, Yaw={target_rpy[2]:.2f}°")
     
     # Set constraints
     input_param.max_velocity = [0.5] * cartesian_dims
@@ -148,6 +182,10 @@ def servo_cartesian(
             new_velocity = output_param.new_velocity
             new_acceleration = output_param.new_acceleration
             
+            # Convert new quaternion to RPY for logging
+            new_rpy = quaternion_to_rpy(new_position[3], new_position[4], new_position[5], new_position[6], degrees=True)
+            print(f"New Trajectory Pose (RPY): Roll={new_rpy[0]:.2f}°, Pitch={new_rpy[1]:.2f}°, Yaw={new_rpy[2]:.2f}°")
+            
             # Send servo command
             error_code = robot.servo_x(new_position, new_velocity, new_acceleration, gain)
             
@@ -161,12 +199,11 @@ def servo_cartesian(
             # You can use scaling_factor if needed
             
             # Prepare for next iteration
-            input_param.current_position = copy.deepcopy(output_param.new_position)
-            input_param.current_velocity = copy.deepcopy(output_param.new_velocity)
-            input_param.current_acceleration = copy.deepcopy(output_param.new_acceleration)
+            input_param.current_position = new_position[:]  # Shallow copy is sufficient
+            input_param.current_velocity = new_velocity[:]
+            input_param.current_acceleration = new_acceleration[:]
             
-            # Wait for next control cyclepip install neurapy  # If available
-
+            # Wait for next control cycle
             time.sleep(control_cycle)
         else:
             if result == Result.Finished:
@@ -184,21 +221,24 @@ def servo_cartesian(
 
 # Example usage
 if __name__ == "__main__":
-    # Define target parameters
-    target_position = [-0.502, -0.417, 0.234,-3.02, -0.06,1.41]  # Move 200mm along X, maintain orientation
+    # Define target parameters with 7 elements for position
+    target_position = [-0.502, -0.417, 0.234, -3.02, -0.06, 1.41, 0.0]  # Added qz = 0.0
     target_velocity = [0.0] * 7
     target_acceleration = [0.0] * 7  # Not used currently
     proportional_gain = 25.0  # Must be between 0.2 and 100
     
-    # Execute servo control
-    success = servo_cartesian(
-        servo_target_position=target_position,
-        servo_target_velocity=target_velocity,
-        servo_target_acceleration=target_acceleration,
-        gain=proportional_gain
-    )
-    
-    if success:
-        print("Servo control completed successfully.")
-    else:
-        print("Servo control failed or was interrupted.")
+    try:
+        # Execute servo control
+        success = servo_cartesian(
+            servo_target_position=target_position,
+            servo_target_velocity=target_velocity,
+            servo_target_acceleration=target_acceleration,
+            gain=proportional_gain
+        )
+        
+        if success:
+            print("Servo control completed successfully.")
+        else:
+            print("Servo control failed or was interrupted.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
