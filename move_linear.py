@@ -165,7 +165,8 @@ def servo_cartesian(
             input_param.current_velocity = copy.deepcopy(output_param.new_velocity)
             input_param.current_acceleration = copy.deepcopy(output_param.new_acceleration)
             
-            # Wait for next control cycle
+            # Wait for next control cyclepip install neurapy  # If available
+
             time.sleep(control_cycle)
         else:
             if result == Result.Finished:
