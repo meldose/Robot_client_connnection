@@ -17,26 +17,26 @@ def test_ls():
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(0.3)
+    time.sleep(0.1)
     robot.pho_get_current_position()
-    time.sleep(0.3)
+    time.sleep(0.1)
     robot.pho_request_ls_get_vision_system_status(1)
-    time.sleep(0.3)
+    time.sleep(0.1)
     robot.pho_request_change_solution(253)
-    time.sleep(0.3)
+    time.sleep(0.1)
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(0.3)
+    time.sleep(0.1)
     robot.pho_request_get_running_solution()
-    time.sleep(0.3)
+    time.sleep(0.1)
     # robot.pho_request_move_to_position()
     # time.sleep(0.2)
     # robot.pho_request_stop_solution()
     # time.sleep(2)
     robot.pho_request_get_available_solution()
     robot.close_connection()  #communication needs to be closed
-    time.sleep(0.3)
+    time.sleep(0.1)
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
@@ -125,15 +125,15 @@ def test_ls(): # main function for calling every function.
 
         logging.info("Requesting objects detected in the scan")
         robot.pho_request_get_objects(1, 5)  # Get objects detected (parameters may vary)
-        time.sleep(0.3)  # Short delay to ensure response is received
+        time.sleep(0.1)  # Short delay to ensure response is received
 
         logging.info("Retrieving vision system status")
         robot.pho_request_ls_get_vision_system_status(1)
-        time.sleep(0.3)
+        time.sleep(0.1)
 
         logging.info("Changing solution to 253")
         robot.pho_request_change_solution(253)
-        time.sleep(0.3)
+        time.sleep(0.1)
 
         logging.info("Initiating another LS scan")
         robot.pho_request_ls_scan(1)
@@ -141,11 +141,11 @@ def test_ls(): # main function for calling every function.
 
         logging.info("Requesting objects detected in the second scan")
         robot.pho_request_get_objects(1, 5)
-        time.sleep(0.3)
+        time.sleep(0.1)
 
         logging.info("Retrieving running solution")
         robot.pho_request_get_running_solution()
-        time.sleep(0.3)
+        time.sleep(0.1)
 
         logging.info("Retrieving available solutions")
         robot.pho_request_get_available_solution()
@@ -180,7 +180,7 @@ def test_ls(): # main function for calling every function.
     finally:
         logging.info("Closing connection to the robot.")
         robot.close_connection()
-        time.sleep(0.3)  # Short delay after closing the connection
+        time.sleep(0.1)  # Short delay after closing the connection
 
 def calibration_extrinsic():
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created

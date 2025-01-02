@@ -76,7 +76,7 @@
 #             #         print("Couldn't find part")
 #             #         raise Exception("Couldn't find part")
 #             #     print("position_from_camera", position_from_camera)
-#             #     time.sleep(0.3)
+#             #     time.sleep(0.1)
 #             #     print("retrying %s time" % str(count+1))
 #             #     self.create_camera_connection('http://192.168.2.20/CmdChannel?TRIG', 4)
 #             #     response = self.set_camera_command('http://192.168.2.20/CmdChannel?gRES', 4)
@@ -121,7 +121,7 @@ class DeltaDMV(Camera):
 
     def trigger(self) -> bytes:
         self.sock.sendall("T1\r\n".encode())
-        time.sleep(0.3)   
+        time.sleep(0.1)   
 
     def generate_pose(self, camera_pose):
         theta = math.radians(camera_pose[2])
