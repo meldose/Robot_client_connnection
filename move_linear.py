@@ -5,6 +5,8 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 import copy
 
 r = Robot()
+
+
     
 
 def movelinear_online():
