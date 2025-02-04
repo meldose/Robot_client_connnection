@@ -143,7 +143,6 @@ def test_ls():
         robot.pho_request_ls_scan(1)
         robot.pho_ls_wait_for_scan()
         robot.pho_request_get_objects(1, 5)
-        robot.pho_send_request()
         time.sleep(0.1)
 
         object_pose = extract_object_pose(robot)
