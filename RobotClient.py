@@ -5,7 +5,7 @@ import time
 import json
 import logging
 
-CONTROLLER_IP = "192.168.1.5"
+CONTROLLER_IP = "192.168.1.13"
 PORT = 11003
 
 
