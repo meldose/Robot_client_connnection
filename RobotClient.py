@@ -30,7 +30,7 @@ def test_ls():
     time.sleep(0.1)
     robot.pho_request_get_running_solution()
     time.sleep(0.1)
-    # robot.pho_request_move_to_position()
+    robot.pho_request_move_to_position()
     # time.sleep(0.2)
     # robot.pho_request_stop_solution()
     # time.sleep(2)
