@@ -131,7 +131,7 @@ PORT = 11003
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 r = Robot()
-r.gripper("on")
+# r.gripper("on")
 
 def test_ls():
     robot = CommunicationLibrary.RobotRequestResponseCommunication()
@@ -240,6 +240,7 @@ def servo_x(target_position):
     r.deactivate_servo_interface()
     r.stop()
 
+<<<<<<< HEAD
 
 # ==============================
 #       MAIN EXECUTION LOOP
@@ -268,3 +269,10 @@ except KeyboardInterrupt:
 finally:
     r.gripper("off")
     logging.info("Robot operations stopped.")
+=======
+# Main Execution
+object_coords = test_ls()
+if object_coords:
+    servo_x(object_coords)
+# r.gripper("off")
+>>>>>>> b7b8c7e61d7b7511d3a0c1e878bb66770a773d61
