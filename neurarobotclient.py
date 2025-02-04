@@ -242,7 +242,6 @@ def servo_x(target_position):
     r.deactivate_servo_interface()
     r.stop()
 
-<<<<<<< HEAD
 
 # ==============================
 #       MAIN EXECUTION LOOP
@@ -277,4 +276,4 @@ object_coords = test_ls()
 if object_coords:
     servo_x(object_coords)
 # r.gripper("off")
->>>>>>> b7b8c7e61d7b7511d3a0c1e878bb66770a773d61
+
