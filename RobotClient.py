@@ -245,8 +245,8 @@ if __name__ == '__main__':
     calibration_extrinsic()
     test_ls()
     #test_bps()
-
+    send_coordinates_to_robot()
     while True:
         test_ls()
         #test_bps()
-
+        send_coordinates_to_robot()
