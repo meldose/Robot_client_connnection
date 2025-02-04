@@ -10,7 +10,7 @@ CONTROLLER_IP = "192.168.1.5"
 PORT = 11003
 
 r = Robot()
-r.gripper("on")
+# r.gripper("on")
 
 def test_ls():
     robot = CommunicationLibrary.RobotRequestResponseCommunication()
@@ -114,4 +114,4 @@ def servo_x(target_position):
 object_coords = test_ls()
 if object_coords:
     servo_x(object_coords)
-r.gripper("off")
+# r.gripper("off")
