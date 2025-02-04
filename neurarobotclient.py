@@ -75,7 +75,7 @@ def servo_x(target_position):
     inp.current_position = r.get_current_cartesian_pose()
     inp.current_velocity = [0.0] * cart_pose_length
     inp.current_acceleration = [0.0] * cart_pose_length
-
+    
     if len(target_position) == 3:
         target = inp.current_position[:3]
         target[:3] = target_position
