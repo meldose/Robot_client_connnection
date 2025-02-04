@@ -186,7 +186,6 @@ def extract_object_pose(robot):
         logging.error(f"Error extracting object pose: {e}")
         return None
 
-
 def format_pose(pose_data):
     """Convert mm to meters and transform quaternion to Euler angles."""
     try:
@@ -251,6 +250,5 @@ def servo_x(target_pose):
 object_pose = test_ls()
 if object_pose:
     servo_x(object_pose)
-
 
 
