@@ -6,7 +6,7 @@ from neurapy.robot import Robot
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 import CommunicationLibrary
 
-CONTROLLER_IP = "192.168.1.5" # robotic controller ip
+CONTROLLER_IP = "192.168.1.5" 
 PORT = 11003 # port id number
 
 r = Robot() # defining the robot 
