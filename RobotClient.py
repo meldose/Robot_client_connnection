@@ -1,35 +1,35 @@
 #!/usr/bin/env python3
 
 import CommunicationLibrary # importing communication library
-import time
-import json
-import logging
+import time # importing time
+import json # importing json
+import logging #    importing logging
 
-CONTROLLER_IP = "192.168.1.5"
-PORT = 11003
+CONTROLLER_IP = "192.168.1.5" # IP address of the controller
+PORT = 11003 # port number
 
 
-def test_ls():
+def test_ls(): # test ls
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
-    robot.pho_request_start_solution(252)
-    robot.pho_request_ls_scan(1)
-    robot.pho_ls_wait_for_scan()
-    robot.pho_request_get_objects(1, 5)
-    time.sleep(0.1)
-    robot.pho_get_current_position()
-    time.sleep(0.1)
-    robot.pho_request_ls_get_vision_system_status(1)
-    time.sleep(0.1)
-    robot.pho_request_change_solution(253)
-    time.sleep(0.1)
-    robot.pho_request_ls_scan(1)
-    robot.pho_ls_wait_for_scan()
-    robot.pho_request_get_objects(1, 5)
-    time.sleep(0.1)
-    robot.pho_request_get_running_solution()
-    time.sleep(0.1)
+    robot.pho_request_start_solution(252) # start solution
+    robot.pho_request_ls_scan(1) # ls scan
+    robot.pho_ls_wait_for_scan() # wait for scan
+    robot.pho_request_get_objects(1, 5) # get objects
+    time.sleep(0.1) # sleep for 0.1 second
+    robot.pho_get_current_position() #  get current position
+    time.sleep(0.1) # sleep for 0.1 second
+    robot.pho_request_ls_get_vision_system_status(1) # get vision system status
+    time.sleep(0.1) # sleep for 0.1 second
+    robot.pho_request_change_solution(253) # change solution
+    time.sleep(0.1) # sleep for 0.1 second
+    robot.pho_request_ls_scan(1) # ls scan
+    robot.pho_ls_wait_for_scan() # wait for scan
+    robot.pho_request_get_objects(1, 5) # get objects
+    time.sleep(0.1) # sleep for 0.1 second
+    robot.pho_request_get_running_solution() # get running solution
+    time.sleep(0.1) # sleep for 0.1 second
     #robot.pho_request_move_to_position()
     # time.sleep(0.2)
     # robot.pho_request_stop_solution()
@@ -48,20 +48,20 @@ def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
             return None
 
         # For simplicity, consider the first detected object
-        first_object = objects[0]
+        first_object = objects[0] # Example attribute; adjust accordingly
         object_coords = first_object.coordinates  # Example attribute; adjust accordingly
 
         logging.info(f"Extracted Object Coordinates: {object_coords}")
         return object_coords
 
-    except AttributeError:
-        logging.error("Failed to extract object coordinates. Check the response data structure.")
-        return None
+    except AttributeError: # error handling
+        logging.error("Failed to extract object coordinates. Check the response data structure.") # error message
+        return None # return None
     except Exception as e:
         logging.error(f"An error occurred while extracting object coordinates: {e}")
         return None
 
-def format_coordinates(coords_mm):
+def format_coordinates(coords_mm): # function for formatting coordinates
 
     try:
         coords_m = [x / 1000.0 for x in coords_mm]
@@ -106,7 +106,7 @@ def format_coordinates(coords_mm):
 #     except Exception as e:
 #         logging.error(f"An error occurred while moving the robot: {e}")
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.1):
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.1): # function for moving robot to position
     """
     Moves the robot to the target coordinates using servo_j with position monitoring.
 
