@@ -15,3 +15,4 @@ linear_property = {
 }
 r.move_joint(**linear_property)
 r.gripper("off") # set the gripper off
+
