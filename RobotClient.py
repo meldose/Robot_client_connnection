@@ -106,6 +106,9 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 #     except Exception as e:
 #         logging.error(f"An error occurred while moving the robot: {e}")
 
+
+
+###### first trail ################
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
     try:
         robot.activate_servo_interface('position')
@@ -161,7 +164,75 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 
 r.gripper("off")
 
+######## second trail ############
 
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.05):
+    """
+    Moves the robot to the target coordinates with improved error handling, dynamic adjustments, and safety measures.
+
+    :param robot: Robot object with servo_j, pho_get_current_position, and optional stop_motion methods
+    :param target_coords: Tuple of (x, y, z) target coordinates
+    :param tolerance: Position tolerance to consider as "reached"
+    :param timeout: Maximum allowed time to reach the target (in seconds)
+    :param check_interval: Interval to check the robot's position (in seconds)
+    """
+    def stop_robot():
+        try:
+            robot.stop_motion()  # Hypothetical stop function
+            logging.info("Emergency stop triggered.")
+        except AttributeError:
+            logging.warning("Stop function not available in the robot API.")
+
+    try:
+        # Initiate movement
+        robot.servo_j(target_coords)
+        logging.info(f"Movement started towards: {target_coords}")
+
+        start_time = time.time()
+        previous_distance = float('inf')  # Initialize with a large number
+
+        while True:
+            # Check for timeout first
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Robot did not reach the target position in time.")
+
+            # Retrieve current position
+            current_coords = robot.pho_get_current_position()
+
+            # Calculate distance to target
+            distance = ((current_coords[0] - target_coords[0]) ** 2 +
+                        (current_coords[1] - target_coords[1]) ** 2 +
+                        (current_coords[2] - target_coords[2]) ** 2) ** 0.5
+
+            # Log progress
+            logging.info(f"Current position: {current_coords}, Distance to target: {distance:.4f}")
+
+            # Check if within tolerance
+            if distance <= tolerance:
+                logging.info(f"Robot reached target position: {current_coords}")
+                break
+
+            # Adjust movement dynamically only if progress stalls
+            if distance >= previous_distance - 0.001:  # No significant improvement
+                logging.info("Re-adjusting movement to correct trajectory.")
+                robot.servo_j(target_coords)
+
+            previous_distance = distance
+
+            time.sleep(check_interval)
+
+    except AttributeError as e:
+        logging.error(f"Missing method in robot API: {e}")
+        stop_robot()
+    except TimeoutError as e:
+        logging.warning(e)
+        stop_robot()
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        stop_robot()
+
+
+####################################### 
 def calibration_extrinsic():
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
