@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import CommunicationLibrary
+import CommunicationLibrary # importing communication library
 import time
 import json
 import logging
