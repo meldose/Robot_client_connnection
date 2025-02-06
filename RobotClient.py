@@ -106,23 +106,33 @@ def format_coordinates(coords_mm): # function for formatting coordinates
 #     except Exception as e:
 #         logging.error(f"An error occurred while moving the robot: {e}")
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.1): # function for moving robot to position
-    """
-    Moves the robot to the target coordinates using servo_j with position monitoring.
 
-    :param robot: Robot object with servo_j and pho_get_current_position methods
+# Enhanced Robot Movement Code with Improvements
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.05):
+    """
+    Moves the robot to the target coordinates with improved error handling, dynamic adjustments, and safety measures.
+
+    :param robot: Robot object with servo_j, pho_get_current_position, and optional stop_motion methods
     :param target_coords: Tuple of (x, y, z) target coordinates
     :param tolerance: Position tolerance to consider as "reached"
     :param timeout: Maximum allowed time to reach the target (in seconds)
     :param check_interval: Interval to check the robot's position (in seconds)
     """
+    def stop_robot():
+        try:
+            robot.stop_motion()  # Hypothetical stop function
+            logging.info("Emergency stop triggered.")
+        except AttributeError:
+            logging.warning("Stop function not available in the robot API.")
+
     try:
         # Initiate movement
         robot.servo_j(target_coords)
         logging.info(f"Movement started towards: {target_coords}")
 
         start_time = time.time()
-        
+        previous_distance = float('inf')  # Initialize with a large number
+
         while True:
             # Check for timeout first
             if time.time() - start_time > timeout:
@@ -144,93 +154,25 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, che
                 logging.info(f"Robot reached target position: {current_coords}")
                 break
 
-            # Adjust movement dynamically if needed
-            robot.servo_j(target_coords)
+            # Adjust movement dynamically only if progress stalls
+            if distance >= previous_distance - 0.001:  # No significant improvement
+                logging.info("Re-adjusting movement to correct trajectory.")
+                robot.servo_j(target_coords)
+
+            previous_distance = distance
 
             time.sleep(check_interval)
 
     except AttributeError as e:
         logging.error(f"Missing method in robot API: {e}")
+        stop_robot()
     except TimeoutError as e:
         logging.warning(e)
-    except Exception as e:
-        logging.error(f"An error occurred while moving the robot: {e}")
-
-def test_ls(): # main function for calling every function.
-    """
-    Tests the LS (Laser Scan) functionality of the robot.
-    Extracts object coordinates from the camera and sends them to the robotic controller to move the robot.
-    """
-    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # Create robot communication object
-    try:
-        logging.info(f"Connecting to robot at {CONTROLLER_IP}:{PORT}")
-        robot.connect_to_server(CONTROLLER_IP, PORT)  # Establish communication
-
-        logging.info("Starting solution 252")
-        robot.pho_request_start_solution(252)
-
-        logging.info("Initiating LS scan")
-        robot.pho_request_ls_scan(1)  # Start LS scan with parameter 1
-        robot.pho_ls_wait_for_scan()    # Wait for the scan to complete
-
-        logging.info("Requesting objects detected in the scan")
-        robot.pho_request_get_objects(1, 5)  # Get objects detected (parameters may vary)
-        time.sleep(0.1)  # Short delay to ensure response is received
-
-        logging.info("Retrieving vision system status")
-        robot.pho_request_ls_get_vision_system_status(1)
-        time.sleep(0.1)
-
-        logging.info("Changing solution to 253")
-        robot.pho_request_change_solution(253)
-        time.sleep(0.1)
-
-        logging.info("Initiating another LS scan")
-        robot.pho_request_ls_scan(1)
-        robot.pho_ls_wait_for_scan()
-
-        logging.info("Requesting objects detected in the second scan")
-        robot.pho_request_get_objects(1, 5)
-        time.sleep(0.1)
-
-        logging.info("Retrieving running solution")
-        robot.pho_request_get_running_solution()
-        time.sleep(0.1)
-
-        logging.info("Retrieving available solutions")
-        robot.pho_request_get_available_solution()
-
-        # Extract object coordinates from the response
-        object_coords = extract_object_coordinates(robot)
-        if object_coords:
-            # Format coordinates (e.g., convert from mm to m)
-            formatted_coords = format_coordinates(object_coords)
-            if formatted_coords:
-                logging.info(f"Formatted Object Coordinates (meters): {formatted_coords}")
-
-                # Send coordinates to the robot to move
-                send_coordinates_to_robot(robot, formatted_coords)
-
-                # Optional: Command the robot to move to the coordinates and wait until it reaches
-                # Uncomment the line below if you wish to perform this action
-                # move_robot_to_position(robot, formatted_coords)
-            else:
-                logging.warning("Failed to format object coordinates.")
-        else:
-            logging.warning("No object coordinates found in the response.")
-
-    except CommunicationLibrary.ConnectionError as ce:
-        logging.error(f"Connection failed: {ce}")
-    except CommunicationLibrary.CommandError as cmd_err:
-        logging.error(f"Command failed: {cmd_err}")
-    except TimeoutError as te:
-        logging.error(f"Operation timed out: {te}")
+        stop_robot()
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
-    finally:
-        logging.info("Closing connection to the robot.")
-        robot.close_connection()
-        time.sleep(0.1)  # Short delay after closing the connection
+        stop_robot()
+
 
 def calibration_extrinsic():
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
