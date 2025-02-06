@@ -73,17 +73,17 @@ def format_coordinates(coords_mm): # function for formatting coordinates
         logging.error(f"An error occurred while formatting coordinates: {e}")
         return None
 
-# def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
+def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
     
-#     try:
-#         # Replace 'pho_request_move_to_position' with the actual method name
-#         # and adjust parameters as required by your CommunicationLibrary
-#         robot.pho_request_move_to_position(coords[0], coords[1], coords[2])
-#         logging.info(f"Sent move command to position: {coords}")
-#     except AttributeError:
-#         logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.")
-#     except Exception as e:
-#         logging.error(f"An error occurred while sending move command: {e}")
+    try:
+        # Replace 'pho_request_move_to_position' with the actual method name
+        # and adjust parameters as required by your CommunicationLibrary
+        robot.pho_request_move_to_position(coords[0], coords[1], coords[2])
+        logging.info(f"Sent move command to position: {coords}")
+    except AttributeError:
+        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.")
+    except Exception as e:
+        logging.error(f"An error occurred while sending move command: {e}")
 
 # def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
 
@@ -106,72 +106,60 @@ def format_coordinates(coords_mm): # function for formatting coordinates
 #     except Exception as e:
 #         logging.error(f"An error occurred while moving the robot: {e}")
 
-
-# Enhanced Robot Movement Code with Improvements
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.05):
-    """
-    Moves the robot to the target coordinates with improved error handling, dynamic adjustments, and safety measures.
-
-    :param robot: Robot object with servo_j, pho_get_current_position, and optional stop_motion methods
-    :param target_coords: Tuple of (x, y, z) target coordinates
-    :param tolerance: Position tolerance to consider as "reached"
-    :param timeout: Maximum allowed time to reach the target (in seconds)
-    :param check_interval: Interval to check the robot's position (in seconds)
-    """
-    def stop_robot():
-        try:
-            robot.stop_motion()  # Hypothetical stop function
-            logging.info("Emergency stop triggered.")
-        except AttributeError:
-            logging.warning("Stop function not available in the robot API.")
-
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
     try:
-        # Initiate movement
-        robot.servo_j(target_coords)
-        logging.info(f"Movement started towards: {target_coords}")
+        robot.activate_servo_interface('position')
+        dof = 6
+        otg = Ruckig(dof, 0.001)
 
+        inp = InputParameter(dof)
+        out = OutputParameter(dof)
+
+        inp.current_position = r.get_current_joint_angles()
+        inp.current_velocity = [0.0] * dof
+        inp.current_acceleration = [0.0] * dof
+
+        inp.target_position = target_coords  # Target joint positions
+        inp.max_velocity = [0.5] * dof
+        inp.max_acceleration = [3.0] * dof
+        inp.max_jerk = [10.0] * dof
+
+        res = Result.Working
         start_time = time.time()
-        previous_distance = float('inf')  # Initialize with a large number
 
-        while True:
-            # Check for timeout first
+        while res == Result.Working:
             if time.time() - start_time > timeout:
                 raise TimeoutError("Robot did not reach the target position in time.")
 
-            # Retrieve current position
-            current_coords = robot.pho_get_current_position()
+            res = otg.update(inp, out)
 
-            # Calculate distance to target
-            distance = ((current_coords[0] - target_coords[0]) ** 2 +
-                        (current_coords[1] - target_coords[1]) ** 2 +
-                        (current_coords[2] - target_coords[2]) ** 2) ** 0.5
+            position = out.new_position
+            velocity = out.new_velocity
+            acceleration = out.new_acceleration
 
-            # Log progress
-            logging.info(f"Current position: {current_coords}, Distance to target: {distance:.4f}")
+            error_code = r.servo_j(position, velocity, acceleration)
+            logging.info(f"Error Code: {error_code}")
 
-            # Check if within tolerance
+            scaling_factor = r.get_servo_trajectory_scaling_factor()
+            out.pass_to_input(inp)
+
+            current_coords = r.get_current_joint_angles()
+            distance = sum((c - t) ** 2 for c, t in zip(current_coords, target_coords)) ** 0.5
             if distance <= tolerance:
                 logging.info(f"Robot reached target position: {current_coords}")
                 break
 
-            # Adjust movement dynamically only if progress stalls
-            if distance >= previous_distance - 0.001:  # No significant improvement
-                logging.info("Re-adjusting movement to correct trajectory.")
-                robot.servo_j(target_coords)
+            time.sleep(0.001)
 
-            previous_distance = distance
-
-            time.sleep(check_interval)
+        robot.deactivate_servo_interface()
+        robot.stop()
 
     except AttributeError as e:
-        logging.error(f"Missing method in robot API: {e}")
-        stop_robot()
-    except TimeoutError as e:
-        logging.warning(e)
-        stop_robot()
+        logging.error(f"Attribute error: {e}")
     except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
-        stop_robot()
+        logging.error(f"An error occurred while moving the robot: {e}")
+
+r.gripper("off")
 
 
 def calibration_extrinsic():
