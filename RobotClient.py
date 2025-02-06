@@ -109,64 +109,64 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 
 
 ###### first trail ################
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
     try:
-        robot.activate_servo_interface('position')
-        dof = 6
-        otg = Ruckig(dof, 0.001)
+        robot.activate_servo_interface('position') # activate servo interface
+        dof = 6 # degrees of freedom
+        otg = Ruckig(dof, 0.001) # create Ruckig object
 
-        inp = InputParameter(dof)
-        out = OutputParameter(dof)
+        inp = InputParameter(dof) # create InputParameter object
+        out = OutputParameter(dof) # create OutputParameter object
 
-        inp.current_position = r.get_current_joint_angles()
-        inp.current_velocity = [0.0] * dof
-        inp.current_acceleration = [0.0] * dof
+        inp.current_position = r.get_current_joint_angles() # get current joint angles
+        inp.current_velocity = [0.0] * dof # set current velocity to zero
+        inp.current_acceleration = [0.0] * dof # set current acceleration to zero
 
         inp.target_position = target_coords  # Target joint positions
-        inp.max_velocity = [0.5] * dof
-        inp.max_acceleration = [3.0] * dof
-        inp.max_jerk = [10.0] * dof
+        inp.max_velocity = [0.5] * dof # set maximum velocity
+        inp.max_acceleration = [3.0] * dof # set maximum acceleration
+        inp.max_jerk = [10.0] * dof #   set maximum jerk
 
-        res = Result.Working
-        start_time = time.time()
+        res = Result.Working # set result to working
+        start_time = time.time() # set start time
 
-        while res == Result.Working:
-            if time.time() - start_time > timeout:
+        while res == Result.Working: # while result is working
+            if time.time() - start_time > timeout: # if time out
                 raise TimeoutError("Robot did not reach the target position in time.")
 
-            res = otg.update(inp, out)
+            res = otg.update(inp, out) # update
 
-            position = out.new_position
-            velocity = out.new_velocity
-            acceleration = out.new_acceleration
+            position = out.new_position # get new position
+            velocity = out.new_velocity # get new velocity
+            acceleration = out.new_acceleration # get new acceleration
 
-            error_code = r.servo_j(position, velocity, acceleration)
-            logging.info(f"Error Code: {error_code}")
+            error_code = r.servo_j(position, velocity, acceleration) # send to robot
+            logging.info(f"Error Code: {error_code}") # log
 
-            scaling_factor = r.get_servo_trajectory_scaling_factor()
-            out.pass_to_input(inp)
+            scaling_factor = r.get_servo_trajectory_scaling_factor() # get scaling factor
+            out.pass_to_input(inp) # pass to input
 
-            current_coords = r.get_current_joint_angles()
-            distance = sum((c - t) ** 2 for c, t in zip(current_coords, target_coords)) ** 0.5
-            if distance <= tolerance:
-                logging.info(f"Robot reached target position: {current_coords}")
+            current_coords = r.get_current_joint_angles() # get current joint angles
+            distance = sum((c - t) ** 2 for c, t in zip(current_coords, target_coords)) ** 0.5 # calculate distance
+            if distance <= tolerance: # if distance is less than tolerance
+                logging.info(f"Robot reached target position: {current_coords}") # log
                 break
 
-            time.sleep(0.001)
+            time.sleep(0.001) # sleep
 
-        robot.deactivate_servo_interface()
-        robot.stop()
+        robot.deactivate_servo_interface() # deactivate servo interface
+        robot.stop() # stop
 
-    except AttributeError as e:
-        logging.error(f"Attribute error: {e}")
-    except Exception as e:
-        logging.error(f"An error occurred while moving the robot: {e}")
+    except AttributeError as e: # error handling
+        logging.error(f"Attribute error: {e}") # error message
+    except Exception as e: # error handling
+        logging.error(f"An error occurred while moving the robot: {e}") # error message
 
-r.gripper("off")
+r.gripper("off") # set gripper off
 
 ######## second trail ############
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.05):
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.05): 
     """
     Moves the robot to the target coordinates with improved error handling, dynamic adjustments, and safety measures.
 
@@ -233,71 +233,71 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, che
 
 
 ####################################### 
-def calibration_extrinsic():
+def calibration_extrinsic(): # function for extrinsic calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
-    robot.pho_request_start_automatic_calibration(6,1)
+    robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
     # Load the JSON data
     file_path = 'extrinsic_calib_points.json'
     json_data = load_json_file(file_path)
 
     # add 9 calibration point
-    for point in json_data:
+    for point in json_data: # for each point
         translation_mm = point["translation"]
         quaternion = point["quaternion"]
         translation_m = [x * 1000 for x in translation_mm] # mm to m
         tool_pose = translation_m + quaternion
 
-        robot.pho_request_add_calibration_point(tool_pose)
-        time.sleep(2)
+        robot.pho_request_add_calibration_point(tool_pose) # add point
+        time.sleep(2) # sleep for 2 seconds
 
-    robot.pho_request_save_automatic_calibration()
-    time.sleep(2)
-    robot.pho_request_stop_automatic_calibration()
+    robot.pho_request_save_automatic_calibration() # save calibration
+    time.sleep(2) # sleep for 2 seconds
+    robot.pho_request_stop_automatic_calibration() # stop calibration
 
 
-def calibration_handeye():
+def calibration_handeye(): # function for handeye calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
-    robot.pho_request_start_automatic_calibration(6, 2)
-    # Load the JSON data
-    file_path = 'handeye_calib_points.json'
-    json_data = load_json_file(file_path)
+    robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
+    # Load the JSON data 
+    file_path = 'handeye_calib_points.json' # file path
+    json_data = load_json_file(file_path) # load data
 
     # add 9 calibration point
-    for point in json_data:
-        translation_mm = point["translation"]
-        quaternion = point["quaternion"]
+    for point in json_data: # for each point
+        translation_mm = point["translation"] # translation
+        quaternion = point["quaternion"] # quaternion
         translation_m = [x * 1000 for x in translation_mm]  # mm to m
-        tool_pose = translation_m + quaternion
+        tool_pose = translation_m + quaternion # tool pose
 
-        robot.pho_request_add_calibration_point(tool_pose)
-        time.sleep(2)
+        robot.pho_request_add_calibration_point(tool_pose) # add point
+        time.sleep(2) # sleep for 2 seconds
 
 
     #robot.pho_request_save_automatic_calibration()
 
-    robot.pho_request_save_automatic_calibration()
-    time.sleep(2)
-    robot.pho_request_stop_automatic_calibration()
+    robot.pho_request_save_automatic_calibration() # save calibration
+    time.sleep(2) # sleep for 2 seconds
+    robot.pho_request_stop_automatic_calibration() # stop calibration
 
 
 # Function to load JSON data from a file
-def load_json_file(file_path):
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return data
+def load_json_file(file_path): # function to load json
+    with open(file_path, 'r') as file: # open file
+        data = json.load(file) # load data
+    return data # return data
 
 
-if __name__ == '__main__':
-    # calibration_handeye()
-    calibration_extrinsic()
-    test_ls()
+if __name__ == '__main__': # main function
+    # calibration_handeye() 
+    calibration_extrinsic() # extrinsic calibration
+    test_ls() # 
     #test_bps()
  
-    while True:
-        test_ls()
+    while True: # infinite loop
+        test_ls() # test ls
         #test_bps()
 
