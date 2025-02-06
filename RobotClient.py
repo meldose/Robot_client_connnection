@@ -106,9 +106,6 @@ def format_coordinates(coords_mm):
 #     except Exception as e:
 #         logging.error(f"An error occurred while moving the robot: {e}")
 
-import time
-import logging
-
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30, check_interval=0.1):
     """
     Moves the robot to the target coordinates using servo_j with position monitoring.
