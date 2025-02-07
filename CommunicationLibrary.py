@@ -5,6 +5,11 @@ import struct
 import math
 import numpy as np
 from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
+import time
+import logging
+from ruckig import InputParameter, OutputParameter, Result, Ruckig 
+from neurapy.robot import Robot
+r=Robot()
 
 BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX"  # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
 BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX"
@@ -13,7 +18,7 @@ DEG2RAD = math.pi / 180
 
 
 class OperationType:
-    PHO_TRAJECTORY_CNT = 0
+    PHO_TRAJECTORY_CNT = 0    
     PHO_TRAJECTORY_FINE = 1
     PHO_GRIPPER = 2
     PHO_ERROR = 3
@@ -77,10 +82,80 @@ OBJECT_POSE_SIZE = 28
 PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 
+class ServoJ:
+    def __init__(self, robot):
+        self.robot = robot
+
+    def servo_j(): # defining function for servoJ
+    #Switch to external servo mode
+    r.activate_servo_interface('position') # activating the servo interface
+    dof = 6 # setting the DOF as 6 
+    otg = Ruckig(dof, 0.001)  # DoFs, control cycle
+
+    inp = InputParameter(dof) # setting the input parameter
+    out = OutputParameter(dof) # setting the output parameter
+ 
+    inp.current_position = r.get_current_joint_angles() # getting the current joint angles
+    inp.current_velocity = [0.]*dof
+    inp.current_acceleration = [0.]*dof
+ 
+    inp.target_position = [1.1625650370244778, -0.5774947959093657, -1.6300017754314295, 1.9807964651163987, 1.5676122261006906, 0.636066807616557] # target positon
+ 
+    inp.max_velocity = [0.5]*dof # setting up the maximum velocity 
+    inp.max_acceleration = [3]*dof # setting up the maximum acceleration
+
+   
+    inp = InputParameter(dof) # setting the input parameter
+    out = OutputParameter(dof) # setting the ouput parameters 
+    inp.current_position = r.get_current_joint_angles() # getting the current joint angles
+    inp.current_velocity = [0.]*dof # setting the current velocity as zero
+    inp.current_acceleration = [0.]*dof # setting the current acceleration as zero
+ 
+    inp.target_position = [1.1625650370244778, -0.5774947959093657, -1.6300017754314295, 1.9807964651163987, 1.5676122261006906, 0.636066807616557] # providing the target position
+    inp.target_acceleration = [0.]*dof # setting the target acceleration as zero.
+    r.gripper("on") # setting the gripper in On position.
+ 
+    inp.max_velocity = [0.5]*dof # defining the maximum velocity
+    inp.max_acceleration = [3]*dof # defining the maximum acceleration
+
+    inp.max_jerk = [10.]*dof
+    res = Result.Working
+ 
+    while res == Result.Working:
+        error_code = 0
+
+        res = otg.update(inp, out)
+
+        position = out.new_position # setting the new position 
+        velocity = out.new_velocity # setting the new velocity
+        acceleration = out.new_acceleration # setting the new acceleration 
+ 
+        error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
+        print(error_code) # checking if the error is there or not 
+        scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors.
+        out.pass_to_input(inp)
+        time.sleep(0.001) # setting the time sleep to 0.001 seconds
+
+    r.deactivate_servo_interface() # deactivating the servo interface
+ 
+    r.stop() # stopped the robot
+
+    servo_j() # calling the servo_j function
+    r.gripper("off") # setting gripper off
+
+
+
 class ResponseHeader:
     def __init__(self, request_id, sub_headers):
         self.request_id = request_id
         self.sub_headers = sub_headers
+
+
+class ResponseData:
+    def __init__(self):
+        self.response_id = 0
+        self.number_of_messages = 0
+        self.message_data = []
 
 
 class ResponseData:  # class used for storing data
@@ -197,6 +272,28 @@ class RobotRequestResponseCommunication:
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
+
+    def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
+        try:
+            start_time = time.time()
+            while True:
+                # Replace 'pho_get_current_joint_angles' with the actual method to retrieve the robot's joint angles
+                current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
+                distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
+                
+                if distance <= tolerance:
+                    logging.info(f"Robot reached target joint angles: {current_joint_angles}")
+                    break
+                
+                if time.time() - start_time > timeout:
+                    raise TimeoutError("Robot did not reach the target joint angles in time.")
+                
+                time.sleep(0.5)
+        
+        except AttributeError:
+            logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
+        except Exception as e:
+            logging.error(f"An error occurred while moving the robot to joint position: {e}")
 
     # -------------------------------------------------------------------
     #                      CALIBRATION REQUESTS
