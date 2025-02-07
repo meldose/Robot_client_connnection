@@ -1,8 +1,8 @@
 
-import CommunicationLibrary
-import time
-import json
-import logging
+import CommunicationLibrary # importing communication library
+import time # importing time
+import json # importing json
+import logging # importing logging
 from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
@@ -10,36 +10,36 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing r
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
-CONTROLLER_IP = "192.168.1.5"
-PORT = 11003
+CONTROLLER_IP = "192.168.1.5" # IP address of the controller
+PORT = 11003 # #port number
 
 
-def test_ls():
+def test_ls(): # main function for calling every function.
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
-    robot.pho_request_start_solution(252)
-    robot.pho_request_ls_scan(1)
-    robot.pho_ls_wait_for_scan()
-    robot.pho_request_get_objects(1, 5)
+    robot.pho_request_start_solution(252) # starting the solution
+    robot.pho_request_ls_scan(1) # ls scan
+    robot.pho_ls_wait_for_scan() # waiting for scan
+    robot.pho_request_get_objects(1, 5) # get objects
     time.sleep(0.01)
-    robot.pho_get_current_position()
+    robot.pho_get_current_position() # get current position
     time.sleep(0.01)
-    robot.pho_request_ls_get_vision_system_status(1)
+    robot.pho_request_ls_get_vision_system_status(1) # get vision system status
     time.sleep(0.01)
-    robot.pho_request_change_solution(253)
+    robot.pho_request_change_solution(253) # change solution
     time.sleep(0.01)
-    robot.pho_request_ls_scan(1)
-    robot.pho_ls_wait_for_scan()
-    robot.pho_request_get_objects(1, 5)
-    time.sleep(0.01)
-    robot.pho_request_get_running_solution()
+    robot.pho_request_ls_scan(1) # ls scan
+    robot.pho_ls_wait_for_scan() # waiting for scan
+    robot.pho_request_get_objects(1, 5) # get objects
+    time.sleep(0.01) # sleep
+    robot.pho_request_get_running_solution() # get running solution
     time.sleep(0.01)
     #robot.pho_request_move_to_position()
     # time.sleep(0.2)
     # robot.pho_request_stop_solution()
     # time.sleep(2)
-    robot.pho_request_get_available_solution()
+    robot.pho_request_get_available_solution() # get available solution
     robot.close_connection()  #communication needs to be closed
     time.sleep(0.01)
 
@@ -66,7 +66,7 @@ def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
         logging.error(f"An error occurred while extracting object coordinates: {e}")
         return None
 
-def format_coordinates(coords_mm):
+def format_coordinates(coords_mm): # function for formatting coordinates
 
     try:
         coords_m = [x / 1000.0 for x in coords_mm]
@@ -96,13 +96,13 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 def servo_j(message): # defining function for servoJ
     #Switch to external servo mode
 
-    x = message[0]
-    y = message[1]
-    z = message[2]
-    a = message[3]
-    b = message[4]
-    c = message[5]
-    d = message[6]
+    x = message[0] # extracting the x,y,z,a,b,c,d
+    y = message[1] # extracting the x,y,z,a,b,c,d
+    z = message[2] # extracting the x,y,z,a,b,c,d
+    a = message[3] # extracting the x,y,z,a,b,c,d
+    b = message[4] # extracting the x,y,z,a,b,c,d
+    c = message[5] # extracting the x,y,z,a,b,c,d
+    d = message[6] # extracting the x,y,z,a,b,c,d
 
     r.activate_servo_interface('position') # activating the servo interface
     dof = 6 # setting the DOF as 6 
@@ -158,27 +158,27 @@ def servo_j(message): # defining function for servoJ
 r.gripper("off") # setting gripper off
 
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
 
-    servo_j()
+    servo_j() # calling servo_j function
 
     try:
-        start_time = time.time()
+        start_time = time.time() # setting the start time
         while True:
             # Replace 'get_current_position' with the actual method to retrieve the robot's current position
-            current_coords = robot.pho_get_current_position()
+            current_coords = robot.pho_get_current_position() # getting the current position
             distance = ((current_coords[0] - target_coords[0]) ** 2 +
                         (current_coords[1] - target_coords[1]) ** 2 +
                         (current_coords[2] - target_coords[2]) ** 2) ** 0.5
-            if distance <= tolerance:
+            if distance <= tolerance: # setting the tolerance
                 logging.info(f"Robot reached target position: {current_coords}")
                 break
-            if time.time() - start_time > timeout:
+            if time.time() - start_time > timeout: # setting the timeout
                 raise TimeoutError("Robot did not reach the target position in time.")
             time.sleep(0.5)
-    except AttributeError:
+    except AttributeError: # error handling
         logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
-    except Exception as e:
+    except Exception as e: # error handling
         logging.error(f"An error occurred while moving the robot: {e}")
 
 def test_ls(): # main function for calling every function.
@@ -192,7 +192,7 @@ def test_ls(): # main function for calling every function.
         robot.connect_to_server(CONTROLLER_IP, PORT)  # Establish communication
 
         logging.info("Starting solution 252")
-        robot.pho_request_start_solution(252)
+        robot.pho_request_start_solution(252) # Start solution 252
 
         logging.info("Initiating LS scan")
         robot.pho_request_ls_scan(1)  # Start LS scan with parameter 1
@@ -203,34 +203,34 @@ def test_ls(): # main function for calling every function.
         time.sleep(0.1)  # Short delay to ensure response is received
 
         logging.info("Retrieving vision system status")
-        robot.pho_request_ls_get_vision_system_status(1)
+        robot.pho_request_ls_get_vision_system_status(1) # Get vision system status
         time.sleep(0.1)
 
         logging.info("Changing solution to 253")
-        robot.pho_request_change_solution(253)
+        robot.pho_request_change_solution(253) # Change solution
         time.sleep(0.1)
 
         logging.info("Initiating another LS scan")
-        robot.pho_request_ls_scan(1)
-        robot.pho_ls_wait_for_scan()
+        robot.pho_request_ls_scan(1) # Start another LS scan
+        robot.pho_ls_wait_for_scan() # Wait for the scan to complete
 
         logging.info("Requesting objects detected in the second scan")
-        robot.pho_request_get_objects(1, 5)
+        robot.pho_request_get_objects(1, 5) # Get objects detected in the second scan
         time.sleep(0.1)
 
         logging.info("Retrieving running solution")
-        robot.pho_request_get_running_solution()
+        robot.pho_request_get_running_solution() # Get running solution
         time.sleep(0.1)
 
         logging.info("Retrieving available solutions")
-        robot.pho_request_get_available_solution()
+        robot.pho_request_get_available_solution() # Get available solutions
 
         # Extract object coordinates from the response
-        object_coords = extract_object_coordinates(robot)
-        if object_coords:
+        object_coords = extract_object_coordinates(robot) # Extract object coordinates
+        if object_coords: # if object coordinates are found
             # Format coordinates (e.g., convert from mm to m)
             formatted_coords = format_coordinates(object_coords)
-            if formatted_coords:
+            if formatted_coords: # if formatting is successful
                 logging.info(f"Formatted Object Coordinates (meters): {formatted_coords}")
 
                 # Send coordinates to the robot to move
@@ -257,71 +257,71 @@ def test_ls(): # main function for calling every function.
         robot.close_connection()
         time.sleep(0.1)  # Short delay after closing the connection
 
-def calibration_extrinsic():
+def calibration_extrinsic(): # function for extrinsic calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
-    robot.pho_request_start_automatic_calibration(6,1)
+    robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
     # Load the JSON data
     file_path = 'extrinsic_calib_points.json'
     json_data = load_json_file(file_path)
 
     # add 9 calibration point
-    for point in json_data:
-        translation_mm = point["translation"]
-        quaternion = point["quaternion"]
+    for point in json_data: # for each point
+        translation_mm = point["translation"] # translation
+        quaternion = point["quaternion"] # quaternion
         translation_m = [x * 1000 for x in translation_mm] # mm to m
         tool_pose = translation_m + quaternion
 
-        robot.pho_request_add_calibration_point(tool_pose)
+        robot.pho_request_add_calibration_point(tool_pose) # add calibration point
         time.sleep(2)
 
-    robot.pho_request_save_automatic_calibration()
+    robot.pho_request_save_automatic_calibration() # save automatic calibration
     time.sleep(2)
-    robot.pho_request_stop_automatic_calibration()
+    robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
 
-def calibration_handeye():
+def calibration_handeye(): # function for handeye calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
-    robot.pho_request_start_automatic_calibration(6, 2)
+    robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
     # Load the JSON data
     file_path = 'handeye_calib_points.json'
     json_data = load_json_file(file_path)
 
     # add 9 calibration point
-    for point in json_data:
-        translation_mm = point["translation"]
-        quaternion = point["quaternion"]
+    for point in json_data: # for each point
+        translation_mm = point["translation"] # translation
+        quaternion = point["quaternion"] # quaternion
         translation_m = [x * 1000 for x in translation_mm]  # mm to m
-        tool_pose = translation_m + quaternion
+        tool_pose = translation_m + quaternion # tool pose
 
-        robot.pho_request_add_calibration_point(tool_pose)
-        time.sleep(2)
+        robot.pho_request_add_calibration_point(tool_pose) # add calibration point
+        time.sleep(2) # sleep for 2 seconds
 
 
     #robot.pho_request_save_automatic_calibration()
 
-    robot.pho_request_save_automatic_calibration()
+    robot.pho_request_save_automatic_calibration() # save automatic calibration
     time.sleep(2)
-    robot.pho_request_stop_automatic_calibration()
+    robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
 
 # Function to load JSON data from a file
-def load_json_file(file_path):
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return data
+def load_json_file(file_path): # function to load JSON data from a file
+    with open(file_path, 'r') as file: # open file
+        data = json.load(file) # load data
+    return data # return data
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # main function
     # calibration_handeye()
-    calibration_extrinsic()
-    test_ls()
+    calibration_extrinsic() # extrinsic calibration
+    test_ls() # calling the test_ls function
     #test_bps()
 
-    while True:
-        test_ls()
+    while True: # main loop
+        test_ls() # calling the test_ls function
         #test_bps()
 
