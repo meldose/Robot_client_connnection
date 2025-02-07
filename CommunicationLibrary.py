@@ -1,30 +1,30 @@
 
 #!/usr/bin/env python3
-import socket
-from copy import deepcopy
-import struct
-import math
-import numpy as np
+import socket # importing socket
+from copy import deepcopy # importing copy
+import struct # importing struct
+import math # importing math
+import numpy as np # importing numpy
 from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
-import time
-import logging
-from ruckig import InputParameter, OutputParameter, Result, Ruckig 
-from neurapy.robot import Robot
-r=Robot()
+import time # importing time
+import logging # importing logging
+from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig
+from neurapy.robot import Robot # importing robot
+r=Robot() # defining the robot
 
 BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX"  # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
 BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX"
 
-DEG2RAD = math.pi / 180
+DEG2RAD = math.pi / 180 # converting degrees to radians
 
 
-class OperationType:
-    PHO_TRAJECTORY_CNT = 0    
-    PHO_TRAJECTORY_FINE = 1
-    PHO_GRIPPER = 2
-    PHO_ERROR = 3
-    PHO_INFO = 4
-    PHO_OBJECT_POSE = 5
+class OperationType: # defining operation type
+    PHO_TRAJECTORY_CNT = 0  # defining operation type    
+    PHO_TRAJECTORY_FINE = 1 # defining operation type
+    PHO_GRIPPER = 2 # defining operation type
+    PHO_ERROR = 3 # defining operation type
+    PHO_INFO = 4 # defining operation type
+    PHO_OBJECT_POSE = 5 # defining operation type
 
 
 PHO_SCAN_BPS_REQUEST = 1
@@ -83,9 +83,9 @@ OBJECT_POSE_SIZE = 28
 PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 
-class ServoJ:
-    def __init__(self, robot):
-        self.robot = robot
+class ServoJ: # defining servoJ
+    def __init__(self, robot): # initializing the robot
+        self.robot = robot # setting the robot
 
     def servo_j(self): # defining function for servoJ#
 
@@ -141,65 +141,65 @@ class ServoJ:
     
         r.stop() # stopped the robot
 
-ServoJ(robot=r).servo_j() 
+ServoJ(robot=r).servo_j() # calling the servo_j function
 r.gripper("off") # setting gripper off
 
 
 
-class ResponseHeader:
-    def __init__(self, request_id, sub_headers):
-        self.request_id = request_id
-        self.sub_headers = sub_headers
+class ResponseHeader: # class used for storing data
+    def __init__(self, request_id, sub_headers): # initializing the class
+        self.request_id = request_id # setting the request id
+        self.sub_headers = sub_headers # setting the sub headers
 
 
-class ResponseData:
-    def __init__(self):
-        self.response_id = 0
-        self.number_of_messages = 0
-        self.message_data = []
+class ResponseData: # class used for storing data
+    def __init__(self): # initializing the class
+        self.response_id = 0 # setting the response id
+        self.number_of_messages = 0 # setting the number of messages
+        self.message_data = [] # setting the message data
 
 
 class ResponseData:  # class used for storing data
 
 
-    def __init__(self):
-        self.segment_id = 0
+    def __init__(self): # initializing the class
+        self.segment_id = 0 # stores the segment id
 
     gripper_command = []  # stores gripper commands
     trajectory_data = []  # stores trajectory waypoints in 4 segments
 
-    def init_trajectory_data(self):
+    def init_trajectory_data(self): # function to initialize the trajectory
         # empty the variable for storing trajectory
-        self.trajectory_data = []
+        self.trajectory_data = [] # empty the variable for storing trajectory
         self.trajectory_data.append(np.empty((0, 6), dtype=float))
-        self.segment_id = 0
-        self.gripper_command = []
+        self.segment_id = 0 # reset the segment id
+        self.gripper_command = [] # reset the gripper command
 
-    def add_waypoint(self, slice_index, row):
+    def add_waypoint(self, slice_index, row): # function to add waypoint
         self.trajectory_data[slice_index] = np.vstack([self.trajectory_data[slice_index], row])
 
-    def add_segment(self):
-        self.trajectory_data.append(np.empty((0, 6), dtype=float))
+    def add_segment(self): #    function to add segment
+        self.trajectory_data.append(np.empty((0, 6), dtype=float)) # add empty segment
 
 
-class RobotRequestResponseCommunication:
+class RobotRequestResponseCommunication: # class used for storing data
 
     response_data = ResponseData()  # create object for storing data
 
-    def __init__(self):
+    def __init__(self): # initializing the class
         self.active_request = 0  # variable to check, if old request has finished and new one can be called
-        self.client = None
-        self.message = None
+        self.client = None # variable to store client
+        self.message = None # variable to store message
         self.print_messages = True # True -> prints messages , False -> doesnt print messages
 
-    def connect_to_server(self, CONTROLLER_IP, PORT):
-        self.client = socket.socket()
-        self.client.connect((str(CONTROLLER_IP), PORT))
-        msg = build_hello_msg()
-        self.client.send(msg)
+    def connect_to_server(self, CONTROLLER_IP, PORT): # function to connect to server
+        self.client = socket.socket() # create socket
+        self.client.connect((str(CONTROLLER_IP), PORT)) # connect to server
+        msg = build_hello_msg() # build hello message
+        self.client.send(msg) # send hello message
 
-    def close_connection(self):
-        self.client.close()
+    def close_connection(self): # function to close connection
+        self.client.close() # close connection
 
     # -------------------------------------------------------------------
     #                      BIN PICKING REQUESTS
