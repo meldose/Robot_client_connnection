@@ -5,6 +5,7 @@ import time # importing time
 import json # importing json
 import logging #    importing logging
 from neurapy.robot import Robot
+from ruckig import InputParameter, OutputParameter, Result, Ruckig 
 r=Robot()
 
 CONTROLLER_IP = "192.168.1.5" # IP address of the controller
