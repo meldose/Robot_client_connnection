@@ -20,8 +20,6 @@ def test_ls(): # test ls
     robot.pho_ls_wait_for_scan() # wait for scan
     robot.pho_request_get_objects(1, 5) # get objects
     time.sleep(0.1) # sleep for 0.1 second
-    # robot.pho_get_current_position() #  get current position
-    # time.sleep(0.1) # sleep for 0.1 second
     robot.pho_request_ls_get_vision_system_status(1) # get vision system status
     time.sleep(0.1) # sleep for 0.1 second
     robot.pho_request_change_solution(253) # change solution
@@ -87,82 +85,82 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
     except Exception as e:
         logging.error(f"An error occurred while sending move command: {e}")
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
-
-    try:
-        start_time = time.time()
-        while True:
-            # Replace 'get_current_position' with the actual method to retrieve the robot's current position
-            current_coords = robot.pho_get_current_position()
-            distance = ((current_coords[0] - target_coords[0]) ** 2 +
-                        (current_coords[1] - target_coords[1]) ** 2 +
-                        (current_coords[2] - target_coords[2]) ** 2) ** 0.5
-            if distance <= tolerance:
-                logging.info(f"Robot reached target position: {current_coords}")
-                break
-            if time.time() - start_time > timeout:
-                raise TimeoutError("Robot did not reach the target position in time.")
-            time.sleep(0.5)
-    except AttributeError:
-        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
-    except Exception as e:
-        logging.error(f"An error occurred while moving the robot: {e}")
-
-
 # def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
+
 #     try:
-#         robot.activate_servo_interface('position') # activate servo interface
-#         dof = 6 # degrees of freedom
-#         otg = Ruckig(dof, 0.001) # create Ruckig object
-
-#         inp = InputParameter(dof) # create InputParameter object
-#         out = OutputParameter(dof) # create OutputParameter object
-
-#         inp.current_position = r.get_current_joint_angles() # get current joint angles
-#         inp.current_velocity = [0.0] * dof # set current velocity to zero
-#         inp.current_acceleration = [0.0] * dof # set current acceleration to zero
-
-#         inp.target_position = target_coords  # Target joint positions
-#         inp.max_velocity = [0.5] * dof # set maximum velocity
-#         inp.max_acceleration = [3.0] * dof # set maximum acceleration
-#         inp.max_jerk = [10.0] * dof #   set maximum jerk
-
-#         res = Result.Working # set result to working
-#         start_time = time.time() # set start time
-
-#         while res == Result.Working: # while result is working
-#             if time.time() - start_time > timeout: # if time out
-#                 raise TimeoutError("Robot did not reach the target position in time.")
-
-#             res = otg.update(inp, out) # update
-
-#             position = out.new_position # get new position
-#             velocity = out.new_velocity # get new velocity
-#             acceleration = out.new_acceleration # get new acceleration
-
-#             error_code = r.servo_j(position, velocity, acceleration) # send to robot
-#             logging.info(f"Error Code: {error_code}") # log
-
-#             scaling_factor = r.get_servo_trajectory_scaling_factor() # get scaling factor
-#             out.pass_to_input(inp) # pass to input
-
-#             current_coords = r.get_current_joint_angles() # get current joint angles
-#             distance = sum((c - t) ** 2 for c, t in zip(current_coords, target_coords)) ** 0.5 # calculate distance
-#             if distance <= tolerance: # if distance is less than tolerance
-#                 logging.info(f"Robot reached target position: {current_coords}") # log
+#         start_time = time.time()
+#         while True:
+#             # Replace 'get_current_position' with the actual method to retrieve the robot's current position
+#             current_coords = robot.pho_get_current_position()
+#             distance = ((current_coords[0] - target_coords[0]) ** 2 +
+#                         (current_coords[1] - target_coords[1]) ** 2 +
+#                         (current_coords[2] - target_coords[2]) ** 2) ** 0.5
+#             if distance <= tolerance:
+#                 logging.info(f"Robot reached target position: {current_coords}")
 #                 break
+#             if time.time() - start_time > timeout:
+#                 raise TimeoutError("Robot did not reach the target position in time.")
+#             time.sleep(0.5)
+#     except AttributeError:
+#         logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
+#     except Exception as e:
+#         logging.error(f"An error occurred while moving the robot: {e}")
 
-#             time.sleep(0.001) # sleep
 
-#         robot.deactivate_servo_interface() # deactivate servo interface
-#         robot.stop() # stop
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
+    try:
+        robot.activate_servo_interface('position') # activate servo interface
+        dof = 6 # degrees of freedom
+        otg = Ruckig(dof, 0.001) # create Ruckig object
 
-#     except AttributeError as e: # error handling
-#         logging.error(f"Attribute error: {e}") # error message
-#     except Exception as e: # error handling
-#         logging.error(f"An error occurred while moving the robot: {e}") # error message
+        inp = InputParameter(dof) # create InputParameter object
+        out = OutputParameter(dof) # create OutputParameter object
 
-# r.gripper("off") # set gripper off
+        inp.current_position = r.get_current_joint_angles() # get current joint angles
+        inp.current_velocity = [0.0] * dof # set current velocity to zero
+        inp.current_acceleration = [0.0] * dof # set current acceleration to zero
+
+        inp.target_position = target_coords  # Target joint positions
+        inp.max_velocity = [0.5] * dof # set maximum velocity
+        inp.max_acceleration = [3.0] * dof # set maximum acceleration
+        inp.max_jerk = [10.0] * dof #   set maximum jerk
+
+        res = Result.Working # set result to working
+        start_time = time.time() # set start time
+
+        while res == Result.Working: # while result is working
+            if time.time() - start_time > timeout: # if time out
+                raise TimeoutError("Robot did not reach the target position in time.")
+
+            res = otg.update(inp, out) # update
+
+            position = out.new_position # get new position
+            velocity = out.new_velocity # get new velocity
+            acceleration = out.new_acceleration # get new acceleration
+
+            error_code = r.servo_j(position, velocity, acceleration) # send to robot
+            logging.info(f"Error Code: {error_code}") # log
+
+            scaling_factor = r.get_servo_trajectory_scaling_factor() # get scaling factor
+            out.pass_to_input(inp) # pass to input
+
+            current_coords = r.get_current_joint_angles() # get current joint angles
+            distance = sum((c - t) ** 2 for c, t in zip(current_coords, target_coords)) ** 0.5 # calculate distance
+            if distance <= tolerance: # if distance is less than tolerance
+                logging.info(f"Robot reached target position: {current_coords}") # log
+                break
+
+            time.sleep(0.001) # sleep
+
+        robot.deactivate_servo_interface() # deactivate servo interface
+        robot.stop() # stop
+
+    except AttributeError as e: # error handling
+        logging.error(f"Attribute error: {e}") # error message
+    except Exception as e: # error handling
+        logging.error(f"An error occurred while moving the robot: {e}") # error message
+
+r.gripper("off") # set gripper off
 
 
 def calibration_extrinsic(): # function for extrinsic calibration
