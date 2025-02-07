@@ -3,6 +3,12 @@ import CommunicationLibrary
 import time
 import json
 import logging
+from neurapy.robot import Robot # importing robot module
+import time # importing time module
+from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
+ 
+r = Robot() #settig r as the variable for the Robot
+r.gripper("on") # setting gripper on
 
 CONTROLLER_IP = "192.168.1.5"
 PORT = 11003
@@ -85,12 +91,7 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
         logging.error(f"An error occurred while sending move command: {e}")
 
 
-from neurapy.robot import Robot # importing robot module
-import time # importing time module
-from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
- 
-r = Robot() #settig r as the variable for the Robot
-r.gripper("on") # setting gripper on
+
 
 def servo_j(message): # defining function for servoJ
     #Switch to external servo mode
