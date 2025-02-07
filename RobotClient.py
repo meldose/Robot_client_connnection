@@ -139,7 +139,6 @@ def servo_j(message): # defining function for servoJ
  
     while res == Result.Working:
         error_code = 0
-
         res = otg.update(inp, out)
 
         position = out.new_position # setting the new position 
