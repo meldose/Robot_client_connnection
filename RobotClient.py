@@ -16,26 +16,26 @@ def test_ls():
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(0.1)
+    time.sleep(0.01)
     robot.pho_get_current_position()
-    time.sleep(0.1)
+    time.sleep(0.01)
     robot.pho_request_ls_get_vision_system_status(1)
-    time.sleep(0.1)
+    time.sleep(0.01)
     robot.pho_request_change_solution(253)
-    time.sleep(0.1)
+    time.sleep(0.01)
     robot.pho_request_ls_scan(1)
     robot.pho_ls_wait_for_scan()
     robot.pho_request_get_objects(1, 5)
-    time.sleep(0.1)
+    time.sleep(0.01)
     robot.pho_request_get_running_solution()
-    time.sleep(0.1)
+    time.sleep(0.01)
     #robot.pho_request_move_to_position()
     # time.sleep(0.2)
     # robot.pho_request_stop_solution()
     # time.sleep(2)
     robot.pho_request_get_available_solution()
     robot.close_connection()  #communication needs to be closed
-    time.sleep(0.1)
+    time.sleep(0.01)
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
@@ -159,7 +159,7 @@ r.gripper("off") # setting gripper off
 
 
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
-    
+
     servo_j()
 
     try:
