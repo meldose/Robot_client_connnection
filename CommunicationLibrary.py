@@ -472,37 +472,37 @@ def build_state_server_hello_msg():
 #                      STATE SERVER FUNCTIONS
 # -------------------------------------------------------------------
 
-class RobotStateCommunication:
-    def __init__(self):
-        self.client = None
-        self.server = None
+class RobotStateCommunication: # class for state server
+    def __init__(self): # initializing the class
+        self.client = None # client
+        self.server = None # server
 
-    def create_server(self, ROBOT_CONTROLLER_IP, PORT):
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.bind((ROBOT_CONTROLLER_IP, PORT))
+    def create_server(self, ROBOT_CONTROLLER_IP, PORT): # defining the server
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create socket
+        self.server.bind((ROBOT_CONTROLLER_IP, PORT)) # bind
         # Listen for incoming connections
-        self.server.listen(1)
-        print('Server is running, waiting for client...')
+        self.server.listen(1) # listen
+        print('Server is running, waiting for client...') # print the message
 
-    def wait_for_client(self):
-        self.client, client_address = self.server.accept()
-        print('Connection established...')
+    def wait_for_client(self): # waiting for client
+        self.client, client_address = self.server.accept() # accept connection
+        print('Connection established...') # print the message
         # Send hello string
-        self.client.send(build_state_server_hello_msg())
+        self.client.send(build_state_server_hello_msg()) # send the message
 
-    def close_connection(self):
-        self.server.close()
+    def close_connection(self): # closing the connection
+        self.server.close() # close the connection
 
-    def send_joint_state(self):
-        msg = deepcopy(PHO_HEADER)
-        msg = msg + [6, 0, 0, 0]  # Data size
-        msg = msg + [JOINT_STATE_TYPE, 0, 0, 0]  # Type
-        msg = msg + floatArray2bytes(get_joint_state(init_joint_state))
-        self.client.send(bytearray(msg))
+    def send_joint_state(self): # sending the joint state
+        msg = deepcopy(PHO_HEADER) # creating the message
+        msg = msg + [6, 0, 0, 0]  # Data size # Data size
+        msg = msg + [JOINT_STATE_TYPE, 0, 0, 0]  # Type 
+        msg = msg + floatArray2bytes(get_joint_state(init_joint_state)) # sending the joint state
+        self.client.send(bytearray(msg)) # sending the message
 
-    def send_tool_pose(self):
-        msg = deepcopy(PHO_HEADER)
+    def send_tool_pose(self): # sending the tool pose
+        msg = deepcopy(PHO_HEADER) # creating the message
         msg = msg + [7, 0, 0, 0]  # Data size
         msg = msg + [TOOL_POSE_TYPE, 0, 0, 0]  # Type
-        msg = msg + floatArray2bytes(get_tool_pose(base_quat))
-        self.client.send(bytearray(msg))
+        msg = msg + floatArray2bytes(get_tool_pose(base_quat)) # sending the tool pose
+        self.client.send(bytearray(msg)) # sending the message
