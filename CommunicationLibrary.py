@@ -9,7 +9,7 @@ import numpy as np # importing numpy
 # from StateServer import init_joint_state, base_quat
 import time # importing times
 import logging # importing logging
-from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig
+from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig . output parameter,InputParameter and Result
 from neurapy.robot import Robot # importing robot
 r=Robot() # defining the robot
 
