@@ -13,6 +13,7 @@ r.gripper("on") # setting gripper on
 CONTROLLER_IP = "192.168.1.5" # IP address of the controller
 PORT = 11003 # #port number
 
+######## MAIN FUNCTION ##############################################
 
 def test_ls(): # main function for calling every function.
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
@@ -90,7 +91,7 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
     except Exception as e:
         logging.error(f"An error occurred while sending move command: {e}")
 
-
+################# SERVO FUNCTION ############################
 
 
 def servo_j(message): # defining function for servoJ
@@ -160,6 +161,8 @@ r.gripper("off") # setting gripper off
 
 
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
+
+    servo_j()
 
     try:
         start_time = time.time() # setting the start time
