@@ -160,7 +160,6 @@ r.gripper("off") # setting gripper off
 
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
 
-    servo_j() # calling servo_j function
 
     try:
         start_time = time.time() # setting the start time
