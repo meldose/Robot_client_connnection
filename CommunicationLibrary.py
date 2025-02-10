@@ -5,8 +5,9 @@ from copy import deepcopy # importing copy
 import struct # importing struct
 import math # importing math
 import numpy as np # importing numpy
-from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
-import time # importing time
+# from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
+# from StateServer import init_joint_state, base_quat
+import time # importing times
 import logging # importing logging
 from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig
 from neurapy.robot import Robot # importing robot
@@ -453,7 +454,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
                 round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
                 round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
-
+    
 
 # -------------------------------------------------------------------
 #                     OTHER FUNCTIONS
