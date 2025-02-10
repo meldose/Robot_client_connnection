@@ -175,7 +175,7 @@ class ServoX:
         c = message[5] 
         d = message[6] 
     
-        r = Robot()
+        r = self.robot
 
         #Switch to external servo mode
         r.activate_servo_interface('position')
@@ -205,6 +205,8 @@ class ServoX:
 
         velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
         acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
+        
+        res=Result.Working
 
         while res == Result.Working:
             error_code = 0
@@ -227,8 +229,9 @@ class ServoX:
 
         r.stop() # stopping the robot
         
+    
+ServoX(robot=r).servo_x()
         
-
 class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
         self.request_id = request_id # setting the request id
