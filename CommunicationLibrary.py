@@ -82,7 +82,6 @@ OBJECT_POSE_SIZE = 28
 # Photoneo header
 PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
-
 class ServoJ: # defining servoJ
     def __init__(self, robot): # initializing the robot
         self.robot = robot # setting the robot
@@ -143,7 +142,6 @@ class ServoJ: # defining servoJ
 
 ServoJ(robot=r).servo_j() # calling the servo_j function
 r.gripper("off") # setting gripper off
-
 
 
 class ResponseHeader: # class used for storing data
@@ -506,3 +504,4 @@ class RobotStateCommunication: # class for state server
         msg = msg + [TOOL_POSE_TYPE, 0, 0, 0]  # Type
         msg = msg + floatArray2bytes(get_tool_pose(base_quat)) # sending the tool pose
         self.client.send(bytearray(msg)) # sending the message
+
