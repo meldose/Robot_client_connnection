@@ -178,7 +178,6 @@ def load_json_file(file_path): # function to load JSON data from a file
 
 
 if __name__ == '__main__': # main function
-    # calibration_handeye()
     calibration_extrinsic() # extrinsic calibration
     test_ls() # calling the test_ls function
     # ServoJ(robot=r).servo_j()
