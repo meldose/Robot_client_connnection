@@ -141,8 +141,8 @@ class ServoJ: # defining servoJ
     
         r.stop() # stopped the robot
 
-# ServoJ(robot=r).servo_j()
-r.gripper("off") # setting gripper off
+# ServoJ(robot=r).servo_j() # line for initial robot movement
+# r.gripper("off") # setting gripper off
 
 
 class ResponseHeader: # class used for storing data
