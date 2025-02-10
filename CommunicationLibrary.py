@@ -89,14 +89,20 @@ class ServoJ: # defining servoJ
 
     def servo_j(self,message):
 
+        message = [x / 1000 for x in message]
+        
+        x = message[0] 
+        y = message[1] 
+        z = message[2] 
+        a = message[3] 
+        b = message[4] 
+        c = message[5] 
+        d = message[6] 
 
-        x = message[0]
-        y = message[1]
-        z = message[2]
-        a = message[3]
-        b = message[4]
-        c = message[5]
-        d = message[6]
+        
+
+        print("x", x)
+        print("mESSAGE:", message)
 
         r.activate_servo_interface('position') # activating the servo interface
         dof = 6 # setting the DOF as 6 
@@ -120,7 +126,7 @@ class ServoJ: # defining servoJ
         inp.current_velocity = [0.]*dof # setting the current velocity as zero
         inp.current_acceleration = [0.]*dof # setting the current acceleration as zero
     
-
+        inp.target_position = [x,y,z,a,b,c,d]
         inp.target_acceleration = [0.]*dof # setting the target acceleration as zero.
         r.gripper("on") # setting the gripper in On position.
     
@@ -138,14 +144,14 @@ class ServoJ: # defining servoJ
             position = out.new_position # setting the new position 
             velocity = out.new_velocity # setting the new velocity
             acceleration = out.new_acceleration # setting the new acceleration 
-    
-            #error_code = r.servo_j(inp.target_position,inp.max_velocity, inp.max_acceleration)
+
             error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
+            #print(error_code) # checking if the error is there or not 
             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors.
             out.pass_to_input(inp)
             time.sleep(0.001) # setting the time sleep to 0.001 seconds
 
-        # r.deactivate_servo_interface() # deactivating the servo interface
+        r.deactivate_servo_interface() # deactivating the servo interface
     
         r.stop() # stopped the robot
 
@@ -422,7 +428,9 @@ class RobotRequestResponseCommunication: # class used for storing data
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose
-                self.print_message(operation_type)
+                a = self.print_message(operation_type)
+                print(a)
+                ServoJ(robot=r).servo_j(a) 
             else:
                 assert False, "Unexpected operation type"
 
@@ -454,7 +462,9 @@ class RobotRequestResponseCommunication: # class used for storing data
                 round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
                 round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
                 round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
-    
+            #print(type(self.message))
+            #print(list(self.message))
+        return self.message
 
 # -------------------------------------------------------------------
 #                     OTHER FUNCTIONS
