@@ -86,39 +86,8 @@ class ServoJ: # defining servoJ
     def __init__(self, robot): # initializing the robot
         self.robot = robot # setting the robot
 
-    def test_ls(): # main function for calling every function.
-        robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
-        robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
-
-        robot.pho_request_start_solution(252) # starting the solution
-        robot.pho_request_ls_scan(1) # ls scan
-        robot.pho_ls_wait_for_scan() # waiting for scan
-        robot.pho_request_get_objects(1, 5) # get objects
-        time.sleep(0.01)
-        robot.pho_get_current_position() # get current position
-        time.sleep(0.01)
-        robot.pho_request_ls_get_vision_system_status(1) # get vision system status
-        time.sleep(0.01)
-        robot.pho_request_change_solution(253) # change solution
-        time.sleep(0.01)
-        robot.pho_request_ls_scan(1) # ls scan
-        robot.pho_ls_wait_for_scan() # waiting for scan
-        robot.pho_request_get_objects(1, 5) # get objects
-        time.sleep(0.01) # sleep
-        robot.pho_request_get_running_solution() # get running solution
-        time.sleep(0.01)
-        #robot.pho_request_move_to_position()
-        # time.sleep(0.2)
-        # robot.pho_request_stop_solution()
-        # time.sleep(2)
-        robot.pho_request_get_available_solution() # get available solution
-        robot.close_connection()  #communication needs to be closed
-        time.sleep(0.01)
-
-
     def servo_j(self): # defining function for servoJ#
 
-        
         r.activate_servo_interface('position') # activating the servo interface
         dof = 6 # setting the DOF as 6 
         otg = Ruckig(dof, 0.001)  # DoFs, control cycle
@@ -173,8 +142,7 @@ class ServoJ: # defining servoJ
     
         r.stop() # stopped the robot
 
-ServoJ(robot=r).test_ls()
-# ServoJ(robot=r).servo_j()
+ServoJ(robot=r).servo_j()
 r.gripper("off") # setting gripper off
 
 
