@@ -6,7 +6,7 @@ import logging # importing logging
 from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
-from CommunicationLibrary import ServoJ
+#from CommunicationLibrary import ServoJ
  
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
@@ -44,6 +44,7 @@ def test_ls(): # main function for calling every function.
     robot.pho_request_get_available_solution() # get available solution
     robot.close_connection()  #communication needs to be closed
     time.sleep(0.01)
+
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
@@ -92,17 +93,9 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
     except Exception as e:
         logging.error(f"An error occurred while sending move command: {e}")
 
-################# SERVO FUNCTION ############################
 
-# def servo_j(message):
-# # Activating the servo interface for position control
-#     x = message[0] # extracting the x,y,z,a,b,c,d
-#     y = message[1] # extracting the x,y,z,a,b,c,d
-#     z = message[2] # extracting the x,y,z,a,b,c,d
-#     a = message[3] # extracting the x,y,z,a,b,c,d
-#     b = message[4] # extracting the x,y,z,a,b,c,d
-#     c = message[5] # extracting the x,y,z,a,b,c,d
-#     d = message[6] # extracting the x,y,z,a,b,c,d
+def servo_j():
+    
 
 
 
