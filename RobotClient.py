@@ -24,7 +24,7 @@ def test_ls(): # main function for calling every function.
     robot.pho_ls_wait_for_scan() # waiting for scan
     robot.pho_request_get_objects(1, 5) # get objects
     time.sleep(0.01)
-    robot.pho_get_current_position() # get current position
+    # robot.pho_get_current_position() # get current position
     time.sleep(0.01)
     robot.pho_request_ls_get_vision_system_status(1) # get vision system status
     time.sleep(0.01)
@@ -43,6 +43,8 @@ def test_ls(): # main function for calling every function.
     robot.pho_request_get_available_solution() # get available solution
     robot.close_connection()  #communication needs to be closed
     time.sleep(0.01)
+
+
 
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
@@ -116,6 +118,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
         logging.error(f"An error occurred while moving the robot: {e}")
 
 
+
 def calibration_extrinsic(): # function for extrinsic calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
@@ -178,6 +181,7 @@ if __name__ == '__main__': # main function
     # calibration_handeye()
     calibration_extrinsic() # extrinsic calibration
     test_ls() # calling the test_ls function
+    ServoJ(robot=r).servo_j()
     #test_bps()
 
     while True: # main loop

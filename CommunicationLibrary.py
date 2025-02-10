@@ -133,7 +133,6 @@ class ServoJ: # defining servoJ
     
             #error_code = r.servo_j(inp.target_position,inp.max_velocity, inp.max_acceleration)
             error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
-            #print(error_code) # checking if the error is there or not 
             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors.
             out.pass_to_input(inp)
             time.sleep(0.001) # setting the time sleep to 0.001 seconds
@@ -142,7 +141,7 @@ class ServoJ: # defining servoJ
     
         r.stop() # stopped the robot
 
-ServoJ(robot=r).servo_j()
+# ServoJ(robot=r).servo_j()
 r.gripper("off") # setting gripper off
 
 
