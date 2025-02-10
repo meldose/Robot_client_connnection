@@ -97,7 +97,7 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
                            
     robot=RobotRequestResponseCommunication()
-    servo=ServoJ()
+    servo=ServoJ().servo_j()
     try:
         start_time = time.time()
         while True:
@@ -116,7 +116,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
         logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
     except Exception as e:
         logging.error(f"An error occurred while moving the robot: {e}")
-
+    return servo
 
 
 def calibration_extrinsic(): # function for extrinsic calibration
@@ -181,7 +181,7 @@ if __name__ == '__main__': # main function
     # calibration_handeye()
     calibration_extrinsic() # extrinsic calibration
     test_ls() # calling the test_ls function
-    ServoJ(robot=r).servo_j()
+    # ServoJ(robot=r).servo_j()
     #test_bps()
 
     while True: # main loop

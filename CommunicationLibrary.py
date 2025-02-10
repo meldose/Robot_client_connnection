@@ -86,7 +86,16 @@ class ServoJ: # defining servoJ
     def __init__(self, robot): # initializing the robot
         self.robot = robot # setting the robot
 
-    def servo_j(self): # defining function for servoJ#
+    def servo_j(self,message):
+
+
+        x = message[0]
+        y = message[1]
+        z = message[2]
+        a = message[3]
+        b = message[4]
+        c = message[5]
+        d = message[6]
 
         r.activate_servo_interface('position') # activating the servo interface
         dof = 6 # setting the DOF as 6 
@@ -100,13 +109,11 @@ class ServoJ: # defining servoJ
         inp.current_acceleration = [0.]*dof
     
         # for home position ####
-        inp.target_position = [] # target positon
+        inp.target_position = [x,y,z,a,b,c,d]
         inp.max_velocity = [0.5]*dof # setting up the maximum velocity 
         inp.max_acceleration = [3]*dof # setting up the maximum acceleration
     
-
-    
-        inp = InputParameter(dof) # setting the input parameter
+        inp = InputParameter(dof) # setting the input parameters
         out = OutputParameter(dof) # setting the ouput parameters 
         inp.current_position = r.get_current_joint_angles() # getting the current joint angles
         inp.current_velocity = [0.]*dof # setting the current velocity as zero
