@@ -229,8 +229,7 @@ class ServoX:
 
         r.stop() # stopping the robot
         
-    
-ServoX(robot=r).servo_x()
+ServoX(robot=r).servo_x
         
 class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
