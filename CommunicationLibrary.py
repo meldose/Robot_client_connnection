@@ -88,6 +88,7 @@ class ServoJ: # defining servoJ
 
     def servo_j(self): # defining function for servoJ#
 
+        
         r.activate_servo_interface('position') # activating the servo interface
         dof = 6 # setting the DOF as 6 
         otg = Ruckig(dof, 0.001)  # DoFs, control cycle
@@ -99,10 +100,11 @@ class ServoJ: # defining servoJ
         inp.current_velocity = [0.]*dof
         inp.current_acceleration = [0.]*dof
     
-        inp.target_position = [1.1625650370244778, -0.5774947959093657, -1.6300017754314295, 1.9807964651163987, 1.5676122261006906, 0.636066807616557] # target positon
-    
+        # for home position ####
+        inp.target_position = [] # target positon
         inp.max_velocity = [0.5]*dof # setting up the maximum velocity 
         inp.max_acceleration = [3]*dof # setting up the maximum acceleration
+    
 
     
         inp = InputParameter(dof) # setting the input parameter
@@ -111,7 +113,7 @@ class ServoJ: # defining servoJ
         inp.current_velocity = [0.]*dof # setting the current velocity as zero
         inp.current_acceleration = [0.]*dof # setting the current acceleration as zero
     
-        inp.target_position = [1.1625650370244778, -0.5774947959093657, -1.6300017754314295, 1.9807964651163987, 1.5676122261006906, 0.636066807616557] # providing the target position
+
         inp.target_acceleration = [0.]*dof # setting the target acceleration as zero.
         r.gripper("on") # setting the gripper in On position.
     
@@ -130,13 +132,14 @@ class ServoJ: # defining servoJ
             velocity = out.new_velocity # setting the new velocity
             acceleration = out.new_acceleration # setting the new acceleration 
     
-            error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
-            #print(error_code) # checking if the error is there or not 
+            error_code = r.servo_j(inp.target_position,inp.max_velocity, inp.max_acceleration)
+            #error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
+            print(error_code) # checking if the error is there or not 
             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors.
             out.pass_to_input(inp)
             time.sleep(0.001) # setting the time sleep to 0.001 seconds
 
-        r.deactivate_servo_interface() # deactivating the servo interface
+        # r.deactivate_servo_interface() # deactivating the servo interface
     
         r.stop() # stopped the robot
 
