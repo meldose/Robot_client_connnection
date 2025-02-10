@@ -91,6 +91,8 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
         logging.error(f"An error occurred while sending move command: {e}")
 
 
+
+
 def servo_j(message): # defining function for servoJ
     #Switch to external servo mode
 
