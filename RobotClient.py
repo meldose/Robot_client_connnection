@@ -153,6 +153,7 @@
 
 #     r.deactivate_servo_interface() # deactivating the servo interface
  
+<<<<<<< HEAD
 #     r.stop() # stopped the robot
 
 # r.gripper("off") # setting gripper off
@@ -473,6 +474,70 @@ def test_loop_communication():
         except socket.error:
             print('Communication lost. Trying to reconnect...')
             break
+
+    r.stop() # stopped the robot
+
+r.gripper("off") # setting gripper off
+
+
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
+
+    try:
+        start_time = time.time() # setting the start time
+        while True:
+            # Replace 'get_current_position' with the actual method to retrieve the robot's current position
+            current_coords = robot.pho_get_current_position() # getting the current position
+            distance = ((current_coords[0] - target_coords[0]) ** 2 +
+                        (current_coords[1] - target_coords[1]) ** 2 +
+                        (current_coords[2] - target_coords[2]) ** 2) ** 0.5
+            if distance <= tolerance: # setting the tolerance
+                logging.info(f"Robot reached target position: {current_coords}")
+                break
+            if time.time() - start_time > timeout: # setting the timeout
+                raise TimeoutError("Robot did not reach the target position in time.")
+            time.sleep(0.5)
+    except AttributeError: # error handling
+        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
+    except Exception as e: # error handling
+        logging.error(f"An error occurred while moving the robot: {e}")
+
+def test_ls(): # main function for calling every function.
+    """
+    Tests the LS (Laser Scan) functionality of the robot.
+    Extracts object coordinates from the camera and sends them to the robotic controller to move the robot.
+    """
+    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # Create robot communication object
+    try:
+        logging.info(f"Connecting to robot at {CONTROLLER_IP}:{PORT}")
+        robot.connect_to_server(CONTROLLER_IP, PORT)  # Establish communication
+
+        logging.info("Starting solution 252")
+        robot.pho_request_start_solution(252) # Start solution 252
+
+        logging.info("Initiating LS scan")
+        robot.pho_request_ls_scan(1)  # Start LS scan with parameter 1
+        robot.pho_ls_wait_for_scan()    # Wait for the scan to complete
+
+        logging.info("Requesting objects detected in the scan")
+        robot.pho_request_get_objects(1, 5)  # Get objects detected (parameters may vary)
+        time.sleep(0.1)  # Short delay to ensure response is received
+
+        logging.info("Retrieving vision system status")
+        robot.pho_request_ls_get_vision_system_status(1) # Get vision system status
+        time.sleep(0.1)
+
+        logging.info("Changing solution to 253")
+        robot.pho_request_change_solution(253) # Change solution
+        time.sleep(0.1)
+
+        logging.info("Initiating another LS scan")
+        robot.pho_request_ls_scan(1) # Start another LS scan
+        robot.pho_ls_wait_for_scan() # Wait for the scan to complete
+
+        logging.info("Requesting objects detected in the second scan")
+        robot.pho_request_get_objects(1, 5) # Get objects detected in the second scan
+        time.sleep(0.1)
+
 
         time.sleep(0.1)
 
