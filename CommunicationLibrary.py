@@ -132,9 +132,9 @@ class ServoJ: # defining servoJ
             velocity = out.new_velocity # setting the new velocity
             acceleration = out.new_acceleration # setting the new acceleration 
     
-            error_code = r.servo_j(inp.target_position,inp.max_velocity, inp.max_acceleration)
-            #error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
-            print(error_code) # checking if the error is there or not 
+            #error_code = r.servo_j(inp.target_position,inp.max_velocity, inp.max_acceleration)
+            error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
+            #print(error_code) # checking if the error is there or not 
             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors.
             out.pass_to_input(inp)
             time.sleep(0.001) # setting the time sleep to 0.001 seconds

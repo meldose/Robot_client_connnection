@@ -94,15 +94,15 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 
 ################# SERVO FUNCTION ############################
 
-def servo_j(message):
-# Activating the servo interface for position control
-    x = message[0] # extracting the x,y,z,a,b,c,d
-    y = message[1] # extracting the x,y,z,a,b,c,d
-    z = message[2] # extracting the x,y,z,a,b,c,d
-    a = message[3] # extracting the x,y,z,a,b,c,d
-    b = message[4] # extracting the x,y,z,a,b,c,d
-    c = message[5] # extracting the x,y,z,a,b,c,d
-    d = message[6] # extracting the x,y,z,a,b,c,d
+# def servo_j(message):
+# # Activating the servo interface for position control
+#     x = message[0] # extracting the x,y,z,a,b,c,d
+#     y = message[1] # extracting the x,y,z,a,b,c,d
+#     z = message[2] # extracting the x,y,z,a,b,c,d
+#     a = message[3] # extracting the x,y,z,a,b,c,d
+#     b = message[4] # extracting the x,y,z,a,b,c,d
+#     c = message[5] # extracting the x,y,z,a,b,c,d
+#     d = message[6] # extracting the x,y,z,a,b,c,d
 
 
 
