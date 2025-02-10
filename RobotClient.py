@@ -6,7 +6,7 @@ import logging # importing logging
 from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
-from CommunicationLibrary import ServoJ,RobotRequestResponseCommunication,RobotStateCommunication
+from CommunicationLibrary import ServoX,RobotRequestResponseCommunication,RobotStateCommunication
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
@@ -95,9 +95,9 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
         logging.error(f"An error occurred while sending move command: {e}")
 
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
-                           
+
     robot=RobotRequestResponseCommunication()
-    servo=ServoJ().servo_j()
+    servo=ServoX.servo_x()
     try:
         start_time = time.time()
         while True:
