@@ -1,5 +1,4 @@
-
-#!/usr/bin/env python3
+3
 import socket # importing socket
 from copy import deepcopy # importing copy
 import struct # importing struct
