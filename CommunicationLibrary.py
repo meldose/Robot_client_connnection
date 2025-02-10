@@ -143,7 +143,7 @@ class ServoJ: # defining servoJ
     
         r.stop() # stopped the robot
 
-ServoJ(robot=r).servo_j() # calling the servo_j function
+# ServoJ(robot=r).servo_j() # calling the servo_j function
 r.gripper("off") # setting gripper off
 
 

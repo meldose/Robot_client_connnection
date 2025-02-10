@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import CommunicationLibrary # importing communication library
 import time # importing time
@@ -91,26 +90,28 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
     except Exception as e:
         logging.error(f"An error occurred while sending move command: {e}")
 
-# def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # function for moving robot to position
 
-#     try:
-#         start_time = time.time()
-#         while True:
-#             # Replace 'get_current_position' with the actual method to retrieve the robot's current position
-#             current_coords = robot.pho_get_current_position()
-#             distance = ((current_coords[0] - target_coords[0]) ** 2 +
-#                         (current_coords[1] - target_coords[1]) ** 2 +
-#                         (current_coords[2] - target_coords[2]) ** 2) ** 0.5
-#             if distance <= tolerance:
-#                 logging.info(f"Robot reached target position: {current_coords}")
-#                 break
-#             if time.time() - start_time > timeout:
-#                 raise TimeoutError("Robot did not reach the target position in time.")
-#             time.sleep(0.5)
-#     except AttributeError:
-#         logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
-#     except Exception as e:
-#         logging.error(f"An error occurred while moving the robot: {e}")
+    servo=ServoJ()
+
+    try:
+        start_time = time.time()
+        while True:
+            # Replace 'get_current_position' with the actual method to retrieve the robot's current position
+            current_coords = robot.pho_get_current_position()
+            distance = ((current_coords[0] - target_coords[0]) ** 2 +
+                        (current_coords[1] - target_coords[1]) ** 2 +
+                        (current_coords[2] - target_coords[2]) ** 2) ** 0.5
+            if distance <= tolerance:
+                logging.info(f"Robot reached target position: {current_coords}")
+                break
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Robot did not reach the target position in time.")
+            time.sleep(0.5)
+    except AttributeError:
+        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
+    except Exception as e:
+        logging.error(f"An error occurred while moving the robot: {e}")
 
 
 # def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
