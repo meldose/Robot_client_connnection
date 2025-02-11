@@ -44,9 +44,6 @@ def test_ls(): # main function for calling every function.
     robot.close_connection()  #communication needs to be closed
     time.sleep(0.01)
 
-
-
-
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
         # Replace 'objects' and 'coordinates' with actual attribute names from your response
