@@ -157,6 +157,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # ServoJ(robot=r).servo_j() # line for initial robot movement
 # r.gripper("off") # setting gripper off
 
+import copy
+
 class ServoX:
     def __init__(self,robot):
         self.robot = robot
@@ -502,7 +504,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 print(a)
-                ServoJ(robot=r).servo_j(a) 
+                ServoX(robot=r).servo_x(a)
             else:
                 assert False, "Unexpected operation type"
 
