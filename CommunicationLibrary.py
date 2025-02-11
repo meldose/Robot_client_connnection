@@ -203,7 +203,7 @@ class ServoX: # defining servoX
 
         inp.current_position = r.get_current_cartesian_pose()
         # inp.target_position = [-0.522, -0.315, 0.120,-3.02,-0.06,1.41] # providing the target position
-        # inp.current_velocity = [0.]*cart_pose_length # mutliplying the initila velocity with cart pose lenght 
+        # inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
         # inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
@@ -251,11 +251,11 @@ class ServoX: # defining servoX
         r.stop() # stopping the robot
         
 # ServoX(robot=r).servo_x()
-r.set_mode("Automatic")
-r.gripper("on")
-r.move_joint("P16")
-r.set_mode("Teach")
-r.gripper("off")
+r.set_mode("Automatic") # setting the mode to automatic
+r.gripper("on") # setting the gripper on
+r.move_joint("P16") # moving to P16
+r.set_mode("Teach") # setting the mode to teach
+r.gripper("off") # setting the gripper off
 
         
 class ResponseHeader: # class used for storing data
