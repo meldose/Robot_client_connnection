@@ -164,38 +164,38 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 ######## SERVO X FUNCTION ##################
 
-import copy
+import copy # importing copy module
 
-class ServoX:
+class ServoX: # defining servoX
 
-    def __init__(self,robot):
-        self.robot = robot
+    def __init__(self,robot): # initializing the robot
+        self.robot = robot # setting the robot
 
 
-    def servo_x(self,message,*args,**kwargs):
+    def servo_x(self,message,*args,**kwargs): # defining servoX
         
-        message = [x/1000 for x in message]
+        message = [x/1000 for x in message] # converting the values to mm
         
-        x = message[0] 
-        y = message[1] 
-        z = message[2] 
-        a = message[3] 
-        b = message[4] 
-        c = message[5] 
-        d = message[6] 
+        x = message[0]  # setting the values
+        y = message[1]  # setting the values
+        z = message[2] # setting the values
+        a = message[3]  # setting the values
+        b = message[4]  # setting the values
+        c = message[5]  # setting the values
+        d = message[6]  # setting the values
         
-        print(message)
+        print(message) # printing the message
         
         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-        print(new_message)
+        print(new_message) # printing the message
 
 
         # r = self.robot
 
         #Switch to external servo mode
-        r.activate_servo_interface('position')
+        r.activate_servo_interface('position') # activating the servo interface
 
-        cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz 
+        cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
 
         otg = Ruckig(cart_pose_length, 0.001)  # control cycle
         inp = InputParameter(cart_pose_length) # setting the inputparameter with cart pose length
