@@ -221,7 +221,7 @@ class ServoX:
                 acceleration[i] = out.new_acceleration[i]
             
             error_code = r.servo_x(position, velocity, acceleration, servox_proportional_gain)
-            print(error_code) # checking if there is an error or not 
+            # print(error_code) # checking if there is an error or not 
             scaling_factor = r.get_servo_trajectory_scaling_factor()
             out.pass_to_input(inp)
             time.sleep(0.001) # setting time 
