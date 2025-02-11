@@ -248,10 +248,10 @@ class ServoX:
         
 # ServoX(robot=r).servo_x()
 r.set_mode("Automatic")
-r.gripper("off")
+r.gripper("on")
 r.move_joint("P16")
 r.set_mode("Teach")
-r.gripper("on")
+r.gripper("off")
 
         
 class ResponseHeader: # class used for storing data
@@ -268,7 +268,6 @@ class ResponseData: # class used for storing data
 
 
 class ResponseData:  # class used for storing data
-
 
     def __init__(self): # initializing the class
         self.segment_id = 0 # stores the segment id
