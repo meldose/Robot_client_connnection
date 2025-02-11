@@ -116,7 +116,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
         logging.error(f"An error occurred while moving the robot: {e}")
     return servo
 
-
+### CALIBRATION FUNCTION ############################################
 def calibration_extrinsic(): # function for extrinsic calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
@@ -140,7 +140,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
     time.sleep(2)
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
-
+####### HAND-EYE CALIBRATION FUNCTION ################################
 def calibration_handeye(): # function for handeye calibration
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
