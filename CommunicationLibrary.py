@@ -1,3 +1,6 @@
+# -------------------------------------------------------------------
+#                      IMPORTS
+# -------------------------------------------------------------------
 
 import socket # importing socket
 from copy import deepcopy # importing copy
@@ -82,8 +85,9 @@ OBJECT_POSE_SIZE = 28
 # Photoneo header
 PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
-##### SERVO J FUNCTION ##############
-
+# -------------------------------------------------------------------
+#                      SERVO_J
+# -------------------------------------------------------------------
 # class ServoJ: # defining servoJ
 #     def __init__(self, robot): # initializing the robot
 #         self.robot = robot # setting the robot
@@ -162,7 +166,9 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # ServoJ(robot=r).servo_j() # line for initial robot movement
 # r.gripper("off") # setting gripper off
 
-######## SERVO X FUNCTION ##################
+# -------------------------------------------------------------------
+#                      SERVO_X
+# -------------------------------------------------------------------
 
 import copy # importing copy module
 
@@ -258,7 +264,7 @@ r.move_joint("P16") # moving to P16
 r.set_mode("Teach") # setting the mode to teach
 r.gripper("off") # setting the gripper off
 
-        
+
 class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
         self.request_id = request_id # setting the request id
@@ -293,6 +299,10 @@ class ResponseData:  # class used for storing data
     def add_segment(self): #    function to add segment
         self.trajectory_data.append(np.empty((0, 6), dtype=float)) # add empty segment
 
+
+# -------------------------------------------------------------------
+#                      ROBOT COMMUNICATION
+# -------------------------------------------------------------------
 
 class RobotRequestResponseCommunication: # class used for storing data
 
