@@ -251,6 +251,7 @@ r.set_mode("Automatic")
 r.gripper("off")
 r.move_joint("P16")
 r.set_mode("Teach")
+r.gripper("off")
 
         
 class ResponseHeader: # class used for storing data
