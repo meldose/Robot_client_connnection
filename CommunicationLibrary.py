@@ -195,7 +195,7 @@ class ServoX: # defining servoX
         print(message) # printing the message
         
         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-        print(new_message) # printing the message
+        print(new_message) # printing the new ordered message
 
 
         # r = self.robot
