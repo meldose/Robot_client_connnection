@@ -2,7 +2,6 @@
 # -------------------------------------------------------------------
 #                      IMPORTS
 # -------------------------------------------------------------------
-
 import CommunicationLibrary # importing communication library
 import time # importing time
 import json # importing json
@@ -16,7 +15,6 @@ r.gripper("on") # setting gripper on
 
 CONTROLLER_IP = "192.168.1.5" # IP address of the controller
 PORT = 11003 # #port number
-
 
 # -------------------------------------------------------------------
 #                      MAIN FUNCTION
@@ -147,7 +145,6 @@ def calibration_extrinsic(): # function for extrinsic calibration
     robot.pho_request_save_automatic_calibration() # save automatic calibration
     time.sleep(2)
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
-
 
 # -------------------------------------------------------------------
 #                      HAND-EYE CALIBRATION
