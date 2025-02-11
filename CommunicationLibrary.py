@@ -182,8 +182,6 @@ class ServoX:
         print(new_message)
 
 
-        # reordered_message = [x, y, z, a,b,c,d]
-
         # r = self.robot
 
         #Switch to external servo mode
