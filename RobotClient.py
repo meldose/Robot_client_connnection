@@ -98,6 +98,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 
     robot=RobotRequestResponseCommunication()
     servo=ServoX.servo_x()
+    r.gripper("off") # setting gripper off
     try:
         start_time = time.time()
         while True:
