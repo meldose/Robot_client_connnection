@@ -623,7 +623,7 @@ class RobotStateCommunication: # class for state server
     def send_joint_state(self): # sending the joint state
         msg = deepcopy(PHO_HEADER) # creating the message
         msg = msg + [6, 0, 0, 0]  # Data size # Data size
-        msg = msg + [JOINT_STATE_TYPE, 0, 0, 0]  # Type 
+        msg = msg + [JOINT_STATE_TYPE, 0, 0, 0]  # Type
         msg = msg + floatArray2bytes(get_joint_state(init_joint_state)) # sending the joint state
         self.client.send(bytearray(msg)) # sending the message
 
