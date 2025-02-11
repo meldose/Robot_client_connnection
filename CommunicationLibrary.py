@@ -203,6 +203,11 @@ class ServoX:
         inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+        inp.target_position = [] # moving to home position
+        inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
+        inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
+
+        target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
         inp.target_position = new_message # initating the target position
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
