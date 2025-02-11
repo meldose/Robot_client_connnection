@@ -172,7 +172,8 @@ class ServoX: # defining servoX
         self.robot = robot # setting the robot
 
 
-    def servo_x(self,message,*args,**kwargs): # defining servoX
+    # def servo_x(self,message,*args,**kwargs): # defining servoX
+    def servo_x(self,message): 
         
         message = [x/1000 for x in message] # converting the values to mm
         
