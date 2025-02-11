@@ -199,16 +199,15 @@ class ServoX:
 
         inp.current_position = r.get_current_cartesian_pose()
         # inp.target_position = [-0.522, -0.315, 0.120,-3.02,-0.06,1.41] # providing the target position
-        inp.current_velocity = [0.]*cart_pose_length # mutliplying the initila velocity with cart pose lenght 
-        inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
+        # inp.current_velocity = [0.]*cart_pose_length # mutliplying the initila velocity with cart pose lenght 
+        # inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        inp.target_position = [] # moving to home position
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        inp.target_position = new_message # initating the target position
+        #inp.target_position = new_message # initating the target position
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
         # inp.target_position = [x,y,z,a,b,c,d] 
@@ -248,7 +247,12 @@ class ServoX:
         r.stop() # stopping the robot
         
 # ServoX(robot=r).servo_x()
+r.set_mode("Automatic")
 r.gripper("off")
+r.move_joint("P13")
+r.move_joint("P15")
+r.set_mode("Teach")
+
         
 class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
