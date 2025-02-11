@@ -88,6 +88,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # -------------------------------------------------------------------
 #                      SERVO_J
 # -------------------------------------------------------------------
+
+
 # class ServoJ: # defining servoJ
 #     def __init__(self, robot): # initializing the robot
 #         self.robot = robot # setting the robot
@@ -323,9 +325,9 @@ class RobotRequestResponseCommunication: # class used for storing data
     def close_connection(self): # function to close connection
         self.client.close() # close connection
 
-    # -------------------------------------------------------------------
-    #                      BIN PICKING REQUESTS
-    # -------------------------------------------------------------------
+# -------------------------------------------------------------------
+#                      BIN PICKING REQUESTS
+# -------------------------------------------------------------------
     def pho_request_init(self, vs_id, start, end):
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         payload = payload + floatArray2bytes(start)  # payload - start
@@ -366,9 +368,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.pho_send_request(PHO_GET_VISION_SYSTEM_BPS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_BPS_REQUEST)
 
-    # -------------------------------------------------------------------
-    #                      LOCATOR REQUESTS
-    # -------------------------------------------------------------------
+# -------------------------------------------------------------------
+#                      LOCATOR REQUESTS
+# -------------------------------------------------------------------
 
     # parameter tool_pose used only in Hand-eye
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
@@ -418,9 +420,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
 
-    # -------------------------------------------------------------------
-    #                      CALIBRATION REQUESTS
-    # -------------------------------------------------------------------
+# -------------------------------------------------------------------
+#                      CALIBRATION REQUESTS
+# -------------------------------------------------------------------
     def pho_request_add_calibration_point(self, tool_pose):
         payload = floatArray2bytes(tool_pose)  # payload - start
         self.pho_send_request(PHO_ADD_CAL_POINT_REQUEST, payload)
@@ -440,9 +442,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.pho_send_request(PHO_STOP_AUTO_CAL_REQUEST)
         self.pho_receive_response(PHO_STOP_AUTO_CAL_REQUEST)
 
-    # -------------------------------------------------------------------
-    #                      SOLUTION REQUESTS
-    # -------------------------------------------------------------------
+# -------------------------------------------------------------------
+#                      SOLUTION REQUESTS
+# -------------------------------------------------------------------
     def pho_request_change_solution(self, sol_id):
         payload = [sol_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_CHANGE_SOLUTION_REQUEST, payload)
@@ -465,9 +467,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.pho_send_request(PHO_GET_AVAILABLE_SOLUTION_REQUEST)
         self.pho_receive_response(PHO_GET_AVAILABLE_SOLUTION_REQUEST)
 
-    # -------------------------------------------------------------------
-    #                     REQUEST RELATED FUNCTIONS
-    # -------------------------------------------------------------------
+# -------------------------------------------------------------------
+#                     REQUEST RELATED FUNCTIONS
+# -------------------------------------------------------------------
 
     def pho_send_request(self, request_id, payload=None):
         assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
