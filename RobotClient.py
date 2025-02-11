@@ -1,4 +1,8 @@
 
+# -------------------------------------------------------------------
+#                      IMPORTS
+# -------------------------------------------------------------------
+
 import CommunicationLibrary # importing communication library
 import time # importing time
 import json # importing json
