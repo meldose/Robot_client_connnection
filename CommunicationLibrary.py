@@ -20,7 +20,6 @@ BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX"
 
 DEG2RAD = math.pi / 180 # converting degrees to radians
 
-
 class OperationType: # defining operation type
     PHO_TRAJECTORY_CNT = 0  # defining operation type    
     PHO_TRAJECTORY_FINE = 1 # defining operation type
