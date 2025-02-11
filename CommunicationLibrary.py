@@ -177,6 +177,9 @@ class ServoX:
         d = message[6] 
         
         print(message)
+        
+        new_message = [x, y, z,d, a, b, c]
+        print(new_message)
 
 
         # reordered_message = [x, y, z, a,b,c,d]
@@ -199,8 +202,8 @@ class ServoX:
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
         target[0] += 0.2 # Move 200mm in X direction
-        # inp.target_position = reordered_message # initating the target position
-        inp.target_position = [x,y,z,a,b,c,d] 
+        inp.target_position = new_message # initating the target position
+        # inp.target_position = [x,y,z,a,b,c,d] 
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
