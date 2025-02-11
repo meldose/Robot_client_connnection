@@ -1,4 +1,4 @@
-3
+
 import socket # importing socket
 from copy import deepcopy # importing copy
 import struct # importing struct
@@ -100,8 +100,11 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
         
 
-#         print("x", x)
-#         print("mESSAGE:", message)
+        #   print(message)
+        
+        #   new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
+        #   print(new_message)
+
 
 #         r.activate_servo_interface('position') # activating the servo interface
 #         dof = 6 # setting the DOF as 6 
