@@ -163,6 +163,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 import copy
 
 class ServoX:
+    
     def __init__(self,robot):
         self.robot = robot
 
