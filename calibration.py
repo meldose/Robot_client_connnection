@@ -1,4 +1,4 @@
-def calculate_target_position(Tx, delta_MSD, delta_TSC, delta_L, delta_CTD):
+def calculate_target_position(Tx, delta_MSD, delta_TSC, delta_L, delta_CTD): # defining an function for getting the target position
     """
     Calculate the target X position on the conveyor belt.
 
@@ -12,9 +12,9 @@ def calculate_target_position(Tx, delta_MSD, delta_TSC, delta_L, delta_CTD):
     Returns:
     float: Calculated Target X position.
     """
-    TD = delta_TSC + delta_L + delta_CTD
-    target_X = Tx - delta_MSD + TD
-    return target_X
+    TD = delta_TSC + delta_L + delta_CTD # TD = Trigger to Scan Completion + Localization distance + Conveyor Tracking Distance
+    target_X = Tx - delta_MSD + TD # Target X position
+    return target_X # returning the target position
 
 # Example input values
 Tx = 150.0          # Initial position in mm
@@ -24,6 +24,6 @@ Delta_L = 30.0      # Localization distance in mm
 Delta_CTD = 40.0    # Conveyor Tracking Distance in mm
 
 # Calculate Target X position
-target_position = calculate_target_position(Tx, Delta_MSD, Delta_TSC, Delta_L, Delta_CTD)
+target_position = calculate_target_position(Tx, Delta_MSD, Delta_TSC, Delta_L, Delta_CTD) # calling the function
 
-print(f"Calculated Target X Position: {target_position} mm")
+print(f"Calculated Target X Position: {target_position} mm") # printing the target position
