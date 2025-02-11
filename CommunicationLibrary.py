@@ -178,7 +178,7 @@ class ServoX:
         
         print(message)
         
-        new_message = [x, y, z,d, a, b, c] # added new order for quaternion values
+        new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
         print(new_message)
 
 
