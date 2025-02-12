@@ -234,6 +234,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         r.deactivate_servo_interface() # deactivating the servo interface
 #         r.stop() # stopped the robot
 #         r.gripper("off") # setting gripper off
+
 #         r.move_joint("P19") # moving to P19
 #         r.move_joint("P20") # moving to P20
 #         r.gripper("on") # setting gripper on
