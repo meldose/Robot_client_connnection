@@ -9,7 +9,7 @@ import logging # importing logging
 from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
-from CommunicationLibrary import ServoX,RobotRequestResponseCommunication,RobotStateCommunication
+from CommunicationLibrary import ServoJ,RobotRequestResponseCommunication,RobotStateCommunication
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
@@ -98,7 +98,7 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 
     robot=RobotRequestResponseCommunication() # object is created
-    servo=ServoX.servo_x() # calling servo function
+    servo=ServoX.movelinear_online() # calling servo function
     r.gripper("off") # setting gripper off
     try:
         start_time = time.time()
