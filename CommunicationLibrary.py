@@ -352,7 +352,6 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # r.gripper("on") # setting the gripper on
 # r.move_joint("P16") # moving to P16
 # r.set_mode("Teach") # setting the mode to teach
-# # r.gripper("off") # setting the gripper off
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR
