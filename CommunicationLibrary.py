@@ -341,14 +341,16 @@ class ServoX: # defining servoX
 
         r.gripper("off") # setting gripper close position
         time.sleep(0.8)
-        r.move_joint("P19")
+        r.move_joint([-0.3943638737403308,
+                    -0.14797200995278978,
+                    0.18469677060779857,
+                    -0.03257955904151373,
+                    0.8577790470851646,
+                    0.5123473031861303,
+                    0.025571852342505662])
         r.move_joint("P20")
 
-
-
     r.deactivate_servo_interface() # deactivating the servo interface
-
-
 
     # r.stop() # stopping the robot
     
