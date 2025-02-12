@@ -263,7 +263,7 @@ class ServoX: # defining servoX
         
         x = message[0]  # setting the values
         y = message[1]  # setting the values
-        z = message[2] # setting the values
+        z = message[2]  # setting the values
         a = message[3]  # setting the values
         b = message[4]  # setting the values
         c = message[5]  # setting the values
