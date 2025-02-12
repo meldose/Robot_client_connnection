@@ -256,6 +256,7 @@ class ServoX: # defining servoX
         # r.deactivate_servo_interface() # deactivating the servo interface
 
         # r.stop() # stopping the robot
+        r.gripper("off")
         
 # ServoX(robot=r).servo_x()
 r.set_mode("Automatic") # setting the mode to automatic
