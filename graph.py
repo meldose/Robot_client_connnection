@@ -4,7 +4,7 @@ import numpy as np # importing numpy
 # Simulation parameters
 conveyor_length = 100  # in cm
 conveyor_speed = 5      # cm/s
-num_objects = 5         # Number of objects on the conveyor
+num_objects = 2         # Number of objects on the conveyor
 tracking_duration = 20  # seconds
 
 # Generate random starting positions for objects
