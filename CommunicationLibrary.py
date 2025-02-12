@@ -221,10 +221,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
 #         inp.max_jerk = [10.0] * dof # defining the maximum jerk
 
-#         # Gripper ON
 #         r.gripper("on")
 
-#         # Trajectory Execution
 #         res = Result.Working
 #         while res == Result.Working: # while the result is working
 #             res = otg.update(inp, out) # updating the input and output
@@ -236,6 +234,10 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         r.deactivate_servo_interface() # deactivating the servo interface
 #         r.stop() # stopped the robot
 #         r.gripper("off") # setting gripper off
+#         r.move_joint("P19") # moving to P19
+#         r.move_joint("P20") # moving to P20
+#         r.gripper("on") # setting gripper on
+#         r.move_joint("P16") # moving to P16
 
 # # ServoX(robot=r).servo_x()
 # r.set_mode("Automatic") # setting the mode to automatic
