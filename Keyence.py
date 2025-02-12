@@ -17,8 +17,6 @@ class Keyence(Camera):
     def disconnect_camera_connection(self) -> None:
         self.sock.close()
 
-    
-    
     def extract_pose_from_camera(self, cameraOut: bytes) -> list:
         pose_values = cameraOut.decode('utf-8').split(',')
         target_cmd = [float(value) for value in pose_values]
