@@ -4,7 +4,7 @@ class VisionSystemController:
 
     def scan_and_detect_objects(self, object_ids):
         """
-        Scan and detect multiple objects (Pipe and Trapezoid).
+
         :param object_ids: List of object IDs to detect (e.g., [1, 2])
         :return: Detected objects with their details
         """
