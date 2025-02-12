@@ -353,12 +353,12 @@ r.set_mode("Teach") # setting the mode to teach
 
 # import copy # importing copy module
 
-# class ServoX:
+# class ServoX: # defining servoX
 
 #     def __init__(self,robot):
 #         self.robot = robot # setting the robot
 
-#     def movelinear_online(self,message):
+#     def movelinear_online(self,message): # defining servoX
 
 #         message = [x/1000 for x in message] # converting the values to mm
         
@@ -388,8 +388,8 @@ r.set_mode("Teach") # setting the mode to teach
 #         # error_code = r.movelinear_online(target, velocity, acceleration)
 #         target = copy.deepcopy(r.get_current_cartesian_pose())
 
-#         target=new_message    
-#         error_code = r.movelinear_online(target, velocity, acceleration)
+#         target=new_message # setting the target position 
+#         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
 
 #         time.sleep(30) # setting the time
 
