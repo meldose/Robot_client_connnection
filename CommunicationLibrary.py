@@ -385,7 +385,7 @@ class ServoX:
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
         print(new_message) # printing the new ordered message
 
-        target_1 = 0.3 # setting the target_1 as 0.3
+        # target_1 = 0.3 # setting the target_1 as 0.3
         # target_2 = 0.25 # settingthe target_2 as 0.25
     
         #Switch to external servo mode
@@ -398,7 +398,7 @@ class ServoX:
         # target[0] -= target_1
         velocity = [0.15]*6 # setting the velocity 
         acceleration = [2.]*6 # setting the acceleration
-        error_code = r.movelinear_online(target, velocity, acceleration)
+        # error_code = r.movelinear_online(target, velocity, acceleration)
 
         #Sleep for 5 sec to complete the motion.
         time.sleep(5)
@@ -412,9 +412,8 @@ class ServoX:
         #Sleep for 5 sec to complete the motion
         time.sleep(5)
 
-        print("Robot stopped") #  print the statment as Robot stopped
         r.deactivate_servo_interface() # deactivating the servo interface 
-        r.stop() # stopping the robot 
+        # r.stop() # stopping the robot 
 
         error_code = r.movelinear_online(target, velocity, acceleration)
         scaling_factor = r.get_servo_trajectory_scaling_factor()
@@ -714,7 +713,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 print(a)
-                ServoX(robot=r).servo_x(a)
+                ServoX(robot=r).movelinear_online(a)
                 r.move_joint("Home")
             else:
                 assert False, "Unexpected operation type"
