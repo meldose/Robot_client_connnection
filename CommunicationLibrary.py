@@ -406,7 +406,7 @@ class ServoX:
         error_code = r.movelinear_online(target, velocity, acceleration)
 
         #Sleep for 5 sec to complete the motion
-        time.sleep(5)
+        time.sleep(0.3)
 
         r.deactivate_servo_interface() # deactivating the servo interface 
         # r.stop() # stopping the robot 
