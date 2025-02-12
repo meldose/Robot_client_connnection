@@ -236,8 +236,6 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         # Deactivate servo and stop
 #         r.deactivate_servo_interface()
 #         r.stop()
-
-#         # Gripper OFF
 #         r.gripper("off")
 
 # # ServoX(robot=r).servo_x()
