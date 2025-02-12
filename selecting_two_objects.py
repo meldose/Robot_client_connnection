@@ -9,7 +9,7 @@ class VisionSystemController:
         :return: Detected objects with their details
         """
         #Step 1: Trigger the Scan
-        self.pho_request_ls_scan(self.vs_id)
+        self.pho_request_ls_scan(vs_id)
         print("Scanning environment...")
 
         # Step 2: Request All Detected Objects (Assume a max limit, e.g., 10)
@@ -50,6 +50,19 @@ class VisionSystemController:
             {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]},
             {"id": 3, "name": "Cube", "position": [200, 300, 400], "orientation": [0, 0, 0, 1]}
         ]
+    def floatArray2bytes(array): # function to convert float array to bytes
+        msg = [] # creating the message
+        for value in array: # iterating through the array
+            msg = msg + list(struct.pack('<f', value)) # converting to bytes
+        return msg # returning the message
+
+
+    def build_hello_msg(): # function to build the hello message
+        return bytearray(BRAND_IDENTIFICATION.encode('utf-8')) # returning the message
+
+
+    def build_state_server_hello_msg(): # function to build the state server hello message
+        return bytearray(BRAND_IDENTIFICATION_SERVER.encode('utf-8')) # returning the message
 
 
 # 🚀 Example Usage
