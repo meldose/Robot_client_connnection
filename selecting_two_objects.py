@@ -8,7 +8,7 @@ class VisionSystemController:
         :param object_ids: List of object IDs to detect (e.g., [1, 2])
         :return: Detected objects with their details
         """
-        # 1️⃣ Step 1: Trigger the Scan
+        #Step 1: Trigger the Scan
         self.pho_request_ls_scan(self.vs_id)
         print("Scanning environment...")
 
