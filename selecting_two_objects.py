@@ -47,8 +47,7 @@ class VisionSystemController:
         # Simulated Response (Replace with actual data)
         return [
             {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
-            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]},
-            {"id": 3, "name": "Cube", "position": [200, 300, 400], "orientation": [0, 0, 0, 1]}
+            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
         ]
     def floatArray2bytes(array): # function to convert float array to bytes
         msg = [] # creating the message
