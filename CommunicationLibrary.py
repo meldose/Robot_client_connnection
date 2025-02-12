@@ -283,7 +283,7 @@ class ServoX: # defining servoX
         print(new_message) # printing the new ordered message
 
 
-        # r = self.robot
+        r = self.robot
 
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
