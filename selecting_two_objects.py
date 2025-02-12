@@ -1,7 +1,7 @@
  
 class VisionSystemController:
     def __init__(self, vs_id):
-    self.vs_id = vs_id  # Vision System ID
+        self.vs_id = vs_id # Vision System ID
 
     def scan_and_detect_objects(self, object_ids):
         """
