@@ -340,10 +340,13 @@ class ServoX: # defining servoX
             time.sleep(0.001) # setting time 
 
         r.gripper("off") # setting gripper close position
-        time.sleep(0.3)
+        time.sleep(0.8)
         r.move_joint("P19")
-        # # r.move_joint("P20")
-        r.deactivate_servo_interface() # deactivating the servo interface
+        r.move_joint("P20")
+
+
+
+    r.deactivate_servo_interface() # deactivating the servo interface
 
 
 
@@ -354,7 +357,7 @@ r.set_mode("Automatic") # setting the mode to automatic
 r.gripper("on") # setting the gripper on
 r.move_joint("P16") # moving to P16
 r.set_mode("Teach") # setting the mode to teach
-r.gripper("off") # setting the gripper off
+# r.gripper("off") # setting the gripper off
 
 
 # -------------------------------------------------------------------
