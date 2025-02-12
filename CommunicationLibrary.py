@@ -156,7 +156,6 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #             acceleration = out.new_acceleration # setting the new acceleration 
 
 #             error_code = r.servo_j(position, velocity, acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration.
-#             #print(error_code) # checking if the error is there or not 
 #             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors.
 #             out.pass_to_input(inp)
 #             time.sleep(0.001) # setting the time sleep to 0.001 seconds
