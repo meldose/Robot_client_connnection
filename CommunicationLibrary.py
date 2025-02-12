@@ -399,10 +399,6 @@ class ServoX:
         velocity = [0.15]*6 # setting the velocity 
         acceleration = [2.]*6 # setting the acceleration
         # error_code = r.movelinear_online(target, velocity, acceleration)
-
-        #Sleep for 5 sec to complete the motion.
-        time.sleep(5)
-
         target = copy.deepcopy(r.get_current_cartesian_pose())
         #Move target_2 units in +Z direction
         # target[2] += target_2
