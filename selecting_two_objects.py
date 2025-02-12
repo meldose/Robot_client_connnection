@@ -13,7 +13,7 @@ class VisionSystemController:
         print("Scanning environment...")
 
         # Step 2: Request All Detected Objects (Assume a max limit, e.g., 10)
-        response = self.pho_request_get_objects(self.vs_id, number_of_objects=2)
+        response = self.pho_request_get_objects(vs_id, number_of_objects=2)
 
         # Step 3: Filter the Required Objects (Pipe & Trapezoid)
         detected_objects = [obj for obj in response if obj['id'] in object_ids]
