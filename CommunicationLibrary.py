@@ -731,9 +731,8 @@ class RobotRequestResponseCommunication: # class used for storing data
             print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
                 round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
                 round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
-                round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
-            #print(type(self.message))
-            #print(list(self.message))
+                round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]"
+
         return self.message
 
 # -------------------------------------------------------------------
