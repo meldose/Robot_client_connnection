@@ -1,4 +1,3 @@
- 
 class VisionSystemController:
     def __init__(self, vs_id):
         self.vs_id = vs_id # Vision System ID
