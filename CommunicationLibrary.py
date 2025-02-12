@@ -88,7 +88,6 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J
 # -------------------------------------------------------------------
 
-
 # class ServoJ: # defining servoJ
 #     def __init__(self, robot): # initializing the robot
 #         self.robot = robot # setting the robot
