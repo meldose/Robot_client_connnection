@@ -20,14 +20,14 @@ class VisionSystemController:
 
         # Display Detected Objects
         for obj in detected_objects:
-            print(f"Detected: {obj['name']} (ID: {obj['id']})")
+            print(f"Detected: {obj['name']} (ID: {obj['id']})") 
             print(f"  Position: {obj['position']}")
             print(f"  Orientation: {obj['orientation']}\n")
-
         return detected_objects
 
     # Existing Request Functions (Assumed)
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
+        
         if tool_pose is None:
             
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
