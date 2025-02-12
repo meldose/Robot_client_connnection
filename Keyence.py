@@ -14,8 +14,6 @@ class Keyence(Camera):
             print("Couldn't connect with the socket-server: %s\n terminating program" % msg)
             sys.exit(1)
 
-    
-    
     def disconnect_camera_connection(self) -> None:
         self.sock.close()
 
