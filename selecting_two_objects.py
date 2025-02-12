@@ -29,9 +29,11 @@ class VisionSystemController:
     # Existing Request Functions (Assumed)
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
         if tool_pose is None:
+            
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
         else:
+            
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
