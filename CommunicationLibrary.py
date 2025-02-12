@@ -699,7 +699,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 print(a)
-                ServoX(robot=r).movelinear_online(a)
+                ServoX(robot=r).servo_x(a)
             else:
                 assert False, "Unexpected operation type"
 
