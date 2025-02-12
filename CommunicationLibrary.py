@@ -391,7 +391,6 @@ r.set_mode("Teach") # setting the mode to teach
 #         target=new_message    
 #         error_code = r.movelinear_online(target, velocity, acceleration)
 
-#         #Sleep for 5 sec to complete the motion
 #         time.sleep(30) # setting the time
 
 #         r.deactivate_servo_interface() # deactivating the servo interface 
