@@ -338,21 +338,17 @@ class ServoX: # defining servoX
             scaling_factor = r.get_servo_trajectory_scaling_factor()
             out.pass_to_input(inp)
             time.sleep(0.001) # setting time 
-
+            
+        r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off") # setting gripper close position
+        r.move_joint("P19")
         time.sleep(0.8)
-        r.move_joint([-0.3943638737403308,
-                    -0.14797200995278978,
-                    0.18469677060779857,
-                    -0.03257955904151373,
-                    0.8577790470851646,
-                    0.5123473031861303,
-                    0.025571852342505662])
         r.move_joint("P20")
+        r.gripper("on")
+        r.move_joint("P16")
 
-    r.deactivate_servo_interface() # deactivating the servo interface
 
-    # r.stop() # stopping the robot
+    r.stop() # stopping the robot
     
 # ServoX(robot=r).servo_x()
 r.set_mode("Automatic") # setting the mode to automatic
@@ -710,6 +706,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 a = self.print_message(operation_type)
                 print(a)
                 ServoX(robot=r).servo_x(a)
+                r.move_joint("Home")
             else:
                 assert False, "Unexpected operation type"
 
