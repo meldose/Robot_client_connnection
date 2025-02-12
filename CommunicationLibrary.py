@@ -361,80 +361,84 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      MOVE_LINEAR
 # -------------------------------------------------------------------
 
-# import copy # importing copy module
+import copy # importing copy module
 
-# class ServoX:
+class ServoX:
 
-#     def __init__(self,robot):
-#         self.robot = robot # setting the robot
+    def __init__(self,robot):
+        self.robot = robot # setting the robot
 
-#     def movelinear_online(self,message):
+    def movelinear_online(self,message):
 
-#         message = [x/1000 for x in message] # converting the values to mm
+        message = [x/1000 for x in message] # converting the values to mm
         
-#         x = message[0]  # setting the values
-#         y = message[1]  # setting the values
-#         z = message[2] # setting the values
-#         a = message[3]  # setting the values
-#         b = message[4]  # setting the values
-#         c = message[5]  # setting the values
-#         d = message[6]  # setting the values
+        x = message[0]  # setting the values
+        y = message[1]  # setting the values
+        z = message[2] # setting the values
+        a = message[3]  # setting the values
+        b = message[4]  # setting the values
+        c = message[5]  # setting the values
+        d = message[6]  # setting the values
         
-#         print(message) # printing the message
+        print(message) # printing the message
         
-#         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-#         print(new_message) # printing the new ordered message
+        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        print(new_message) # printing the new ordered message
 
-#         target_1 = 0.3 # setting the target_1 as 0.3
-#         # target_2 = 0.25 # settingthe target_2 as 0.25
+        target_1 = 0.3 # setting the target_1 as 0.3
+        # target_2 = 0.25 # settingthe target_2 as 0.25
     
-#         #Switch to external servo mode
-#         r.activate_servo_interface('position') # activating the servo interface
-#         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-#         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-#         print(target) # printing the target values
+        #Switch to external servo mode
+        r.activate_servo_interface('position') # activating the servo interface
+        cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
+        target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
+        print(target) # printing the target values
 
-#         # Move target_1 unit in -X direction
-#         # target[0] -= target_1
-#         velocity = [0.15]*6 # setting the velocity 
-#         acceleration = [2.]*6 # setting the acceleration
-#         error_code = r.movelinear_online(target, velocity, acceleration)
+        # Move target_1 unit in -X direction
+        # target[0] -= target_1
+        velocity = [0.15]*6 # setting the velocity 
+        acceleration = [2.]*6 # setting the acceleration
+        error_code = r.movelinear_online(target, velocity, acceleration)
 
-#         #Sleep for 5 sec to complete the motion.
-#         time.sleep(5)
+        #Sleep for 5 sec to complete the motion.
+        time.sleep(5)
 
-#         target = copy.deepcopy(r.get_current_cartesian_pose())
-#         #Move target_2 units in +Z direction
-#         # target[2] += target_2
-#         target=new_message    
-#         error_code = r.movelinear_online(target, velocity, acceleration)
+        target = copy.deepcopy(r.get_current_cartesian_pose())
+        #Move target_2 units in +Z direction
+        # target[2] += target_2
+        target=new_message    
+        error_code = r.movelinear_online(target, velocity, acceleration)
 
-#         #Sleep for 5 sec to complete the motion
-#         time.sleep(5)
+        #Sleep for 5 sec to complete the motion
+        time.sleep(5)
 
-#         print("Robot stopped") #  print the statment as Robot stopped
-#         r.deactivate_servo_interface() # deactivating the servo interface 
-#         r.stop() # stopping the robot 
+        print("Robot stopped") #  print the statment as Robot stopped
+        r.deactivate_servo_interface() # deactivating the servo interface 
+        r.stop() # stopping the robot 
 
-#         error_code = r.movelinear_online(target, velocity, acceleration)
-#         scaling_factor = r.get_servo_trajectory_scaling_factor()
-#         time.sleep(0.001) # setting time 
+        error_code = r.movelinear_online(target, velocity, acceleration)
+        scaling_factor = r.get_servo_trajectory_scaling_factor()
+        time.sleep(0.001) # setting time 
 
-#         r.deactivate_servo_interface() # deactivating the servo interface
-#         r.gripper("off") # setting gripper close position
-#         r.move_joint("P19")
-#         time.sleep(0.8)
-#         r.move_joint("P20")
-#         r.gripper("on")
-#         r.move_joint("P16")
+        r.deactivate_servo_interface() # deactivating the servo interface
+        r.gripper("off") # setting gripper close position
+        r.move_joint("P19")
+        time.sleep(0.8)
+        r.move_joint("P20")
+        r.gripper("on")
+        r.move_joint("P16")
 
-#         # r.stop() # stopping the robot
+        # r.stop() # stopping the robot
     
-# r.set_mode("Automatic") # setting the mode to automatic
-# r.gripper("on") # setting the gripper on
-# r.move_joint("P16") # moving to P16
-# r.set_mode("Teach") # setting the mode to teach
-# r.gripper("off") # setting the gripper off
+r.set_mode("Automatic") # setting the mode to automatic
+r.gripper("on") # setting the gripper on
+r.move_joint("P16") # moving to P16
+r.set_mode("Teach") # setting the mode to teach
+
+
+# -------------------------------------------------------------------
+#                      CLASSES
+# -------------------------------------------------------------------
 
 class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
