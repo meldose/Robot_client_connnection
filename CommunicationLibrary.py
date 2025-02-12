@@ -257,7 +257,7 @@ class ServoX: # defining servoX
 
 
     # def servo_x(self,message,*args,**kwargs): # defining servoX
-    def servo_x(self,message): 
+    def servo_x(self,message): # defining servoX
         
         message = [x/1000 for x in message] # converting the values to mm
         
@@ -275,7 +275,7 @@ class ServoX: # defining servoX
         print(new_message) # printing the new ordered message
 
 
-        r = self.robot
+        r = self.robot #setting the robot
 
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
@@ -312,14 +312,14 @@ class ServoX: # defining servoX
         velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
         acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
         
-        res=Result.Working
+        res=Result.Working # setting the result
 
-        while res == Result.Working:
-            error_code = 0
+        while res == Result.Working: # while the result is working
+            error_code = 0 # setting the error code
 
-            res = otg.update(inp, out)
+            res = otg.update(inp, out) # updating the input and output
 
-            position = out.new_position
+            position = out.new_position # getting the new position
 
             # for i in range(0,3): # Updating target translation velocity and accelerations
                 # velocity[i] = out.new_velocity[i]
@@ -333,10 +333,10 @@ class ServoX: # defining servoX
             
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off") # setting gripper close position
-        r.move_joint("P19")
-        r.move_joint("P20")
-        r.gripper("on")
-        r.move_joint("P16")
+        r.move_joint("P19") # moving to P19
+        r.move_joint("P20") # moving to P20
+        r.gripper("on") # setting gripper on
+        r.move_joint("P16") # moving to P16
 
 
         # r.stop() # stopping the robot
