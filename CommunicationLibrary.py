@@ -348,7 +348,7 @@ class ServoX: # defining servoX
         r.move_joint("P16")
 
 
-    # r.stop() # stopping the robot
+        r.stop() # stopping the robot
     
 # ServoX(robot=r).servo_x()
 r.set_mode("Automatic") # setting the mode to automatic
