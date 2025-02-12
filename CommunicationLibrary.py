@@ -265,7 +265,6 @@ r.move_joint("P16") # moving to P16
 r.set_mode("Teach") # setting the mode to teach
 r.gripper("off") # setting the gripper off
 
-
 class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
         self.request_id = request_id # setting the request id
