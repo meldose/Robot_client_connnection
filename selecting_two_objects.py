@@ -28,11 +28,14 @@ class VisionSystemController:
 
     # Existing Request Functions (Assumed)
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
-        payload = [vs_id, 0, 0, 0]
-        if tool_pose:
-            assert len(tool_pose) == 7, 'Invalid tool_pose size'
-            payload += floatArray2bytes(tool_pose)
-        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+        if tool_pose is None:
+            payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+        else:
+            assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            payload = payload + floatArray2bytes(tool_pose)  # payload - start
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
     def pho_request_get_objects(self, vs_id,  number_of_objects):
         payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
