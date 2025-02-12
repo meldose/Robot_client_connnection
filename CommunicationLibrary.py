@@ -172,77 +172,77 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J (CONVERSION)
 # -------------------------------------------------------------------
 
-class ServoJ:  # defining servoJ
-    def __init__(self, robot):  # initializing the robot
-        self.robot = robot  # setting the robot
+# class ServoJ:  # defining servoJ
+#     def __init__(self, robot):  # initializing the robot
+#         self.robot = robot  # setting the robot
 
-    def servo_j(self, message):
-        message = [x / 1000 for x in message]  # Scale values
+#     def servo_j(self, message):
+#         message = [x / 1000 for x in message]  # Scale values
 
-        message = [x / 1000 for x in message] # Scale values
+#         message = [x / 1000 for x in message] # Scale values
         
-        x = message[0] # Scale values
-        y = message[1] # Scale values
-        z = message[2]  # Scale values
-        a = message[3]  # Scale values
-        b = message[4] # Scale values
-        c = message[5] # Scale values
-        d = message[6] # Scale values
+#         x = message[0] # Scale values
+#         y = message[1] # Scale values
+#         z = message[2]  # Scale values
+#         a = message[3]  # Scale values
+#         b = message[4] # Scale values
+#         c = message[5] # Scale values
+#         d = message[6] # Scale values
 
-        print(message)# printing the message
+#         print(message)# printing the message
         
-        new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
+#         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
 
-        print(new_message)# printing the new ordered message
+#         print(new_message)# printing the new ordered message
 
-        # Activate servo interface
-        r.activate_servo_interface('position')
-        dof = 6  # Degrees of freedom
-        otg = Ruckig(dof, 0.001)  # Online trajectory generator
+#         # Activate servo interface
+#         r.activate_servo_interface('position')
+#         dof = 6  # Degrees of freedom
+#         otg = Ruckig(dof, 0.001)  # Online trajectory generator
 
-        # Input/Output parameters
-        inp = InputParameter(dof) #setting the input parameter
-        out = OutputParameter(dof) #setting the output parameter
+#         # Input/Output parameters
+#         inp = InputParameter(dof) #setting the input parameter
+#         out = OutputParameter(dof) #setting the output parameter
 
-        # Current state
-        inp.current_position = r.get_current_joint_angles() # getting the current joint angles
-        inp.current_velocity = [0.0] * dof # setting the current velocity as zero
-        inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
+#         # Current state
+#         inp.current_position = r.get_current_joint_angles() # getting the current joint angles
+#         inp.current_velocity = [0.0] * dof # setting the current velocity as zero
+#         inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
 
-        # Inverse Kinematics: Convert pose to joint angles
-        target_joint_angles = r.ik_fk("ik", target_pose=new_message, # conversion of target pose
-        current_joint=inp.current_position)
-        print("Target Joint Angles:", target_joint_angles) # print the target joint angles
+#         # Inverse Kinematics: Convert pose to joint angles
+#         target_joint_angles = r.ik_fk("ik", target_pose=new_message, # conversion of target pose
+#         current_joint=inp.current_position)
+#         print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
-        # Set target position to the IK result
-        inp.target_position = target_joint_angles # setting the target position
-        inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
-        inp.max_velocity = [0.5] * dof #    defining the maximum velocity
-        inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
-        inp.max_jerk = [10.0] * dof # defining the maximum jerk
+#         # Set target position to the IK result
+#         inp.target_position = target_joint_angles # setting the target position
+#         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
+#         inp.max_velocity = [0.5] * dof #    defining the maximum velocity
+#         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
+#         inp.max_jerk = [10.0] * dof # defining the maximum jerk
 
-        # Gripper ON
-        r.gripper("on")
+#         # Gripper ON
+#         r.gripper("on")
 
-        # Trajectory Execution
-        res = Result.Working
-        while res == Result.Working: # while the result is working
-            res = otg.update(inp, out) # updating the input and output
-            error_code = r.servo_j(out.new_position, out.new_velocity, out.new_acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration
-            scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
-            out.pass_to_input(inp) # passing the output to the input
-            time.sleep(0.001) # setting the time sleep to 0.001 seconds
+#         # Trajectory Execution
+#         res = Result.Working
+#         while res == Result.Working: # while the result is working
+#             res = otg.update(inp, out) # updating the input and output
+#             error_code = r.servo_j(out.new_position, out.new_velocity, out.new_acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration
+#             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
+#             out.pass_to_input(inp) # passing the output to the input
+#             time.sleep(0.001) # setting the time sleep to 0.001 seconds
 
-        r.deactivate_servo_interface() # deactivating the servo interface
-        r.stop() # stopped the robot
-        r.gripper("off") # setting gripper off
+#         r.deactivate_servo_interface() # deactivating the servo interface
+#         r.stop() # stopped the robot
+#         r.gripper("off") # setting gripper off
 
-# ServoX(robot=r).servo_x()
-r.set_mode("Automatic") # setting the mode to automatic
-r.gripper("on") # setting the gripper on
-r.move_joint("P16") # moving to P16
-r.set_mode("Teach") # setting the mode to teach
-r.gripper("off") # setting the gripper off
+# # ServoX(robot=r).servo_x()
+# r.set_mode("Automatic") # setting the mode to automatic
+# r.gripper("on") # setting the gripper on
+# r.move_joint("P16") # moving to P16
+# r.set_mode("Teach") # setting the mode to teach
+# r.gripper("off") # setting the gripper off
 
 # -------------------------------------------------------------------
 #                      SERVO_X
@@ -375,8 +375,7 @@ r.set_mode("Teach") # setting the mode to teach
 #         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
 #         print(new_message) # printing the new ordered message
 
-#         # target_1 = 0.3 # setting the target_1 as 0.3
-#         # target_2 = 0.25 # settingthe target_2 as 0.25
+#         r = self.robot # setting the robot
     
 #         #Switch to external servo mode
 #         r.activate_servo_interface('position') # activating the servo interface
@@ -384,33 +383,33 @@ r.set_mode("Teach") # setting the mode to teach
 #         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
 #         print(target) # printing the target values
 
-#         # Move target_1 unit in -X direction
-#         # target[0] -= target_1
 #         velocity = [0.15]*6 # setting the velocity 
 #         acceleration = [2.]*6 # setting the acceleration
 #         # error_code = r.movelinear_online(target, velocity, acceleration)
 #         target = copy.deepcopy(r.get_current_cartesian_pose())
-#         #Move target_2 units in +Z direction
-#         # target[2] += target_2
+
 #         target=new_message    
 #         error_code = r.movelinear_online(target, velocity, acceleration)
 
 #         #Sleep for 5 sec to complete the motion
-#         time.sleep(0.3)
+#         time.sleep(30) # setting the time
 
 #         r.deactivate_servo_interface() # deactivating the servo interface 
 #         # r.stop() # stopping the robot 
 
 #         error_code = r.movelinear_online(target, velocity, acceleration)
+
+#         time.sleep(30) # setting the time
+
 #         scaling_factor = r.get_servo_trajectory_scaling_factor()
 #         time.sleep(0.001) # setting time 
 
 #         r.deactivate_servo_interface() # deactivating the servo interface
 #         r.gripper("off") # setting gripper close position
-#         r.move_joint("P19")
-#         r.move_joint("P20")
-#         r.gripper("on")
-#         r.move_joint("P16")
+#         r.move_joint("P19") # moving to P19
+#         r.move_joint("P20") # moving to P20
+#         r.gripper("on") # setting gripper close position
+#         r.move_joint("P16") # moving to P16
 
 #         # r.stop() # stopping the robot
     
