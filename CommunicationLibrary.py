@@ -226,8 +226,8 @@ class ServoX: # defining servoX
         # inp.target_position = [-0.522, -0.315, 0.120,-3.02,-0.06,1.41]
         # target[0] += 0.2 # Move 200mm in X direction
 
-        inp.max_velocity = [0.3]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
-        inp.max_acceleration = [1]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
+        inp.max_velocity = [0.5]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
+        inp.max_acceleration = [5]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
         inp.max_jerk = [5.]*cart_pose_length # setting the jerk values
 
         servox_proportional_gain = 25 # setting the servox propotional gain as 25
@@ -253,9 +253,9 @@ class ServoX: # defining servoX
             out.pass_to_input(inp)
             time.sleep(0.001) # setting time 
 
-        r.deactivate_servo_interface() # deactivating the servo interface
+        # r.deactivate_servo_interface() # deactivating the servo interface
 
-        r.stop() # stopping the robot
+        # r.stop() # stopping the robot
         
 # ServoX(robot=r).servo_x()
 r.set_mode("Automatic") # setting the mode to automatic
