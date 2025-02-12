@@ -121,8 +121,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         inp.current_position = r.get_current_joint_angles() # getting the current joint angles
 #         inp.current_velocity = [0.]*dof
 #         inp.current_acceleration = [0.]*dof
-    
-#         # for home position ####
+
 #         # inp.target_position = [x,y,z,a,b,c,d]
 #         inp.max_velocity = [0.5]*dof # setting up the maximum velocity 
 #         inp.max_acceleration = [3]*dof # setting up the maximum acceleration
