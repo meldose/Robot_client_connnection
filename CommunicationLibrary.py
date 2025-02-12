@@ -304,7 +304,7 @@ class ServoX: # defining servoX
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        inp.target_position = new_message # initating the target position
+        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # initating the target position
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
         # inp.target_position = [x,y,z,a,b,c,d] 
@@ -312,8 +312,8 @@ class ServoX: # defining servoX
         # target[0] += 0.2 # Move 200mm in X direction
 
         inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
-        inp.max_acceleration = [8]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
-        inp.max_jerk = [5.]*cart_pose_length # setting the jerk values
+        inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
+        inp.max_jerk = [10.]*cart_pose_length # setting the jerk values
 
         servox_proportional_gain = 20 # setting the servox propotional gain as 25
 
@@ -329,19 +329,22 @@ class ServoX: # defining servoX
 
             position = out.new_position
 
-            for i in range(0,3): # Updating target translation velocity and accelerations
-                velocity[i] = out.new_velocity[i]
-                acceleration[i] = out.new_acceleration[i]
-            
-            error_code = r.servo_x(position, velocity, acceleration, servox_proportional_gain)
+            # for i in range(0,3): # Updating target translation velocity and accelerations
+                # velocity[i] = out.new_velocity[i]
+                # acceleration[i] = out.new_acceleration[i]
+            zeros = [0.] * 6
+
+            error_code = r.servo_x(position, zeros, zeros, servox_proportional_gain)
             scaling_factor = r.get_servo_trajectory_scaling_factor()
             out.pass_to_input(inp)
             time.sleep(0.001) # setting time 
 
-        # r.deactivate_servo_interface() # deactivating the servo interface
+        r.gripper("off") # setting gripper close position
+
+
+        r.deactivate_servo_interface() # deactivating the servo interface
 
         # r.stop() # stopping the robot
-        # r.gripper("off") # setting gripper close position
         
 # ServoX(robot=r).servo_x()
 r.set_mode("Automatic") # setting the mode to automatic
