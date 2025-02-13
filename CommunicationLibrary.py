@@ -129,14 +129,14 @@ class ServoJ:  # defining servoJ
         # print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
         # inp.target_position = target_joint_angles # setting the target position
-        inp.target_position = [0.6097599242439671, -0.48503564824529677, -1.2137392114427084, -0.12947047540168863, -1.3982837460126774, 0.7863150797801922] # setting the target position
+        inp.target_position = [0.7523937541369765, -0.29802456012011835, -1.179023089002252, -0.13305920361488976, -1.6366873468026333, 0.8989122483477352] # setting the target position
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
         inp.max_velocity = [0.5] * dof #    defining the maximum velocity
         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
         inp.max_jerk = [10.0] * dof # defining the maximum jerk
 
         res = Result.Working
-        
+
         while res == Result.Working: # while the result is working
             res = otg.update(inp, out) # updating the input and output
             error_code = r.servo_j(out.new_position, out.new_velocity, out.new_acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration
@@ -156,7 +156,6 @@ class ServoJ:  # defining servoJ
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
     r.move_joint("P16") # moving to P16
-    r.set_mode("Teach") # setting the mode to teach
     r.gripper("off") # setting the gripper off
 
 # -------------------------------------------------------------------
