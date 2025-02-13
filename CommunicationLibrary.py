@@ -124,12 +124,10 @@ class ServoJ:  # defining servoJ
         inp.current_velocity = [0.0] * dof # setting the current velocity as zero
         inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
 
-        # Inverse Kinematics: Convert pose to joint angles
         # target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
         # current_joint=[0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973])
         # print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
-        # Set target position to the IK result
         # inp.target_position = target_joint_angles # setting the target position
         inp.target_position = [0.6097599242439671, -0.48503564824529677, -1.2137392114427084, -0.12947047540168863, -1.3982837460126774, 0.7863150797801922] # setting the target position
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
@@ -137,9 +135,8 @@ class ServoJ:  # defining servoJ
         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
         inp.max_jerk = [10.0] * dof # defining the maximum jerk
 
-        r.gripper("on")
-
         res = Result.Working
+        
         while res == Result.Working: # while the result is working
             res = otg.update(inp, out) # updating the input and output
             error_code = r.servo_j(out.new_position, out.new_velocity, out.new_acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration
