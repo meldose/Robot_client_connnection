@@ -212,7 +212,7 @@ class ServoJ:  # defining servoJ
 
         # Inverse Kinematics: Convert pose to joint angles
         target_joint_angles = r.ik_fk("ik", target_pose=new_message, # conversion of target pose
-        current_joint=inp.current_position)
+        current_joint=r.get_current_joint_angles())
         print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
         # Set target position to the IK result
