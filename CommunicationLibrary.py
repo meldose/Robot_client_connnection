@@ -94,23 +94,21 @@ class ServoJ:  # defining servoJ
         self.robot = robot  # setting the robot
 
     def servo_j(self, message):
-        message = [x / 1000 for x in message]  # Scale values
-
-        message = [x / 1000 for x in message] # Scale values
+        # message = [x / 1000 for x in message]  # Scale values
         
-        x = message[0] # Scale values
-        y = message[1] # Scale values
-        z = message[2]  # Scale values
-        a = message[3]  # Scale values
-        b = message[4] # Scale values
-        c = message[5] # Scale values
-        d = message[6] # Scale values
+        # x = message[0] # Scale values
+        # y = message[1] # Scale values
+        # z = message[2]  # Scale values
+        # a = message[3]  # Scale values
+        # b = message[4] # Scale values
+        # c = message[5] # Scale values
+        # d = message[6] # Scale values
 
-        print(message)# printing the message
+        # print(message)# printing the message
         
-        new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
+        # new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
 
-        print(new_message)# printing the new ordered message
+        # print(new_message)# printing the new ordered message
 
         # Activate servo interface
         r.activate_servo_interface('position')
@@ -127,12 +125,13 @@ class ServoJ:  # defining servoJ
         inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
 
         # Inverse Kinematics: Convert pose to joint angles
-        target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
-        current_joint=[0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973])
-        print("Target Joint Angles:", target_joint_angles) # print the target joint angles
+        # target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
+        # current_joint=[0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973])
+        # print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
         # Set target position to the IK result
-        inp.target_position = target_joint_angles # setting the target position
+        # inp.target_position = target_joint_angles # setting the target position
+        inp.target_position = [0.6097599242439671, -0.48503564824529677, -1.2137392114427084, -0.12947047540168863, -1.3982837460126774, 0.7863150797801922] # setting the target position
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
         inp.max_velocity = [0.5] * dof #    defining the maximum velocity
         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
@@ -150,12 +149,11 @@ class ServoJ:  # defining servoJ
 
             r.deactivate_servo_interface() # deactivating the servo interface
             # r.stop() # stopped the robot
-            r.gripper("off") # setting gripper off
             r.move_joint("P19") # moving to P19
+            r.gripper("off")
             r.move_joint("P20") # moving to P20
             r.gripper("on") # setting gripper on
             r.move_joint("P16") # moving to P16
-            r.set_mode("Teach")
 
     # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
