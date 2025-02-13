@@ -88,27 +88,29 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J
 # -------------------------------------------------------------------
 
+import copy
+
 class ServoJ:  # defining servoJ
     
     def __init__(self, robot):  # initializing the robot
         self.robot = robot  # setting the robot
 
     def servo_j(self, message):
-        # message = [x / 1000 for x in message]  # Scale values
+        message = [x / 1000 for x in message]  # Scale values
         
-        # x = message[0] # Scale values
-        # y = message[1] # Scale values
-        # z = message[2]  # Scale values
-        # a = message[3]  # Scale values
-        # b = message[4] # Scale values
-        # c = message[5] # Scale values
-        # d = message[6] # Scale values
+        x = message[0] # Scale values
+        y = message[1] # Scale values
+        z = message[2]  # Scale values
+        a = message[3]  # Scale values
+        b = message[4] # Scale values
+        c = message[5] # Scale values
+        d = message[6] # Scale values
 
-        # print(message)# printing the message
+        print(message)# printing the message
         
-        # new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
+        new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
 
-        # print(new_message)# printing the new ordered message
+        print(new_message)# printing the new ordered message
 
         # Activate servo interface
         r.activate_servo_interface('position')
@@ -124,12 +126,19 @@ class ServoJ:  # defining servoJ
         inp.current_velocity = [0.0] * dof # setting the current velocity as zero
         inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
 
+        target_angle = r.ik_fk("ik", target_pose =new_message, # object pose values in radians
+        current_joint = [0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973]) # current joint angles in radians
+        print(target_angle) # print the target joint angles
+
+
         # target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
         # current_joint=[0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973])
         # print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
         # inp.target_position = target_joint_angles # setting the target position
-        inp.target_position = [0.7523937541369765, -0.29802456012011835, -1.179023089002252, -0.13305920361488976, -1.6366873468026333, 0.8989122483477352] # setting the target position
+        target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+        inp.target_position = [0.31764351712572647, -1.5097579644424788, -1.115881588855747, 1.8344006543935802, -2.4782356003958528, -0.6248432487824395] # setting the target position
+        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
         inp.max_velocity = [0.5] * dof #    defining the maximum velocity
         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
