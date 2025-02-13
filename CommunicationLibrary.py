@@ -248,7 +248,7 @@ r.set_mode("Teach") # setting the mode to teach
 r.gripper("off") # setting the gripper off
 
 # -------------------------------------------------------------------
-#                      SERVO_X
+#                      SERVO_X (WORKING)
 # -------------------------------------------------------------------
 
 # import copy # importing copy module
