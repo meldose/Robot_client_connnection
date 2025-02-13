@@ -100,8 +100,8 @@ class ServoJ:  # defining servoJ
         
         x = message[0] # Scale values
         y = message[1] # Scale values
-        z = message[2]  # Scale values
-        a = message[3]  # Scale values
+        z = message[2] # Scale values
+        a = message[3] # Scale values
         b = message[4] # Scale values
         c = message[5] # Scale values
         d = message[6] # Scale values
