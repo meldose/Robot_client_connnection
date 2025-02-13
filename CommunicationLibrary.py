@@ -213,8 +213,6 @@ class ServoJ:  # defining servoJ
 #         inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # initating the target position
 #         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
 #         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
-#         # inp.target_position = [x,y,z,a,b,c,d] 
-#         # inp.target_position = [-0.522, -0.315, 0.120,-3.02,-0.06,1.41]
 #         # target[0] += 0.2 # Move 200mm in X direction
 
 #         inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
