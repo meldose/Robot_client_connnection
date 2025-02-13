@@ -146,11 +146,11 @@ class ServoJ:  # defining servoJ
 
             r.deactivate_servo_interface() # deactivating the servo interface
             # r.stop() # stopped the robot
-            r.move_joint("P19") # moving to P19
-            r.gripper("off")
-            r.move_joint("P20") # moving to P20
-            r.gripper("on") # setting gripper on
-            r.move_joint("P16") # moving to P16
+            # r.move_joint("P19") # moving to P19
+            # r.gripper("off")
+            # r.move_joint("P20") # moving to P20
+            # r.gripper("on") # setting gripper on
+            # r.move_joint("P16") # moving to P16
 
     # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
@@ -201,7 +201,6 @@ class ServoJ:  # defining servoJ
 #         out = OutputParameter(cart_pose_length) # setting the outputparmeter with cart pose length
 
 #         inp.current_position = r.get_current_cartesian_pose()
-#         # inp.target_position = [-0.522, -0.315, 0.120,-3.02,-0.06,1.41] # providing the target position
 #         # inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
 #         # inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
