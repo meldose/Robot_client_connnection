@@ -88,14 +88,14 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J
 # -------------------------------------------------------------------
 
-# import copy
+# import copy # importing copy moudule
 
 # class ServoJ:  # defining servoJ
     
 #     def __init__(self, robot):  # initializing the robot
 #         self.robot = robot  # setting the robot
 
-#     def servo_j(self, message):
+#     def servo_j(self, message): # defining the servo_j function
 #         message = [x / 1000 for x in message]  # Scale values
         
 #         x = message[0] # Scale values
@@ -133,13 +133,13 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         inp.target_position = target_joint_angles # setting the target position
 #         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
 #         # inp.target_position = [0.31764351712572647, -1.5097579644424788, -1.115881588855747, 1.8344006543935802, -2.4782356003958528, -0.6248432487824395] # setting the target position
-#         inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
+#         inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passigng the values by fixing the [X,Y,z and fixign the d,a,b,c]
 #         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
 #         inp.max_velocity = [0.5] * dof #    defining the maximum velocity
 #         inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
 #         inp.max_jerk = [10.0] * dof # defining the maximum jerk
 
-#         res = Result.Working
+#         res = Result.Working # setting the res variable as Result.Working
 
 #         while res == Result.Working: # while the result is working
 #             res = otg.update(inp, out) # updating the input and output
@@ -265,14 +265,14 @@ class ServoX: # defining servoX
 #                      MOVE_LINEAR
 # -------------------------------------------------------------------
 
-# import copy
+# import copy # importing copy module
 
 # class ServoX: # defining servoX
 
 #     def __init__(self,robot):
 #         self.robot = robot # setting the robot
 
-#     def movelinear_online(self,message,*args,**kwargs):# defining servoX
+#     def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
 
 #         message = [x/1000 for x in message] # converting the values to mm
         
