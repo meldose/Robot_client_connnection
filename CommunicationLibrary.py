@@ -317,8 +317,8 @@ class ServoX: # defining servoX
         # r.move_joint("P16") # moving to P16
 
         # r.stop() # stopping the robot
-
-    r.gripper("on")
+        r.set_mode("Teach")
+        r.gripper("on")
     # r.set_mode("Automatic") # setting the mode to automatic
     # r.gripper("on") # setting the gripper on
     # r.move_joint("P16") # moving to P16
