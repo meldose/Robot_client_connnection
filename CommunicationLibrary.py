@@ -203,9 +203,9 @@ class ServoX: # defining servoX
         inp = InputParameter(cart_pose_length) # setting the inputparameter with cart pose length
         out = OutputParameter(cart_pose_length) # setting the outputparmeter with cart pose length
 
-        # inp.current_position = r.get_current_cartesian_pose()
-        # inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
-        # inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
+        inp.current_position = r.get_current_cartesian_pose() # getting the current cartesian poses
+        inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
+        inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
         # target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
         # inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
