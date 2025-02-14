@@ -212,11 +212,10 @@ class ServoX: # defining servoX
         # inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        # inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
-        inp.target_position = new_message
+        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
+        # inp.target_position = new_message
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
-        # target[0] += 0.2 # Move 200mm in X direction
 
         inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
         inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
@@ -230,6 +229,7 @@ class ServoX: # defining servoX
         res=Result.Working # setting the result
 
         while res == Result.Working: # while the result is working
+            
             error_code = 0 # setting the error code
 
             res = otg.update(inp, out) # updating the input and output
@@ -253,17 +253,13 @@ class ServoX: # defining servoX
         r.move_joint("P20") # moving to P20
         r.gripper("on") # setting gripper on
         r.move_joint("P16") # moving to P16
-        # r.move_joint("P27") # moving to P27
-
 
         # r.stop() # stopping the robot
     
 # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    r.move_joint("P21") # moving to P16
-    # r.move_joint("P27") # moving to P27
-
+    r.move_joint("P21") # moving to P21
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR
