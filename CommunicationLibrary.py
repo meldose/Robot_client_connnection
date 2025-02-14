@@ -175,7 +175,6 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 
 #     # def servo_x(self,message,*args,**kwargs): # defining servoX
-#     def servo_x(self,message): # defining servoX
         
 #         message = [x/1000 for x in message] # converting the values to mm
         
