@@ -98,7 +98,7 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 
     robot=RobotRequestResponseCommunication() # object is created
-    servo=ServoJ.servo_j() # calling servo function
+    servo=ServoX.servo_x() # calling servo function
     r.gripper("off") # setting gripper off
     try:
         start_time = time.time()
