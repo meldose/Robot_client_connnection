@@ -213,7 +213,7 @@ class ServoX: # defining servoX
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # initating the target position
+        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
         # target[0] += 0.2 # Move 200mm in X direction
@@ -251,8 +251,8 @@ class ServoX: # defining servoX
         r.move_joint("P19")
         r.move_joint("P20") # moving to P20
         r.gripper("on") # setting gripper on
-        # r.move_joint("P16") # moving to P16
-        r.move_joint("P27") # moving to P27
+        r.move_joint("P16") # moving to P16
+        # r.move_joint("P27") # moving to P27
 
 
         # r.stop() # stopping the robot
@@ -260,8 +260,8 @@ class ServoX: # defining servoX
 # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    # r.move_joint("P16") # moving to P16
-    r.move_joint("P27") # moving to P27
+    r.move_joint("P16") # moving to P16
+    # r.move_joint("P27") # moving to P27
 
 
 # -------------------------------------------------------------------
