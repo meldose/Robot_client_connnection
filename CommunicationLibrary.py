@@ -275,7 +275,7 @@ class ServoX: # defining servoX
     def __init__(self,robot):
         self.robot = robot # setting the robot
 
-    def movelinear_online(self,message): # defining servoX
+    def movelinear_online(self,message,*args,**kwargs):# defining servoX
 
         message = [x/1000 for x in message] # converting the values to mm
         
@@ -292,43 +292,41 @@ class ServoX: # defining servoX
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
         print(new_message) # printing the new ordered message
 
-        # r = self.robot # setting the robot
-    
+        r = self.robot # setting the robot
+
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-        # target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-        # print(target) # printing the target values
-
+        
         velocity = [0.15]*6 # setting the velocity 
         acceleration = [2.]*6 # setting the acceleration
+        target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
+        # print(target) # printing the target values
+
         # error_code = r.movelinear_online(target, velocity, acceleration)
-        target = copy.deepcopy(r.get_current_cartesian_pose())
 
         # target=new_message # setting the target position 
         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
 
-        # error_code = r.movelinear_online(target, velocity, acceleration)
-
         time.sleep(0.3) # setting the time
 
         scaling_factor = r.get_servo_trajectory_scaling_factor()
-        time.sleep(0.001) # setting time 
+        # time.sleep(0.001) # setting time 
 
         r.deactivate_servo_interface() # deactivating the servo interface
-    #     r.gripper("off") # setting gripper close position
-    #     r.move_joint("P19") # moving to P19
-    #     r.move_joint("P20") # moving to P20
-    #     r.gripper("on") # setting gripper close position
-    #     r.move_joint("P16") # moving to P16
+        # r.gripper("off") # setting gripper close position
+        # r.move_joint("P19") # moving to P19
+        # r.move_joint("P20") # moving to P20
+        # r.gripper("on") # setting gripper close position
+        # r.move_joint("P16") # moving to P16
 
-    #     # r.stop() # stopping the robot
+        # r.stop() # stopping the robot
     
-    # r.set_mode("Automatic") # setting the mode to automatic
-    # # r.gripper("on") # setting the gripper on
-    # # r.move_joint("P16") # moving to P16
-    # # r.set_mode("Teach") # setting the mode to teach
+# r.set_mode("Automatic") # setting the mode to automatic
+# # r.gripper("on") # setting the gripper on
+# r.move_joint("P16") # moving to P16
+# # r.set_mode("Teach") # setting the mode to teach
 
 
 # -------------------------------------------------------------------
@@ -611,6 +609,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 print(a)
                 # ServoX(robot=r).servo_x(a) # servoX function calling
                 ServoX(robot=r).movelinear_online(a) # move_öinear function calling
+                # ServoJ(robot=r).servo_j(a) # move_öinear function calling
 
             else:
                 assert False, "Unexpected operation type"
