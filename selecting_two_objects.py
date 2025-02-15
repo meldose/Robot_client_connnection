@@ -3,11 +3,10 @@ class VisionSystemController: # defining class Visioncontroller
         self.vs_id = vs_id # Vision System ID
 
     def scan_and_detect_objects(vs_id, object_ids): # defining the function for scaning and detecting the objects
-        """
 
-        :param object_ids: List of object IDs to detect (e.g., [1, 2])
-        :return: Detected objects with their details
-        """
+        # param object_ids: List of object IDs to detect (e.g., [1, 2])
+        # return: Detected objects with their details
+
         #Step 1: Trigger the Scan
         self.pho_request_ls_scan(vs_id)
         print("Scanning environment...") # printing the comment for scanning the environment
