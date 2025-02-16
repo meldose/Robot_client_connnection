@@ -18,7 +18,7 @@ class VisionSystemController: # defining class Visioncontroller
         detected_objects = [obj for obj in response if obj['id'] in object_ids] # checking the detected the objects
 
         # Display Detected Objects
-        for obj in detected_objects:
+        for obj in detected_objects: # checking the detected objects in the for loop
             print(f"Detected: {obj['name']} (ID: {obj['id']})") # if detected print the object name and ID
             print(f"  Position: {obj['position']}") # print the position 
             print(f"  Orientation: {obj['orientation']}\n") # print the orientation
