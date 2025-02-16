@@ -37,12 +37,12 @@ class VisionSystemController: # defining class Visioncontroller
             assert len(tool_pose) == 7, 'Wrong tool_pose size' #  chceking if the lenght is equal to seven or not 
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload) # sending the Photoneo reuqest
 
     def pho_request_get_objects(self, vs_id,  number_of_objects): # function for request to get the objects that contains the vs_id and number of objects
         payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
-        self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        return self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+        self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload) # sending the request from the camera
+        return self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST) # photoneo recieving the response
 
     # Placeholder for sending/receiving (replace with actual implementation)
     def pho_send_request(self, request_type, payload): # defining the function for sending the request sss
