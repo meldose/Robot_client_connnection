@@ -8,7 +8,7 @@ class VisionSystemController: # defining class Visioncontroller
         # return: Detected objects with their details
 
         #Step 1: Trigger the Scan
-        self.pho_request_ls_scan(vs_id)
+        self.pho_request_ls_scan(vs_id) # triggering the camera for scanning the objects
         print("Scanning environment...") # printing the comment for scanning the environment
 
         # Step 2: Request All Detected Objects (Assume a max limit, e.g., 10)
@@ -40,7 +40,7 @@ class VisionSystemController: # defining class Visioncontroller
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload) # sending the Photoneo reuqest
 
     def pho_request_get_objects(self, vs_id,  number_of_objects): # function for request to get the objects that contains the vs_id and number of objects
-        payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
+        payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0] # setting up the payload with vs_id and number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload) # sending the request from the camera
         return self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST) # photoneo recieving the response
 
