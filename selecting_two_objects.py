@@ -60,6 +60,7 @@ class VisionSystemController: # defining class Visioncontroller
             msg = msg + list(struct.pack('<f', value)) # converting to bytes
         return msg # returning the message
 
+########### OTHER FUNCTIONS ####################################
 
     def build_hello_msg(): # function to build the hello message
         return bytearray(BRAND_IDENTIFICATION.encode('utf-8')) # returning the message
