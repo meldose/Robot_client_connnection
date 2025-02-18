@@ -166,114 +166,16 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_X (WORKING)
 # -------------------------------------------------------------------
 
-import copy # importing copy module
-
-class ServoX: # defining servoX
-
-    def __init__(self,robot): # initializing the robot
-        self.robot = robot # setting the robot
-
-
-    def servo_x(self,message,*args,**kwargs): # defining servoX
-        
-        message = [x/1000 for x in message] # converting the values to mm
-        
-        x = message[0]  # setting the values
-        y = message[1]  # setting the values
-        z = message[2]  # setting the values
-        a = message[3]  # setting the values
-        b = message[4]  # setting the values
-        c = message[5]  # setting the values
-        d = message[6]  # setting the values
-        
-        print(message) # printing the message
-        
-        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-        print(new_message) # printing the new ordered message
-
-
-        r = self.robot #setting the robot
-
-        #Switch to external servo mode
-        r.activate_servo_interface('position') # activating the servo interface
-
-        cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
-
-        otg = Ruckig(cart_pose_length, 0.001)  # control cycle
-        inp = InputParameter(cart_pose_length) # setting the inputparameter with cart pose length
-        out = OutputParameter(cart_pose_length) # setting the outputparmeter with cart pose length
-
-        inp.current_position = r.get_current_cartesian_pose() # getting the current cartesian poses
-        inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
-        inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
-
-        # target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        # inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
-        # inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
-
-        target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
-        # inp.target_position = new_message
-        inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
-        inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
-
-        inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
-        inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
-        inp.max_jerk = [10.]*cart_pose_length # setting the jerk values
-
-        servox_proportional_gain = 20 # setting the servox propotional gain as 25
-
-        velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
-        acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
-        
-        res=Result.Working # setting the result
-
-        while res == Result.Working: # while the result is working
-            
-            error_code = 0 # setting the error code
-
-            res = otg.update(inp, out) # updating the input and output
-
-            position = out.new_position # getting the new position
-
-            # for i in range(0,3): # Updating target translation velocity and accelerations
-                # velocity[i] = out.new_velocity[i]
-                # acceleration[i] = out.new_acceleration[i]
-
-            zeros = [0.] * 6 #setting the zeros
-
-            error_code = r.servo_x(position, zeros, zeros, servox_proportional_gain) # passing the error code variable with having servo_j function having position, velocity and acceleration
-            scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
-            out.pass_to_input(inp)
-            time.sleep(0.001) # setting time 
-            
-        r.deactivate_servo_interface() # deactivating the servo interface
-        r.gripper("off") # setting gripper close position
-        r.move_joint("P19")
-        r.move_joint("P20") # moving to P20
-        r.gripper("on") # setting gripper on
-        r.move_joint("P16") # moving to P16
-
-        # r.stop() # stopping the robot
-    
-# ServoX(robot=r).servo_x()
-    r.set_mode("Automatic") # setting the mode to automatic
-    r.gripper("on") # setting the gripper on
-    r.move_joint("P16") # moving to P16
-
-# -------------------------------------------------------------------
-#                      MOVE_LINEAR
-# -------------------------------------------------------------------
-
 # import copy # importing copy module
 
 # class ServoX: # defining servoX
 
-#     def __init__(self,robot):
+#     def __init__(self,robot): # initializing the robot
 #         self.robot = robot # setting the robot
 
-#     def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
 
+#     def servo_x(self,message,*args,**kwargs): # defining servoX
+        
 #         message = [x/1000 for x in message] # converting the values to mm
         
 #         x = message[0]  # setting the values
@@ -289,42 +191,140 @@ class ServoX: # defining servoX
 #         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
 #         print(new_message) # printing the new ordered message
 
-#         r = self.robot # setting the robot
-        
+
+#         r = self.robot #setting the robot
+
 #         #Switch to external servo mode
 #         r.activate_servo_interface('position') # activating the servo interface
 
-#         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-#         velocity = [0.15]*6 # setting the velocity 
-#         acceleration = [2.]*6 # setting the acceleration
-#         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-#         time.sleep(0.3) # setting the time
+#         cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
 
-#         # target=new_message # setting the target position 
-#         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
-#         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
-#         # r.move_linear(target)
+#         otg = Ruckig(cart_pose_length, 0.001)  # control cycle
+#         inp = InputParameter(cart_pose_length) # setting the inputparameter with cart pose length
+#         out = OutputParameter(cart_pose_length) # setting the outputparmeter with cart pose length
 
-#         time.sleep(0.3) # setting the time
+#         inp.current_position = r.get_current_cartesian_pose() # getting the current cartesian poses
+#         inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
+#         inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
+#         # target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+#         # inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
+#         # inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
+
+#         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+#         inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
+#         # inp.target_position = new_message
+#         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
+#         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
+
+#         inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
+#         inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
+#         inp.max_jerk = [10.]*cart_pose_length # setting the jerk values
+
+#         servox_proportional_gain = 20 # setting the servox propotional gain as 25
+
+#         velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
+#         acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
+        
+#         res=Result.Working # setting the result
+
+#         while res == Result.Working: # while the result is working
+            
+#             error_code = 0 # setting the error code
+
+#             res = otg.update(inp, out) # updating the input and output
+
+#             position = out.new_position # getting the new position
+
+#             # for i in range(0,3): # Updating target translation velocity and accelerations
+#                 # velocity[i] = out.new_velocity[i]
+#                 # acceleration[i] = out.new_acceleration[i]
+
+#             zeros = [0.] * 6 #setting the zeros
+
+#             error_code = r.servo_x(position, zeros, zeros, servox_proportional_gain) # passing the error code variable with having servo_j function having position, velocity and acceleration
+#             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
+#             out.pass_to_input(inp)
+#             time.sleep(0.001) # setting time 
+            
 #         r.deactivate_servo_interface() # deactivating the servo interface
-#         # r.gripper("off") # setting gripper close position
-#         # r.move_joint("P19") # moving to P19
-#         # r.move_joint("P20") # moving to P20
-#         # r.gripper("on") # setting gripper close position
-#         # r.move_joint("P16") # moving to P16
+#         r.gripper("off") # setting gripper close position
+#         r.move_joint("P19")
+#         r.move_joint("P20") # moving to P20
+#         r.gripper("on") # setting gripper on
+#         r.move_joint("P16") # moving to P16
 
 #         # r.stop() # stopping the robot
-#     # r.set_mode("Automatic")
-#     # r.move_joint("P16")
-#     r.set_mode("Teach")
-#     r.gripper("on")
+    
+# # ServoX(robot=r).servo_x()
+#     r.set_mode("Automatic") # setting the mode to automatic
+#     r.gripper("on") # setting the gripper on
+#     r.move_joint("P16") # moving to P16
+
+# -------------------------------------------------------------------
+#                      MOVE_LINEAR
+# -------------------------------------------------------------------
+
+import copy # importing copy module
+
+class ServoX: # defining servoX
+
+    def __init__(self,robot):
+        self.robot = robot # setting the robot
+
+    def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
+
+        message = [x/1000 for x in message] # converting the values to mm
+        
+        x = message[0]  # setting the values
+        y = message[1]  # setting the values
+        z = message[2]  # setting the values
+        a = message[3]  # setting the values
+        b = message[4]  # setting the values
+        c = message[5]  # setting the values
+        d = message[6]  # setting the values
+        
+        print(message) # printing the message
+        
+        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        print(new_message) # printing the new ordered message
+
+        r = self.robot # setting the robot
+        
+        #Switch to external servo mode
+        r.activate_servo_interface('position') # activating the servo interface
+
+        cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
+        velocity = [0.15]*6 # setting the velocity 
+        acceleration = [2.]*6 # setting the acceleration
+        target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
+        time.sleep(0.5) # setting the time
+
+        # target=new_message # setting the target position 
+        target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
+        error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
+        # r.move_linear(target)
+
+        time.sleep(0.5) # setting the time
+
+        r.deactivate_servo_interface() # deactivating the servo interface
+        # r.gripper("off") # setting gripper close position
+        # r.move_joint("P19") # moving to P19
+        # r.move_joint("P20") # moving to P20
+        # r.gripper("on") # setting gripper close position
+        # r.move_joint("P16") # moving to P16
+
+        # r.stop() # stopping the robot
+    r.set_mode("Automatic")
+    r.move_joint("P16")
+    r.set_mode("Teach")
+    r.gripper("on")
 
 
-#     # r.set_mode("Automatic") # setting the mode to automatic
-#     # r.gripper("on") # setting the gripper on
-#     # r.move_joint("P16") # moving to P16
-#     # r.move_joint("P27") # moving to P27
+    # r.set_mode("Automatic") # setting the mode to automatic
+    # r.gripper("on") # setting the gripper on
+    # r.move_joint("P16") # moving to P16
+    # r.move_joint("P27") # moving to P27
 
 # -------------------------------------------------------------------
 #                      CLASSES
@@ -604,8 +604,8 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 print(a)
-                ServoX(robot=r).servo_x(a) # servoX function calling
-                # ServoX(robot=r).movelinear_online(a) # move_öinear function calling
+                # ServoX(robot=r).servo_x(a) # servoX function calling
+                ServoX(robot=r).movelinear_online(a) # move_öinear function calling
                 # ServoJ(robot=r).servo_j(a) # move_öinear function calling
 
             else:
