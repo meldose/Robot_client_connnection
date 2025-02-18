@@ -334,7 +334,7 @@ class ResponseHeader: # class used for storing data
     def __init__(self, request_id, sub_headers): # initializing the class
         self.request_id = request_id # setting the request id
         self.sub_headers = sub_headers # setting the sub headers
-
+        # self.number_of_messages = 0
 
 class ResponseData: # class used for storing data
     def __init__(self): # initializing the class
@@ -638,12 +638,13 @@ class RobotRequestResponseCommunication: # class used for storing data
 
 
     def pho_receive_response(self, required_id=None):
-        # Receive header
+
         received_header = self.client.recv(HEADER_SIZE)
         request_id = int.from_bytes(received_header[0:3], "little")
         number_of_messages = int.from_bytes(received_header[4:7], "little")
         assert len(received_header) == HEADER_SIZE, 'Wrong header size'
         header = ResponseHeader(request_id, number_of_messages)
+        assert header.request_id == request_id, "Wrong request id recieved"
         
         if required_id is not None:
             assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
@@ -711,7 +712,6 @@ class RobotRequestResponseCommunication: # class used for storing data
     def print_message(self, operation_type):
         if self.print_messages is not True:
             return
-
 
         if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
             waypoints_size = int((len(self.message) + 1) / 6)
