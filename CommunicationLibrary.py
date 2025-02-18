@@ -436,7 +436,31 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     # parameter tool_pose used only in Hand-eye
+    
+    def scan_and_detect_objects(vs_id, object_ids): # defining the function for scaning and detecting the objects
+
+        # param object_ids: List of object IDs to detect (e.g., [1, 2])
+        # return: Detected objects with their details
+
+        #Step 1: Trigger the Scan
+        self.pho_request_ls_scan(vs_id) # triggering the camera for scanning the objects
+        print("Scanning environment...") # printing the comment for scanning the environment
+
+        # Step 2: Request All Detected Objects (Assume a max limit, e.g., 10)
+        response = self.pho_request_get_objects(vs_id, number_of_objects=2) # creating the varibale for assigning the vs_id and number of objects
+
+        # Step 3: Filter the Required Objects (Pipe & Trapezoid)
+        detected_objects = [obj for obj in response if obj['id'] in object_ids] # checking the detected the objects
+
+        # Display Detected Objects
+        for obj in detected_objects: # checking the detected objects in the for loop
+            print(f"Detected: {obj['name']} (ID: {obj['id']})") # if detected print the object name and ID
+            print(f"  Position: {obj['position']}") # print the position 
+            print(f"  Orientation: {obj['orientation']}\n") # print the orientation
+        return detected_objects # get the detected objects
+
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
+        
         if tool_pose is None:
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
@@ -446,16 +470,31 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
-    def pho_ls_wait_for_scan(self):
+    def pho_ls_wait_for_scan(self,object_ids,vs_id):
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
         self.active_request = 0  # request finished - response from request received
+            
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+        return self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+    
+    
+        # Placeholder for sending/receiving (replace with actual implementation)
+    def pho_send_request(self, request_type, payload): # defining the function for sending the request sss
+        print(f"Sending request: {request_type}, Payload: {payload}") # print the request_type and payload
 
+    def pho_receive_response(self, request_type): # defining the function for recieving the response
+        # Simulated Response (Replace with actual data)
+        return [
+            {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
+            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
+            
+        ]
+        
+        
     def pho_request_ls_get_vision_system_status(self, vs_id):
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
