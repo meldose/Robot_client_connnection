@@ -469,7 +469,9 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload = [vs_id, 0, 0, 0]  # Vision system ID
         else:
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            payload = [vs_id, 0, 0, 0] + self.floatArray2bytes(tool_pose)
+            payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            payload = payload + floatArray2bytes(tool_pose)  # payload - start
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
         
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
