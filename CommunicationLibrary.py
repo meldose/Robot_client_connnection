@@ -494,7 +494,6 @@ class RobotRequestResponseCommunication: # class used for storing data
             
         ]
         
-        
     def pho_request_ls_get_vision_system_status(self, vs_id):
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
