@@ -24,9 +24,10 @@ def test_ls(): # main function for calling every function.
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_solution(252) # starting the solution
+    robot.scan_and_detect_objects(1,[1,2])
     robot.pho_request_ls_scan(1) # ls scan
     robot.pho_ls_wait_for_scan() # waiting for scan
-    robot.scan_and_detect_objects()
+   
     robot.pho_request_get_objects(1, 5) # get objects
     time.sleep(0.01)
     # robot.pho_get_current_position() # get current position

@@ -435,17 +435,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-
-    def pho_ls_wait_for_scan(self, object_ids,vs_id):
-        if object_ids:
-            object_ids = [1,2]
-        if vs_id is None:
-            vs_id = [1,2]  # Default Vision System ID (modify as needed)
-
-        self.pho_receive_response(PHO_SCAN_LS_REQUEST)
-        self.active_request = 0  # Request finished - response from request received
-
-
     def scan_and_detect_objects(self, vs_id, object_ids):
         """
         Scan the environment and detect specified objects.
@@ -484,7 +473,21 @@ class RobotRequestResponseCommunication: # class used for storing data
         
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
+    def pho_ls_wait_for_scan(self, object_ids=None,vs_id=None):
+        if not object_ids is None:
+            object_ids = [1,2]
+        if not vs_id is None:
+            vs_id = [1,2]  # Default Vision System ID (modify as needed)
+
+        self.pho_receive_response(PHO_SCAN_LS_REQUEST)
+        self.active_request = 0  # Request finished - response from request received
+
+
     def pho_request_get_objects(self, vs_id, number_of_objects):
+        if self.active_request != 0:
+            logging.warning(f"Previous request {request_name.get(self.active_request, 'Unknown Request')} not finished. Waiting...")
+            time.sleep(0.5)  # Small delay before retrying (adjust as needed)
+
         payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
         response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
@@ -520,15 +523,35 @@ class RobotRequestResponseCommunication: # class used for storing data
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
 
-    def pho_send_request(self, request_type, payload):
+    def pho_send_request(self, request_type, payload,request_id):
         print(f"Sending request: {request_type}, Payload: {payload}")
 
-    def pho_receive_response(self, request_type):
-        # Simulated Response (Replace with actual data retrieval method)
-        return [
-            {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
-            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
-        ]
+        if self.active_request != 0:
+            logging.warning(f"Previous request {request_name.get(self.active_request, 'Unknown Request')} not finished. Waiting...")
+            time.sleep(1)  # Wait for the previous request to complete (adjust as needed)
+
+        assert self.active_request == 0, f"Request {request_name.get(self.active_request, 'Unknown Request')} not finished"
+
+        self.active_request = request_id  # Mark the new request as active
+        msg = PHO_HEADER[:]  # Copy header to avoid modifying the original list
+
+        if payload is not None:
+            assert isinstance(payload, list), "Payload must be a list"
+            assert all(isinstance(x, int) for x in payload), "Payload must contain only integers"
+            msg += [int(len(payload) // PACKET_SIZE), 0, 0, 0]  # Payload size
+            msg += [request_id, 0, 0, 0]  # Request ID
+            msg += payload  # Append payload
+        else:
+            msg += [0, 0, 0, 0]  # Payload size (empty)
+            msg += [request_id, 0, 0, 0]  # Request ID
+
+        try:
+            self.client.send(bytearray(msg))  # Send the message to the client
+        except Exception as e:
+            logging.error(f"Failed to send request {request_id}: {e}")
+
+
+    
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
@@ -591,8 +614,25 @@ class RobotRequestResponseCommunication: # class used for storing data
         else:
             msg = msg + [0, 0, 0, 0]  # header - payload size
             msg = msg + [request_id, 0, 0, 0]  # header - request ID
+        try:
+            self.client.send(bytearray(msg))
+        except Exception as e:
+            logging.error(f"Failed to request{request_id}:{e}")
 
-        self.client.send(bytearray(msg))
+
+    def pho_receive_response(self, response):
+        # Simulated Response (Replace with actual data retrieval method)
+        response = [
+            {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
+            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
+        ]
+
+        if response is None:
+            logging.error("No response received from vision system.")
+            return []
+
+        self.active_request = 0  #  Reset active request after handling response
+        return response
 
     def pho_receive_response(self, required_id):
         # receive header
