@@ -259,7 +259,7 @@ class ServoX: # defining servoX
 # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    r.move_joint("P21") # moving to P21
+    r.move_joint("P16") # moving to P16
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR
