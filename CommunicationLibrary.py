@@ -435,92 +435,100 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    # parameter tool_pose used only in Hand-eye
-    
-    def scan_and_detect_objects(vs_id, object_ids): # defining the function for scaning and detecting the objects
 
-        # param object_ids: List of object IDs to detect (e.g., [1, 2])
-        # return: Detected objects with their details
+    def pho_ls_wait_for_scan(self, object_ids,vs_id):
+        if object_ids:
+            object_ids = [1,2]
+        if vs_id is None:
+            vs_id = [1,2]  # Default Vision System ID (modify as needed)
 
-        #Step 1: Trigger the Scan
-        self.pho_request_ls_scan(vs_id) # triggering the camera for scanning the objects
-        print("Scanning environment...") # printing the comment for scanning the environment
+        self.pho_receive_response(PHO_SCAN_LS_REQUEST)
+        self.active_request = 0  # Request finished - response from request received
 
-        # Step 2: Request All Detected Objects (Assume a max limit, e.g., 10)
-        response = self.pho_request_get_objects(vs_id, number_of_objects=2) # creating the varibale for assigning the vs_id and number of objects
 
-        # Step 3: Filter the Required Objects (Pipe & Trapezoid)
-        detected_objects = [obj for obj in response if obj['id'] in object_ids] # checking the detected the objects
+    def scan_and_detect_objects(self, vs_id, object_ids):
+        """
+        Scan the environment and detect specified objects.
+        :param vs_id: Vision system ID
+        :param object_ids: List of object IDs to detect (e.g., [1, 2])
+        :return: Detected objects with their details
+        """
+        # Step 1: Trigger the Scan
+        self.pho_request_ls_scan(vs_id)  # Fixed incorrect argument passing
+        print("Scanning environment...")
+
+        # Step 2: Request All Detected Objects
+        response = self.pho_request_get_objects(vs_id, number_of_objects=2)
+        
+        if response is None:
+            logging.error("Failed to retrieve objects from the vision system.")
+            return []
+
+        # Step 3: Filter the Required Objects
+        detected_objects = [obj for obj in response if obj['id'] in object_ids]
 
         # Display Detected Objects
-        for obj in detected_objects: # checking the detected objects in the for loop
-            print(f"Detected: {obj['name']} (ID: {obj['id']})") # if detected print the object name and ID
-            print(f"  Position: {obj['position']}") # print the position 
-            print(f"  Orientation: {obj['orientation']}\n") # print the orientation
-        return detected_objects # get the detected objects
+        for obj in detected_objects:
+            print(f"Detected: {obj['name']} (ID: {obj['id']})")
+            print(f"  Position: {obj['position']}")
+            print(f"  Orientation: {obj['orientation']}\n")
+        
+        return detected_objects
 
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
-        
         if tool_pose is None:
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+            payload = [vs_id, 0, 0, 0]  # Vision system ID
         else:
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-
-    def pho_ls_wait_for_scan(self,object_ids,vs_id):
-        self.pho_receive_response(PHO_SCAN_LS_REQUEST)
-        self.active_request = 0  # request finished - response from request received
-            
+            payload = [vs_id, 0, 0, 0] + self.floatArray2bytes(tool_pose)
+        
+        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
-        payload = [vs_id, 0, 0, 0]  # payload - vision system id
-        payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
+        payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        return self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
-    
-    
-        # Placeholder for sending/receiving (replace with actual implementation)
-    def pho_send_request(self, request_type, payload): # defining the function for sending the request sss
-        print(f"Sending request: {request_type}, Payload: {payload}") # print the request_type and payload
-
-    def pho_receive_response(self, request_type): # defining the function for recieving the response
-        # Simulated Response (Replace with actual data)
-        return [
-            {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
-            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
-            
-        ]
+        response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
         
+        if response is None:
+            logging.error("No response received from vision system.")
+            return []
+        
+        return response
+
     def pho_request_ls_get_vision_system_status(self, vs_id):
-        payload = [vs_id, 0, 0, 0]  # payload - vision system id
+        payload = [vs_id, 0, 0, 0]
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
+        return self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
 
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
         try:
             start_time = time.time()
             while True:
-                # Replace 'pho_get_current_joint_angles' with the actual method to retrieve the robot's joint angles
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
                 distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
-                
+
                 if distance <= tolerance:
                     logging.info(f"Robot reached target joint angles: {current_joint_angles}")
                     break
-                
+
                 if time.time() - start_time > timeout:
                     raise TimeoutError("Robot did not reach the target joint angles in time.")
-                
+
                 time.sleep(0.5)
-        
         except AttributeError:
             logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
 
+    def pho_send_request(self, request_type, payload):
+        print(f"Sending request: {request_type}, Payload: {payload}")
+
+    def pho_receive_response(self, request_type):
+        # Simulated Response (Replace with actual data retrieval method)
+        return [
+            {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
+            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
+        ]
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
