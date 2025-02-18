@@ -53,14 +53,18 @@ class VisionSystemController: # defining class Visioncontroller
         return [
             {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
             {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
+            
         ]
+        
+########### OTHER FUNCTIONS ####################################
+
     def floatArray2bytes(array): # function to convert float array to bytes
         msg = [] # creating the message
         for value in array: # iterating through the array
             msg = msg + list(struct.pack('<f', value)) # converting to bytes
         return msg # returning the message
 
-########### OTHER FUNCTIONS ####################################
+
 
     def build_hello_msg(): # function to build the hello message
         return bytearray(BRAND_IDENTIFICATION.encode('utf-8')) # returning the message
