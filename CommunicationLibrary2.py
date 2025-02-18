@@ -436,20 +436,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     # parameter tool_pose used only in Hand-eye
-    def pho_request_ls_scan(self, vs_id, tool_pose=None):
-        if tool_pose is None:
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-        else:
-            assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-
-    def pho_ls_wait_for_scan(self,object_ids,vs_id):
-        self.pho_receive_response(PHO_SCAN_LS_REQUEST)
-        self.active_request = 0  # request finished - response from request received
-        
+    
     def scan_and_detect_objects(vs_id, object_ids): # defining the function for scaning and detecting the objects
 
         # param object_ids: List of object IDs to detect (e.g., [1, 2])
@@ -472,16 +459,42 @@ class RobotRequestResponseCommunication: # class used for storing data
             print(f"  Orientation: {obj['orientation']}\n") # print the orientation
         return detected_objects # get the detected objects
 
-    
+    def pho_request_ls_scan(self, vs_id, tool_pose=None):
+        
+        if tool_pose is None:
+            payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+        else:
+            assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            payload = payload + floatArray2bytes(tool_pose)  # payload - start
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+
+    def pho_ls_wait_for_scan(self,object_ids,vs_id):
+        self.pho_receive_response(PHO_SCAN_LS_REQUEST)
+        self.active_request = 0  # request finished - response from request received
+            
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
         return self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+    
+    
+        # Placeholder for sending/receiving (replace with actual implementation)
+    def pho_send_request(self, request_type, payload): # defining the function for sending the request sss
+        print(f"Sending request: {request_type}, Payload: {payload}") # print the request_type and payload
 
-
-
+    def pho_receive_response(self, request_type): # defining the function for recieving the response
+        # Simulated Response (Replace with actual data)
+        return [
+            {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
+            {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
+            
+        ]
+        
+        
     def pho_request_ls_get_vision_system_status(self, vs_id):
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)

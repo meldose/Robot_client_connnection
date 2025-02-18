@@ -56,24 +56,6 @@ class VisionSystemController: # defining class Visioncontroller
             
         ]
         
-########### OTHER FUNCTIONS ####################################
-
-    def floatArray2bytes(array): # function to convert float array to bytes
-        msg = [] # creating the message
-        for value in array: # iterating through the array
-            msg = msg + list(struct.pack('<f', value)) # converting to bytes
-        return msg # returning the message
-
-
-
-    def build_hello_msg(): # function to build the hello message
-        return bytearray(BRAND_IDENTIFICATION.encode('utf-8')) # returning the message
-
-
-    def build_state_server_hello_msg(): # function to build the state server hello message
-        return bytearray(BRAND_IDENTIFICATION_SERVER.encode('utf-8')) # returning the message
-
-
 # 🚀 Example Usage
 if __name__ == "__main__":
     vision_controller = VisionSystemController(vs_id=1)
