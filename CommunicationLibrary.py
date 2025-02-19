@@ -465,6 +465,7 @@ class RobotRequestResponseCommunication: # class used for storing data
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
         if tool_pose is None:
             payload = [vs_id, 0, 0, 0]  # Vision system ID
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
         else:
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
@@ -485,13 +486,18 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
         if self.active_request != 0:
-            payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
+            payload = [vs_id, 0, 0, 0]
+            payload = payload + [number_of_objects, 0, 0, 0]
             self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
             response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
             
-        if response is None:
-            logging.error("No response received from vision system.")
-            return []
+            if response is None:
+                logging.error("No response received from vision system.")
+                return []
+        else:
+
+            logging.warning("No active for object retrieval")
+            return[]
         
         return response
 
@@ -520,32 +526,32 @@ class RobotRequestResponseCommunication: # class used for storing data
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
 
-    def pho_send_request(self, request_type, payload,request_id):
-        print(f"Sending request: {request_type}, Payload: {payload}")
+    # def pho_send_request(self, request_type, payload,request_id):
+    #     print(f"Sending request: {request_type}, Payload: {payload}")
 
-        if self.active_request != 0:
-            logging.warning(f"Previous request {request_name.get(self.active_request, 'Unknown Request')} not finished. Waiting...")
-            time.sleep(1)  # Wait for the previous request to complete (adjust as needed)
+    #     if self.active_request != 0:
+    #         logging.warning(f"Previous request {request_name.get(self.active_request, 'Unknown Request')} not finished. Waiting...")
+    #         time.sleep(1)  # Wait for the previous request to complete (adjust as needed)
 
-        assert self.active_request == 0, f"Request {request_name.get(self.active_request, 'Unknown Request')} not finished"
+    #     assert self.active_request == 0, f"Request {request_name.get(self.active_request, 'Unknown Request')} not finished"
 
-        self.active_request = request_id  # Mark the new request as active
-        msg = PHO_HEADER[:]  # Copy header to avoid modifying the original list
+    #     self.active_request = request_id  # Mark the new request as active
+    #     msg = PHO_HEADER[:]  # Copy header to avoid modifying the original list
 
-        if payload is not None:
-            assert isinstance(payload, list), "Payload must be a list"
-            assert all(isinstance(x, int) for x in payload), "Payload must contain only integers"
-            msg += [int(len(payload) // PACKET_SIZE), 0, 0, 0]  # Payload size
-            msg += [request_id, 0, 0, 0]  # Request ID
-            msg += payload  # Append payload
-        else:
-            msg += [0, 0, 0, 0]  # Payload size (empty)
-            msg += [request_id, 0, 0, 0]  # Request ID
+    #     if payload is not None:
+    #         assert isinstance(payload, list), "Payload must be a list"
+    #         assert all(isinstance(x, int) for x in payload), "Payload must contain only integers"
+    #         msg += [int(len(payload) // PACKET_SIZE), 0, 0, 0]  # Payload size
+    #         msg += [request_id, 0, 0, 0]  # Request ID
+    #         msg += payload  # Append payload
+    #     else:
+    #         msg += [0, 0, 0, 0]  # Payload size (empty)
+    #         msg += [request_id, 0, 0, 0]  # Request ID
 
-        try:
-            self.client.send(bytearray(msg))  # Send the message to the client
-        except Exception as e:
-            logging.error(f"Failed to send request {request_id}: {e}")
+    #     try:
+    #         self.client.send(bytearray(msg))  # Send the message to the client
+    #     except Exception as e:
+    #         logging.error(f"Failed to send request {request_id}: {e}")
 
 
     
@@ -736,11 +742,23 @@ class RobotRequestResponseCommunication: # class used for storing data
                 info = int.from_bytes(self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
                 print('\033[94m' + "INFO: " + '\033[0m' + "[" + str(info) + "]")
         elif operation_type == OperationType.PHO_OBJECT_POSE:
-            print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
-                round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
-                round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
-                round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
-        return self.message
+            if isinstance(self.message,(list,tuple)) and len(self.message) >=7:
+                print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
+                    round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
+                    round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
+                    round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
+            else:
+                print("Invalid object",self.message)
+                return self.message
+       
+        elif operation_type == OperationType.PHO_OBJECT_POSE:
+            data = self.client.recv(OBJECT_POSE_SIZE)
+            if len(data) >= 28:
+                self.message = struct.unpack('<7f', data[:28])  # Ensure it's a tuple
+            else:
+                self.message = []  # Avoid indexing errors
+            self.print_message(operation_type)
+
 
 # -------------------------------------------------------------------
 #                     OTHER FUNCTIONS
