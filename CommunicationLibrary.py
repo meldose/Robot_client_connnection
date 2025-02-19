@@ -485,13 +485,10 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
         if self.active_request != 0:
-            logging.warning(f"Previous request {request_name.get(self.active_request, 'Unknown Request')} not finished. Waiting...")
-            time.sleep(0.5)  # Small delay before retrying (adjust as needed)
-
-        payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
-        self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
-        
+            payload = [vs_id, 0, 0, 0] + [number_of_objects, 0, 0, 0]
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
+            response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+            
         if response is None:
             logging.error("No response received from vision system.")
             return []
