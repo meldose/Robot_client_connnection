@@ -596,7 +596,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
 
     def pho_receive_response(self, required_id=None, response=None,message=None):
-        if message is None or len(message) <=7:
+        if message is None or len(message) <7:
             logging.error("Invalid or missing message data")
             return [],[]
         
