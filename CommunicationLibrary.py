@@ -629,68 +629,68 @@ class RobotRequestResponseCommunication: # class used for storing data
         
         # Receive header
         received_header = self.client.recv(HEADER_SIZE)
-        if len(received_header) < HEADER_SIZE:
-            return [],[]
-        request_id = int.from_bytes(received_header[0:3], "little")
-        number_of_messages = int.from_bytes(received_header[4:7], "little")
-        assert len(received_header) == HEADER_SIZE, 'Wrong header size'
-        header = ResponseHeader(self,request_id, number_of_messages)
-
+        if len(received_header) < HEADER_SIZE: # checking if the header is empty
+            return[],[] # returning empty response
+        request_id = int.from_bytes(received_header[0:3], "little") # setting the request id
+        number_of_messages = int.from_bytes(received_header[4:7], "little") # setting the number of messages
+        assert len(received_header) == HEADER_SIZE, 'Wrong header size' # checking if the header size is correct
+        header = ResponseHeader(self,request_id, number_of_messages) # setting the header
+ 
         # if required_id is not None:
         #     assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
 
-        if request_id == PHO_TRAJECTORY_REQUEST:
+        if request_id == PHO_TRAJECTORY_REQUEST: # if the request id is PHO_TRAJECTORY_REQUEST
             self.response_data.init_trajectory_data()  # empty variable for receiving new trajectory
 
         for message_count in range(header.number_of_messages):  # Fix: using correct header field
             # Receive subheader
-            received_subheader = self.client.recv(SUBHEADER_SIZE)
-            operation_type = int.from_bytes(received_subheader[0:3], "little")
-            operation_number = int.from_bytes(received_subheader[4:7], "little")
-            data_size = int.from_bytes(received_subheader[8:11], "little")
-            assert len(received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size'
+            received_subheader = self.client.recv(SUBHEADER_SIZE) # receiving the subheader
+            operation_type = int.from_bytes(received_subheader[0:3], "little") # setting the operation type
+            operation_number = int.from_bytes(received_subheader[4:7], "little") # setting the operation number
+            data_size = int.from_bytes(received_subheader[8:11], "little") # setting the data size
+            assert len(received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size' #checking if the subheader size is correct
 
-            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
-                if self.response_data.segment_id >= len(self.response_data.trajectory_data):
+            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
+                if self.response_data.segment_id >= len(self.response_data.trajectory_data): # checking if the segment id is greater than the length of the trajectory data
                     self.response_data.add_segment()
                 waypoints = []
                 waypoint_size = 8 * PACKET_SIZE  # 2 + 6
-                for _ in range(data_size):
+                for i in range(data_size): # iterating over the data size
                     data = self.client.recv(waypoint_size)
                     waypoint_id = struct.unpack('<i', data[0:4])[0]
                     waypoint = struct.unpack('<6f', data[4:28])
                     check_sum = struct.unpack('<f', data[28:32])[0]
                     joint_sum = sum(waypoint)
                     assert abs(joint_sum - check_sum) < 0.01, "Wrong joints sum"
-                    waypoints.append(waypoint)
+                    waypoints.append(waypoint) # appending the waypoint
                     self.response_data.add_waypoint(self.response_data.segment_id, waypoint)
-                self.response_data.segment_id += 1
-                self.message = waypoints
-                self.print_message(operation_type)
+                self.response_data.segment_id += 1 # incrementing the segment id
+                self.message = waypoints # setting the message
+                self.print_message(operation_type) # printing the message
 
-            elif operation_type == OperationType.PHO_GRIPPER:
-                data_size = data_size * 4
-                data = self.client.recv(data_size)
+            elif operation_type == OperationType.PHO_GRIPPER: # checking if the operation type is PHO_GRIPPER
+                data_size = data_size * 4 # setting the data size
+                data = self.client.recv(data_size) # receiving the data
                 self.response_data.gripper_command.append(int(data[0]))  # store gripper command
-                self.message = data
-                self.print_message(operation_type)
+                self.message = data # setting the message
+                self.print_message(operation_type) # printing the message
 
             elif operation_type == OperationType.PHO_ERROR:
-                data_size = data_size * 4
-                data = self.client.recv(data_size)
-                error_code = int.from_bytes(data[0:3], "little")
-                self.message = error_code
-                self.print_message(operation_type)
+                data_size = data_size * 4 # setting the data size
+                data = self.client.recv(data_size) # receiving the data
+                error_code = int.from_bytes(data[0:3], "little") # setting the error code
+                self.message = error_code # setting the message
+                self.print_message(operation_type) # printing the message
 
-            elif operation_type == OperationType.PHO_INFO:
-                data = self.client.recv(data_size * PACKET_SIZE)
-                self.message = data
-                self.print_message(operation_type)
+            elif operation_type == OperationType.PHO_INFO: # checking if the operation type is PHO_INFO
+                data = self.client.recv(data_size * PACKET_SIZE) # receiving the data
+                self.message = data # setting the message
+                self.print_message(operation_type) # printing the message
 
-            elif operation_type == OperationType.PHO_OBJECT_POSE:
+            elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
                 # Use simulated response if available, otherwise fetch real data
-                if response:
-                    logging.info("Using simulated response for object pose.")
+                if response: # if there is a response
+                    logging.info("Using simulated response for object pose.") # logging
                     pose_to_move = [
                         obj["position"] + obj["orientation"] for obj in response
                     ]
@@ -701,23 +701,23 @@ class RobotRequestResponseCommunication: # class used for storing data
                     self.message = object_pose
                     pose_to_move = [object_pose]
 
-                self.print_message(operation_type)
+                self.print_message(operation_type) # printing the message
 
                 # Ensure the pose is valid before attempting to move
-                if pose_to_move:
-                    for pose in pose_to_move:
+                if pose_to_move: # if there is a pose to move
+                    for pose in pose_to_move: # iterating over the poses
                         ServoX(robot=self.robot).movelinear_online(pose)  # Move to pose using movelinear_online
 
             # else:
             #     assert False, "Unexpected operation type"
 
             self.active_request = 0  # Request finished - response from request received
-            return response
+            return response # returning the response
 
 
-    def print_message(self, operation_type):
-        if self.print_messages is not True:
-            return
+    def print_message(self, operation_type): #defining the print_message function
+        if self.print_messages is not True: # checking if the print messages is not true
+            return 
 
         if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
             waypoints_size = int((len(self.message) + 1) / 6)
@@ -746,13 +746,13 @@ class RobotRequestResponseCommunication: # class used for storing data
                 print("Invalid object",self.message)
                 return self.message
        
-        elif operation_type == OperationType.PHO_OBJECT_POSE:
-            data = self.client.recv(OBJECT_POSE_SIZE)
-            if len(data) >= 28:
+        elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
+            data = self.client.recv(OBJECT_POSE_SIZE) # receiving the data
+            if len(data) >= 28: # checking if the data is valid
                 self.message = struct.unpack('<7f', data[:28])  # Ensure it's a tuple
-            else:
+            else: # if the data is not valid
                 self.message = []  # Avoid indexing errors
-            self.print_message(operation_type)
+            self.print_message(operation_type) # printing the message
 
 
 # -------------------------------------------------------------------
