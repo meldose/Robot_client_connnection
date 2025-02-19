@@ -1,8 +1,6 @@
 from price_tag import PriceTag
 import cv2 as cv
- 
- 
- 
+
 def detect_number_1(image):
     grey_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     blur = cv.GaussianBlur(grey_image, (5, 5), 0)
