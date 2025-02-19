@@ -595,39 +595,42 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.client.send(bytearray(msg))
 
 
-    def pho_receive_response(self, required_id=None, response=None,message=None):
-        if message is None or len(message) <7:
-            logging.error("Invalid or missing message data")
-            return [],[]
+    # def pho_receive_response(self, required_id=None, response=None,message=None):
+    def pho_receive_response(self, required_id=None, response=None):
+        # if message is None or len(message) <7:
+        #     logging.error("Invalid or missing message data")
+        #     return [],[]
         
-        message = [x/1000 for x in message] # converting the values to mm
+        # message = [x/1000 for x in message] # converting the values to mm
         
-        x = message[0]  # setting the values
-        y = message[1]  # setting the values
-        z = message[2]  # setting the values
-        a = message[3]  # setting the values
-        b = message[4]  # setting the values
-        c = message[5]  # setting the values
-        d = message[6]  # setting the values
+        # x = message[0]  # setting the values
+        # y = message[1]  # setting the values
+        # z = message[2]  # setting the values
+        # a = message[3]  # setting the values
+        # b = message[4]  # setting the values
+        # c = message[5]  # setting the values
+        # d = message[6]  # setting the values
         
-        print(message) # printing the message
+        # print(message) # printing the message
 
-        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-        print(new_message)
+        # new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        # print(new_message)
     
-        position=[new_message[0],new_message[1],new_message[2],new_message[3]]
+        # position=[new_message[0],new_message[1],new_message[2],new_message[3]]
 
-        orientation=[new_message[4],new_message[5],new_message[6]]
+        # orientation=[new_message[4],new_message[5],new_message[6]]
 
-        # Simulated Response (Replace with actual data retrieval method)
-        if response is None:
-            response = [
-                {"id": 1, "name": "Pipe", "position": position, "orientation": position},
-                {"id": 2, "name": "Trapezoid", "position": orientation, "orientation": orientation}
-            ]
+        # # Simulated Response (Replace with actual data retrieval method)
+        # if response is None:
+        #     response = [
+        #         {"id": 1, "name": "Pipe", "position": position, "orientation": position},
+        #         {"id": 2, "name": "Trapezoid", "position": orientation, "orientation": orientation}
+        #     ]
         
         # Receive header
         received_header = self.client.recv(HEADER_SIZE)
+        if len(received_header) < HEADER_SIZE:
+            return [],[]
         request_id = int.from_bytes(received_header[0:3], "little")
         number_of_messages = int.from_bytes(received_header[4:7], "little")
         assert len(received_header) == HEADER_SIZE, 'Wrong header size'
