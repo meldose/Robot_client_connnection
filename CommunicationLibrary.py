@@ -716,7 +716,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         request_id = int.from_bytes(received_header[0:3], "little")
         number_of_messages = int.from_bytes(received_header[4:7], "little")
         assert len(received_header) == HEADER_SIZE, 'Wrong header size'
-        header = ResponseHeader(request_id, number_of_messages,sub_headers)
+        header = ResponseHeader(self,request_id, number_of_messages)
 
         if required_id is not None:
             assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
