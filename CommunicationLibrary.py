@@ -289,7 +289,9 @@ class ServoX: # defining servoX
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
         print(new_message) # printing the new ordered message
 
-        r = self.robot # setting the robot
+        # self.robot=ServoX() # setting the robot
+        # servo=ServoX(self.robot)
+        # servo.movelinear_online()
         
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
@@ -373,11 +375,12 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     response_data = ResponseData()  # create object for storing data
 
-    def __init__(self): # initializing the class
+    def __init__(self,robot=None): # initializing the class
         self.active_request = 0  # variable to check, if old request has finished and new one can be called
         self.client = None # variable to store client
         self.message = None # variable to store message
         self.print_messages = True # True -> prints messages , False -> doesnt print messages
+        self.robot=robot
 
     def connect_to_server(self, CONTROLLER_IP, PORT): # function to connect to server
         self.client = socket.socket() # create socket
@@ -525,35 +528,6 @@ class RobotRequestResponseCommunication: # class used for storing data
             logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
-
-    # def pho_send_request(self, request_type, payload,request_id):
-    #     print(f"Sending request: {request_type}, Payload: {payload}")
-
-    #     if self.active_request != 0:
-    #         logging.warning(f"Previous request {request_name.get(self.active_request, 'Unknown Request')} not finished. Waiting...")
-    #         time.sleep(1)  # Wait for the previous request to complete (adjust as needed)
-
-    #     assert self.active_request == 0, f"Request {request_name.get(self.active_request, 'Unknown Request')} not finished"
-
-    #     self.active_request = request_id  # Mark the new request as active
-    #     msg = PHO_HEADER[:]  # Copy header to avoid modifying the original list
-
-    #     if payload is not None:
-    #         assert isinstance(payload, list), "Payload must be a list"
-    #         assert all(isinstance(x, int) for x in payload), "Payload must contain only integers"
-    #         msg += [int(len(payload) // PACKET_SIZE), 0, 0, 0]  # Payload size
-    #         msg += [request_id, 0, 0, 0]  # Request ID
-    #         msg += payload  # Append payload
-    #     else:
-    #         msg += [0, 0, 0, 0]  # Payload size (empty)
-    #         msg += [request_id, 0, 0, 0]  # Request ID
-
-    #     try:
-    #         self.client.send(bytearray(msg))  # Send the message to the client
-    #     except Exception as e:
-    #         logging.error(f"Failed to send request {request_id}: {e}")
-
-
     
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
@@ -632,7 +606,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         # Check if response is None, log error and return empty list
         if not response:
             logging.error("No response received from vision system.")
-            return []
+            return [],[]
 
         # Receive header
         received_header = self.client.recv(HEADER_SIZE)
