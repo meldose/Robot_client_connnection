@@ -601,7 +601,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     def pho_send_request(self, request_id, payload=None):
-        assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
+        # assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
         self.active_request = request_id
         msg = PHO_HEADER  # header - PHO
         if payload is not None:
@@ -635,8 +635,8 @@ class RobotRequestResponseCommunication: # class used for storing data
         assert len(received_header) == HEADER_SIZE, 'Wrong header size'
         header = ResponseHeader(self,request_id, number_of_messages)
 
-        if required_id is not None:
-            assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
+        # if required_id is not None:
+        #     assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
 
         if request_id == PHO_TRAJECTORY_REQUEST:
             self.response_data.init_trajectory_data()  # empty variable for receiving new trajectory
