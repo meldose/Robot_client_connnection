@@ -437,10 +437,8 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def scan_and_detect_objects(self, vs_id, object_ids):
         """
-        Scan the environment and detect specified objects.
         :param vs_id: Vision system ID
         :param object_ids: List of object IDs to detect (e.g., [1, 2])
-        :return: Detected objects with their details
         """
         # Step 1: Trigger the Scan
         self.pho_request_ls_scan(vs_id)  # Fixed incorrect argument passing
