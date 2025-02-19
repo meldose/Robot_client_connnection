@@ -595,19 +595,37 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.client.send(bytearray(msg))
 
 
-    def pho_receive_response(self, required_id=None, response=None):
+    def pho_receive_response(self, required_id=None, response=None,message=None):
+        if message is None or len(message) < 7:
+            logging.error("Invalid or missing message data")
+            return [],[]
+        
+        message = [x/1000 for x in message] # converting the values to mm
+        
+        x = message[0]  # setting the values
+        y = message[1]  # setting the values
+        z = message[2]  # setting the values
+        a = message[3]  # setting the values
+        b = message[4]  # setting the values
+        c = message[5]  # setting the values
+        d = message[6]  # setting the values
+        
+        print(message) # printing the message
+
+        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        print(new_message)
+    
+        position=new_message[:3]
+
+        orientation=new_message[:4]
+
         # Simulated Response (Replace with actual data retrieval method)
         if response is None:
             response = [
-                {"id": 1, "name": "Pipe", "position": [100, 200, 300], "orientation": [0, 0, 0, 1]},
-                {"id": 2, "name": "Trapezoid", "position": [150, 250, 350], "orientation": [0, 0, 0, 1]}
+                {"id": 1, "name": "Pipe", "position": position, "orientation": position},
+                {"id": 2, "name": "Trapezoid", "position": orientation, "orientation": orientation}
             ]
         
-        # Check if response is None, log error and return empty list
-        if not response:
-            logging.error("No response received from vision system.")
-            return [],[]
-
         # Receive header
         received_header = self.client.recv(HEADER_SIZE)
         request_id = int.from_bytes(received_header[0:3], "little")
@@ -687,8 +705,8 @@ class RobotRequestResponseCommunication: # class used for storing data
                     for pose in pose_to_move:
                         ServoX(robot=self.robot).movelinear_online(pose)  # Move to pose using movelinear_online
 
-            else:
-                assert False, "Unexpected operation type"
+            # else:
+            #     assert False, "Unexpected operation type"
 
             self.active_request = 0  # Request finished - response from request received
             return response
