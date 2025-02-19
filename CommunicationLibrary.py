@@ -615,9 +615,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
         print(new_message)
     
-        position=new_message[:3]
+        position=[new_message[0],new_message[1],new_message[2],new_message[3]]
 
-        orientation=new_message[:4]
+        orientation=[new_message[4],new_message[5],new_message[6]]
 
         # Simulated Response (Replace with actual data retrieval method)
         if response is None:
