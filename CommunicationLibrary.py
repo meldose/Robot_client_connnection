@@ -440,18 +440,20 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    def pho_request_ls_scan(self, vs_id, tool_pose=None):
+    def pho_request_ls_scan(self, vs_id=None, tool_pose=None):
 
-        assert vs_id in [1,2]
-
-        if tool_pose is None:
-            payload = [vs_id, 0, 0, 0]  # Vision system ID
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-        else:
+        if vs_id is None and tool_pose is not None:
+            assert vs_id in [1,2]
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+            payload = [vs_id, 0, 0, 0] 
+            payload.extend(floatArray2bytes(tool_pose))  # Use extend for readability
+
+        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+
+            # assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            # payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            # payload = payload + floatArray2bytes(tool_pose)  # payload - start
+            # self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
     def pho_ls_wait_for_scan(self,vs_id):
         assert vs_id in [1, 2], "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
@@ -461,23 +463,26 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
         self.active_request = 0  # Request finished - response received
 
-    def pho_request_get_objects(self, vs_id, number_of_objects):
-        if self.active_request != 0:
-            payload = [vs_id, 0, 0, 0]
-            payload = payload + [number_of_objects, 0, 0, 0]
-            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-            response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
-            
-            if response is None:
-                logging.error("No response received from vision system.")
-                return []
-        else:
-
-            logging.warning("No active for object retrieval")
-            return[]
+    def pho_request_get_objects(self, vs_id, number_of_objects,retries=3):
+        if self.active_request != PHO_GET_OBJECT_LS_REQUEST:
+            logging.warning("No active request for object retrieval")
+            return []
         
-        return response
+        payload = [vs_id, 0, 0, 0]
+        payload = payload + [number_of_objects, 0, 0, 0]
+        self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
+     
+        for attempt in range(retries):
+            response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+            if response is not None:
+                return response
+            logging.warning(f"Attempt {attempt + 1} failed: No response received from vision system.")
+            time.sleep(1)  # Small delay before retrying
+        
+        logging.error("No response received from vision system after multiple attempts.")
+        return []
 
+            
     def pho_request_ls_get_vision_system_status(self, vs_id):
         payload = [vs_id, 0, 0, 0]
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
