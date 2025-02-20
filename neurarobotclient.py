@@ -4,7 +4,7 @@ import copy
 import json
 from neurapy.robot import Robot
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
-import Communication_Library
+import CommunicationLibrary
 
 CONTROLLER_IP = "192.168.1.5" 
 PORT = 11003 # port id number
@@ -13,7 +13,7 @@ r = Robot() # defining the robot
 
 
 def test_ls():
-    robot = Communication_Library.RobotRequestResponseCommunication()
+    robot = CommunicationLibrary.RobotRequestResponseCommunication()
     try:
         logging.info(f"Connecting to robot at {CONTROLLER_IP}:{PORT}")
         robot.connect_to_server(CONTROLLER_IP, PORT)

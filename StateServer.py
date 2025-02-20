@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import socket
 import time
-import Communication_Library
+import CommunicationLibrary
 import random
 import math
 import numpy as np
@@ -136,7 +136,7 @@ def normalize_quaternion(q):
 
 
 def test_loop_communication():
-    server = Communication_Library.RobotStateCommunication() # create server object
+    server = CommunicationLibrary.RobotStateCommunication() # create server object
     server.create_server(ROBOT_CONTROLLER_IP, PORT)
     server.wait_for_client()
     while True:

@@ -168,6 +168,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 # import copy # importing copy module
 
+# r=Robot()
+
 # class ServoX: # defining servoX
 
 #     def __init__(self,robot): # initializing the robot
@@ -194,8 +196,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 #         r = self.robot #setting the robot
 
-#         #Switch to external servo mode
-#         r.activate_servo_interface('position') # activating the servo interface
+#         # #Switch to external servo mode
+#         # r.activate_servo_interface('position') # activating the servo interface
 
 #         cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
 
@@ -252,14 +254,14 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         r.move_joint("P19")
 #         r.move_joint("P20") # moving to P20
 #         r.gripper("on") # setting gripper on
-#         r.move_joint("P28") # moving to P16
+#         r.move_joint("P16") # moving to P16
 
 #         # r.stop() # stopping the robot
     
 # # ServoX(robot=r).servo_x()
 #     r.set_mode("Automatic") # setting the mode to automatic
 #     r.gripper("on") # setting the gripper on
-#     r.move_joint("P28") # moving to P16
+#     r.move_joint("P16") # moving to P16
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
@@ -289,7 +291,9 @@ class ServoX: # defining servoX
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
         print(new_message) # printing the new ordered message
 
-        r = self.robot # setting the robot
+        # self.robot=ServoX() # setting the robot
+        # servo=ServoX(self.robot)
+        # servo.movelinear_online()
         
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
@@ -331,10 +335,10 @@ class ServoX: # defining servoX
 # -------------------------------------------------------------------
 
 class ResponseHeader: # class used for storing data
-    def __init__(self, request_id, sub_headers): # initializing the class
+    def __init__(self, request_id, sub_headers,number_of_messages): # initializing the class
         self.request_id = request_id # setting the request id
         self.sub_headers = sub_headers # setting the sub headers
-
+        self.number_of_messages = number_of_messages # setting the number of messages
 
 class ResponseData: # class used for storing data
     def __init__(self): # initializing the class
@@ -373,11 +377,12 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     response_data = ResponseData()  # create object for storing data
 
-    def __init__(self): # initializing the class
+    def __init__(self,robot=None): # initializing the class
         self.active_request = 0  # variable to check, if old request has finished and new one can be called
         self.client = None # variable to store client
         self.message = None # variable to store message
         self.print_messages = True # True -> prints messages , False -> doesnt print messages
+        self.robot=robot
 
     def connect_to_server(self, CONTROLLER_IP, PORT): # function to connect to server
         self.client = socket.socket() # create socket
@@ -435,29 +440,45 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    # parameter tool_pose used only in Hand-eye
-    def pho_request_ls_scan(self, vs_id, tool_pose=None):
-        if tool_pose is None:
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-        else:
+    def pho_request_ls_scan(self, vs_id=None, tool_pose=None):
+
+        if vs_id is None and tool_pose is None: 
+            assert vs_id in [1,2]
+
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            payload = payload + floatArray2bytes(tool_pose)  # payload - start
+            payload = [vs_id, 0, 0, 0] 
+            payload = payload + floatArray2bytes(tool_pose) 
+            # payload.extend(floatArray2bytes(tool_pose)  # Use extend for readability
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
-    def pho_ls_wait_for_scan(self):
+            # assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            # payload = [vs_id, 0, 0, 0]  # payload - vision system id
+            # payload = payload + floatArray2bytes(tool_pose)  # payload - start
+            # self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+
+    def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
+
+        if pay_load_1 is None:
+            pay_load_1 = [vs_id, 0, 0, 0]
+        elif pay_load_2 is None :      
+            pay_load_2 =  [vs_id, 0, 0, 0]
+
+        assert vs_id in pay_load_1 and pay_load_2, "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
+
+        logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
+
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
-        self.active_request = 0  # request finished - response from request received
+        self.active_request = 0  # Request finished - response received
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
-        payload = [vs_id, 0, 0, 0]  # payload - vision system id
-        payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
+    
+        payload = [vs_id, 0, 0, 0]
+        payload = payload + [number_of_objects, 0, 0, 0]
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
 
     def pho_request_ls_get_vision_system_status(self, vs_id):
-        payload = [vs_id, 0, 0, 0]  # payload - vision system id
+        payload = [vs_id, 0, 0, 0]
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
 
@@ -465,24 +486,23 @@ class RobotRequestResponseCommunication: # class used for storing data
         try:
             start_time = time.time()
             while True:
-                # Replace 'pho_get_current_joint_angles' with the actual method to retrieve the robot's joint angles
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
                 distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
-                
+
                 if distance <= tolerance:
                     logging.info(f"Robot reached target joint angles: {current_joint_angles}")
                     break
-                
+
                 if time.time() - start_time > timeout:
                     raise TimeoutError("Robot did not reach the target joint angles in time.")
-                
+
                 time.sleep(0.5)
-        
+
         except AttributeError:
             logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
-
+    
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
@@ -535,7 +555,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     def pho_send_request(self, request_id, payload=None):
-        assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
+        # assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
         self.active_request = request_id
         msg = PHO_HEADER  # header - PHO
         if payload is not None:
@@ -548,74 +568,140 @@ class RobotRequestResponseCommunication: # class used for storing data
 
         self.client.send(bytearray(msg))
 
-    def pho_receive_response(self, required_id):
-        # receive header
+
+    def pho_receive_response(self, required_id=None, response=None):
+        # if message is None:
+        #     message=list(self.client.recv(OBJECT_POSE_SIZE))
+
+        # if not message:
+        #     logging.error("Invalid or missing message data")
+        #     return [],[]
+
+        # if len(message) != OBJECT_POSE_SIZE:
+        #     logging.error("Incomplete data received")
+        #     return [], []
+        
+        # message = [x/1000 for x in message] # converting the values to mm
+        
+        # x = message[0]  # setting the values
+        # y = message[1]  # setting the values
+        # z = message[2]  # setting the values
+        # a = message[3]  # setting the values
+        # b = message[4]  # setting the values
+        # c = message[5]  # setting the values
+        # d = message[6]  # setting the values
+        
+        # print(message) # printing the message
+
+        # new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        # logging.info(f"Processed message: {new_message}")
+
+        # print(new_message)
+    
+        # position=new_message[:3]
+        # orientation=new_message[3:]
+
+        # # Simulated Response (Replace with actual data retrieval method)
+        # if response is None:
+        #     response = [
+        #         {"vs_id": 1,"id": 1, "name": "Pipe", "position": position, "orientation": orientation},
+        #         {"vs_id": 2,"id": 2, "name": "Trapezoid", "position": position, "orientation": orientation}
+        #     ]
+        # Receive header
         received_header = self.client.recv(HEADER_SIZE)
-        request_id = int.from_bytes(received_header[0:3], "little")
-        number_of_messages = int.from_bytes(received_header[4:7], "little")
-        assert len(received_header) == HEADER_SIZE, 'Wrong header size'
-        header = ResponseHeader(request_id, number_of_messages)
-        assert header.request_id == required_id, 'Wrong request id received'
+        if len(received_header) < HEADER_SIZE: # checking if the header is empty
+            return[],[] # returning empty response
+        request_id = int.from_bytes(received_header[0:3], "little") # setting the request id
+        number_of_messages = int.from_bytes(received_header[4:7], "little") # setting the number of messages
+        assert len(received_header) == HEADER_SIZE, 'Wrong header size' # checking if the header size is correct
+        header = ResponseHeader(self,request_id, number_of_messages) # setting the header
+        # assert header.request_id == request_id, "Wrong request_id recieved"
+ 
+        # if required_id is not None:
+        #     assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
 
-        if request_id == PHO_TRAJECTORY_REQUEST: self.response_data.init_trajectory_data() # empty variable for receiving new trajectory
+        if request_id == PHO_TRAJECTORY_REQUEST: # if the request id is PHO_TRAJECTORY_REQUEST
+            self.response_data.init_trajectory_data()  # empty variable for receiving new trajectory
 
-        for message_count in range(header.sub_headers):
-            received_subheader = self.client.recv(SUBHEADER_SIZE)
-            operation_type = int.from_bytes(received_subheader[0:3], "little")
-            operation_number = int.from_bytes(received_subheader[4:7], "little")
-            data_size = int.from_bytes(received_subheader[8:11], "little")
-            assert len(received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size'
+        for message_count in range(header.number_of_messages):  # Fix: using correct header field
+            # Receive subheader
+            received_subheader = self.client.recv(SUBHEADER_SIZE) # receiving the subheader
+            operation_type = int.from_bytes(received_subheader[0:3], "little") # setting the operation type
+            operation_number = int.from_bytes(received_subheader[4:7], "little") # setting the operation number
+            data_size = int.from_bytes(received_subheader[8:11], "little") # setting the data size
+            assert len(received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size' #checking if the subheader size is correct
 
-            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
-                if self.response_data.segment_id >= len(self.response_data.trajectory_data):  self.response_data.add_segment()
-                waypoints = ()
-                waypoint_size = 2 * PACKET_SIZE + 6 * PACKET_SIZE
-                for iterator in range(data_size):
+            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
+                if self.response_data.segment_id >= len(self.response_data.trajectory_data): # checking if the segment id is greater than the length of the trajectory data
+                    self.response_data.add_segment()
+                waypoints = []
+                waypoint_size = 8 * PACKET_SIZE  # 2 + 6
+                for i in range(data_size): # iterating over the data size
                     data = self.client.recv(waypoint_size)
                     waypoint_id = struct.unpack('<i', data[0:4])[0]
                     waypoint = struct.unpack('<6f', data[4:28])
                     check_sum = struct.unpack('<f', data[28:32])[0]
                     joint_sum = sum(waypoint)
                     assert abs(joint_sum - check_sum) < 0.01, "Wrong joints sum"
-                    waypoints = waypoints + waypoint
-                    self.response_data.add_waypoint(self.response_data.segment_id, waypoint)  # add waypoint to the actual segment of trajectory
-                self.response_data.segment_id += 1  # increment to switch to another segment of trajectory
-                self.message = waypoints
-                self.print_message(operation_type)
-            elif operation_type == OperationType.PHO_GRIPPER:
-                data_size = data_size * 4
-                data = self.client.recv(data_size)
-                self.response_data.gripper_command.append(int(data[0])) # store gripper command
-                self.message = data
-                self.print_message(operation_type)
+                    waypoints.append(waypoint) # appending the waypoint
+                    self.response_data.add_waypoint(self.response_data.segment_id, waypoint)
+                self.response_data.segment_id += 1 # incrementing the segment id
+                self.message = waypoints # setting the message
+                self.print_message(operation_type) # printing the message
+
+            elif operation_type == OperationType.PHO_GRIPPER: # checking if the operation type is PHO_GRIPPER
+                data_size = data_size * 4 # setting the data size
+                data = self.client.recv(data_size) # receiving the data
+                self.response_data.gripper_command.append(int(data[0]))  # store gripper command
+                self.message = data # setting the message
+                self.print_message(operation_type) # printing the message
+
             elif operation_type == OperationType.PHO_ERROR:
-                data_size = data_size * 4
-                data = self.client.recv(data_size)
-                error_code = int.from_bytes(data[0:3], "little")
-                self.message = error_code
-                self.print_message(operation_type)
-            elif operation_type == OperationType.PHO_INFO:
-                data = self.client.recv(data_size * PACKET_SIZE)
-                self.message = data
-                self.print_message(operation_type)
-            elif operation_type == OperationType.PHO_OBJECT_POSE:
-                data = self.client.recv(OBJECT_POSE_SIZE)
-                object_pose = struct.unpack('<7f', data[0:28])
-                self.message = object_pose
-                a = self.print_message(operation_type)
-                print(a)
-                # ServoX(robot=r).servo_x(a) # servoX function calling
-                ServoX(robot=r).movelinear_online(a) # move_öinear function calling
-                # ServoJ(robot=r).servo_j(a) # move_öinear function calling
+                data_size = data_size * 4 # setting the data size
+                data = self.client.recv(data_size) # receiving the data
+                error_code = int.from_bytes(data[0:3], "little") # setting the error code
+                self.message = error_code # setting the message
+                self.print_message(operation_type) # printing the message
 
-            else:
-                assert False, "Unexpected operation type"
+            elif operation_type == OperationType.PHO_INFO: # checking if the operation type is PHO_INFO
+                data = self.client.recv(data_size * PACKET_SIZE) # receiving the data
+                self.message = data # setting the message
+                self.print_message(operation_type) # printing the message
 
-        self.active_request = 0  # request finished - response from request received
+            elif operation_type == OperationType.PHO_OBJECT_POSE:  # checking if the operation type is PHO_OBJECT_POSE
+                # Use simulated response if available, otherwise fetch real data
+                if response:  # if there is a response
+                    logging.info("Using simulated response for object pose.")  # logging
+                    pose_to_move = [
+                        obj["position"] + obj["orientation"] for obj in response
+                    ]
+                else:
+                    # Receiving real data (from robot's vision system)
+                    data = self.client.recv(OBJECT_POSE_SIZE)
+                    object_pose = struct.unpack('<7f', data[0:28])
 
-    def print_message(self, operation_type):
-        if self.print_messages is not True:
-            return
+                    # Extract position and orientation with correct order
+                    position = list(object_pose[:3])  # First three values (x, y, z)
+                    orientation = [object_pose[6], object_pose[3], object_pose[4], object_pose[5]]  # Reordering (d, a, b, c)
+
+                    # Combine for movement
+                    pose_to_move = [position + orientation]
+                    self.message = position + orientation  # Store message for logging
+
+                self.print_message(operation_type)  # printing the message
+
+                # Ensure the pose is valid before attempting to move
+                if pose_to_move:  # if there is a pose to move
+                    for pose in pose_to_move:  # iterating over the poses
+                        ServoX(robot=self.robot).movelinear_online(pose)  # Move to pose using movelinear_online
+
+                self.active_request = 0  # Request finished - response from request received
+        return response  # returning the response
+
+
+    def print_message(self, operation_type): #defining the print_message function
+        if self.print_messages is not True: # checking if the print messages is not true
+            return 
 
         if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
             waypoints_size = int((len(self.message) + 1) / 6)
@@ -635,11 +721,26 @@ class RobotRequestResponseCommunication: # class used for storing data
                 info = int.from_bytes(self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
                 print('\033[94m' + "INFO: " + '\033[0m' + "[" + str(info) + "]")
         elif operation_type == OperationType.PHO_OBJECT_POSE:
-            print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
-                round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
-                round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
-                round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
+            # if isinstance(self.message,(list,tuple)) and len(self.message) >=7:
+                print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
+                    round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
+                    round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
+                    round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
+                
         return self.message
+            # else:
+            #     print("Invalid object",self.message)
+       
+        # elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
+        #     data = self.client.recv(OBJECT_POSE_SIZE) # receiving the data
+        #     if len(data) >= 28: # checking if the data is valid
+        #         self.message = struct.unpack('<7f', data[:28])  # Ensure it's a tuple
+        #     else: # if the data is not valid
+        #         self.message = []  # Avoid indexing errors
+        #     self.print_message(operation_type) # printing the message
+
+        # return self.message
+
 
 # -------------------------------------------------------------------
 #                     OTHER FUNCTIONS

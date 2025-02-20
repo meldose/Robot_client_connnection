@@ -1,12 +1,12 @@
 
 
-import Communication_Library # importing communication library
+import CommunicationLibrary # importing communication library
 import time # importing time
 import json # importing json
 import logging #    importing logging
 from neurapy.robot import Robot
 from ruckig import InputParameter, OutputParameter, Result, Ruckig 
-from Communication_Library import ServoJ, ResponseData, RobotRequestResponseCommunication
+from CommunicationLibrary import ServoJ, ResponseData, RobotRequestResponseCommunication
 
 r=Robot()
 
@@ -18,7 +18,7 @@ PORT = 11003 # port number
 # response_data = ResponseData() 
 
 def test_ls(): # test ls
-    robot = Communication_Library.RobotRequestResponseCommunication()  # object is created
+    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_solution(252) # start solution
@@ -245,7 +245,7 @@ r.gripper("off") # setting gripper off
 
 
 def calibration_extrinsic(): # function for extrinsic calibration
-    robot = Communication_Library.RobotRequestResponseCommunication()  # object is created
+    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
@@ -269,7 +269,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
 
 
 def calibration_handeye(): # function for handeye calibration
-    robot = Communication_Library.RobotRequestResponseCommunication()  # object is created
+    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
