@@ -467,7 +467,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
         self.active_request = 0  # Request finished - response received
 
-    def pho_request_get_objects(self, vs_id, number_of_objects,retries=3):
+    def pho_request_get_objects(self, vs_id, number_of_objects):
     
         payload = [vs_id, 0, 0, 0]
         payload = payload + [number_of_objects, 0, 0, 0]
@@ -574,6 +574,10 @@ class RobotRequestResponseCommunication: # class used for storing data
         if not message:
             logging.error("Invalid or missing message data")
             return [],[]
+
+        if len(message) != OBJECT_POSE_SIZE:
+            logging.error("Incomplete data received")
+            return [], []
         
         message = [x/1000 for x in message] # converting the values to mm
         
@@ -588,6 +592,8 @@ class RobotRequestResponseCommunication: # class used for storing data
         print(message) # printing the message
 
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        logging.info(f"Processed message: {new_message}")
+
         print(new_message)
     
         position=new_message[:3]
@@ -596,8 +602,8 @@ class RobotRequestResponseCommunication: # class used for storing data
         # Simulated Response (Replace with actual data retrieval method)
         if response is None:
             response = [
-                {"id": 1, "name": "Pipe", "position": position, "orientation": position},
-                {"id": 2, "name": "Trapezoid", "position": orientation, "orientation": orientation}
+                {"vs_id": 1, "name": "Pipe", "position": position, "orientation": orientation},
+                {"vs_id": 2, "name": "Trapezoid", "position": position, "orientation": orientation}
             ]
         
         # Receive header
@@ -689,7 +695,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                         ServoX(robot=self.robot).movelinear_online(pose)  # Move to pose using movelinear_online
 
                 self.active_request = 0  # Request finished - response from request received
-                return response  # returning the response
+        return response  # returning the response
 
 
     def print_message(self, operation_type): #defining the print_message function
