@@ -61,3 +61,28 @@ if __name__ == "__main__":
     vision_controller = VisionSystemController(vs_id=1)
     detected_objects = vision_controller.scan_and_detect_objects([1, 2])  # Detect Pipe & Trapezoid
     
+# Simulated response from vision system
+object_data = [
+    {"id": 2, "name": "object_B", "position": [0.5, 0.3, 0.1], "orientation": [0, 0, 0, 1]},
+    {"id": 1, "name": "object_A", "position": [0.2, 0.4, 0.1], "orientation": [0, 0, 0, 1]},
+]
+
+# Sort objects by ID
+sorted_objects = sorted(object_data, key=lambda obj: obj["id"])
+
+# Function to scan objects
+def scan_objects():
+    print("Scanning objects...")
+    return sorted_objects  # Simulated response from camera
+
+# Function to pick an object
+def pick_object(obj):
+    print(f"Picking object {obj['name']} with ID {obj['id']}")
+    # Move robot to object position and pick
+    move_robot_to_position(obj["position"], obj["orientation"])
+    control_gripper("close")  # Simulated gripper action
+
+# Main logic
+objects_to_pick = scan_objects()
+for obj in objects_to_pick:
+    pick_object(obj)
