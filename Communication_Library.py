@@ -252,14 +252,14 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         r.move_joint("P19")
 #         r.move_joint("P20") # moving to P20
 #         r.gripper("on") # setting gripper on
-#         r.move_joint("P16") # moving to P16
+#         r.move_joint("P28") # moving to P16
 
 #         # r.stop() # stopping the robot
     
 # # ServoX(robot=r).servo_x()
 #     r.set_mode("Automatic") # setting the mode to automatic
 #     r.gripper("on") # setting the gripper on
-#     r.move_joint("P16") # moving to P16
+#     r.move_joint("P28") # moving to P16
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
@@ -316,7 +316,7 @@ class ServoX: # defining servoX
 
         # r.stop() # stopping the robot
     r.set_mode("Automatic")
-    r.move_joint("P16")
+    r.move_joint("P28")
     r.set_mode("Teach")
     r.gripper("on")
 
