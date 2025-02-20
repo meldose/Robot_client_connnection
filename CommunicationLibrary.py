@@ -602,10 +602,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         # Simulated Response (Replace with actual data retrieval method)
         if response is None:
             response = [
-                {"vs_id": 1, "name": "Pipe", "position": position, "orientation": orientation},
-                {"vs_id": 2, "name": "Trapezoid", "position": position, "orientation": orientation}
+                {"vs_id": 1,"id": 1, "name": "Pipe", "position": position, "orientation": orientation},
+                {"vs_id": 2,"id": 2, "name": "Trapezoid", "position": position, "orientation": orientation}
             ]
-        
         # Receive header
         received_header = self.client.recv(HEADER_SIZE)
         if len(received_header) < HEADER_SIZE: # checking if the header is empty
