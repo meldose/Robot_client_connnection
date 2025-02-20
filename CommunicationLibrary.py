@@ -440,66 +440,10 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    def scan_and_detect_objects(self, vs_id, object_ids):
-        """
-        :param vs_id: Vision system ID
-        :param object_ids: List of object IDs to detect (e.g., [1, 2])
-        """
-        object_ids=[1,2]
-        # Step 1: Trigger the Scan
-        self.pho_request_ls_scan(vs_id)  # Fixed incorrect argument passing
-        print("Scanning environment...")
-
-        # Step 2: Request All Detected Objects
-        response = self.pho_request_get_objects(vs_id, number_of_objects=2)
-        
-        if response is None:
-            logging.error("Failed to retrieve objects from the vision system.")
-            return []
-
-        # Step 3: Filter the Required Objects
-        detected_objects = [obj for obj in response if obj['id'] in object_ids]
-        
-        detected_objects.sort(key=lambda obj: obj["id"])
-
-        # Display Detected Objects
-        for obj in detected_objects:
-            print(f"Detected: {obj['name']} (ID: {obj['id']})")
-            print(f"  Position: {obj['position']}")
-            print(f"  Orientation: {obj['orientation']}\n")
-        
-        return detected_objects
-    
-    def pick_objects_in_order(self,vs_id,object_ids):
-
-        """
-        Pick up the objects in the given order (e.g., Trapezoid first, then Pipe).
-        :param vs_id: Vision system ID
-        :param object_ids: List of object IDs to detect and pick up (e.g., [1, 2])
-        """
-
-        vs_id
-        object_ids=[1,2]
-     
-
-        detected_objects = self.scan_and_detect_objects(vs_id, object_ids)
-
-        if not detected_objects:
-            logging.error("No objects detected.")
-            return
-
-        # Step 4: Pick Objects in the Correct Order (Sorted by ID)
-        for obj in detected_objects:
-            position = obj['position']
-            orientation = obj['orientation']
-
-            # Create a pose to move to
-            pose = position + orientation
-            
-            # Move to the pose of the object
-            self.move_to_position(pose)  # Assuming move_to_position can accept pose as input
-
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
+
+        assert vs_id in [1,2]
+
         if tool_pose is None:
             payload = [vs_id, 0, 0, 0]  # Vision system ID
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
@@ -507,19 +451,16 @@ class RobotRequestResponseCommunication: # class used for storing data
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-        
+            
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
-    def pho_ls_wait_for_scan(self, object_ids=None,vs_id=None):
-        if not object_ids is None:
-            object_ids = [1,2]
-        if not vs_id is None:
-            vs_id = 1  # Default Vision System ID (modify as needed)
+    def pho_ls_wait_for_scan(self,vs_id=None):
+        assert vs_id in [1, 2], "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
+
+        logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
 
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
-        self.active_request = 0  # Request finished - response from request received
-
+        self.active_request = 0  # Request finished - response received
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
         if self.active_request != 0:
@@ -541,7 +482,7 @@ class RobotRequestResponseCommunication: # class used for storing data
     def pho_request_ls_get_vision_system_status(self, vs_id):
         payload = [vs_id, 0, 0, 0]
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
-        return self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
+        self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
 
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
         try:
