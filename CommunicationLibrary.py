@@ -445,12 +445,13 @@ class RobotRequestResponseCommunication: # class used for storing data
         :param vs_id: Vision system ID
         :param object_ids: List of object IDs to detect (e.g., [1, 2])
         """
+        object_ids=[1,2]
         # Step 1: Trigger the Scan
         self.pho_request_ls_scan(vs_id)  # Fixed incorrect argument passing
         print("Scanning environment...")
 
         # Step 2: Request All Detected Objects
-        response = self.pho_request_get_objects(vs_id, number_of_objects=2)
+        response = self.pho_request_get_objects(vs_id=1, number_of_objects=2)
         
         if response is None:
             logging.error("Failed to retrieve objects from the vision system.")
@@ -477,8 +478,9 @@ class RobotRequestResponseCommunication: # class used for storing data
         :param object_ids: List of object IDs to detect and pick up (e.g., [1, 2])
         """
 
-        object_ids=[1,2]
         vs_id=1
+        object_ids=[1,2]
+     
 
         detected_objects = self.scan_and_detect_objects(vs_id, object_ids)
 
@@ -496,31 +498,6 @@ class RobotRequestResponseCommunication: # class used for storing data
             
             # Move to the pose of the object
             self.move_to_position(pose)  # Assuming move_to_position can accept pose as input
-
-            # Trigger the gripper to pick up the object
-            self.gripper_control(grip=True)  # Assuming a method for gripper control
-            
-            print(f"Picked up: {obj['name']} (ID: {obj['id']})")
-            
-            # Wait for the robot to stabilize or the gripper action to complete
-            time.sleep(2)  # Adjust time as needed before moving to the next object
-            
-            # Optionally, release the gripper before moving to the next object
-            self.gripper_control(grip=False)
-            
-            print(f"Released: {obj['name']} (ID: {obj['id']})")
-
-
-    def gripper_control(self, grip=True):
-        """
-        Control the robot's gripper (grip=True to close, grip=False to release).
-        """
-        if grip:
-            print("Gripper closing...")
-            # Code to close gripper
-        else:
-            print("Gripper releasing...")
-            # Code to open gripper
 
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
         if tool_pose is None:
@@ -657,7 +634,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         if message is None:
             message=list(self.client.recv(OBJECT_POSE_SIZE))
 
-        if not message or len(message) <7: 
+        if not message:
             logging.error("Invalid or missing message data")
             return [],[]
         
@@ -746,10 +723,10 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = data # setting the message
                 self.print_message(operation_type) # printing the message
 
-            elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
+            elif operation_type == OperationType.PHO_OBJECT_POSE:  # checking if the operation type is PHO_OBJECT_POSE
                 # Use simulated response if available, otherwise fetch real data
-                if response: # if there is a response
-                    logging.info("Using simulated response for object pose.") # logging
+                if response:  # if there is a response
+                    logging.info("Using simulated response for object pose.")  # logging
                     pose_to_move = [
                         obj["position"] + obj["orientation"] for obj in response
                     ]
@@ -757,21 +734,24 @@ class RobotRequestResponseCommunication: # class used for storing data
                     # Receiving real data (from robot's vision system)
                     data = self.client.recv(OBJECT_POSE_SIZE)
                     object_pose = struct.unpack('<7f', data[0:28])
-                    self.message = object_pose
-                    pose_to_move = [object_pose]
 
-                self.print_message(operation_type) # printing the message
+                    # Extract position and orientation with correct order
+                    position = list(object_pose[:3])  # First three values (x, y, z)
+                    orientation = [object_pose[6], object_pose[3], object_pose[4], object_pose[5]]  # Reordering (d, a, b, c)
+
+                    # Combine for movement
+                    pose_to_move = [position + orientation]
+                    self.message = position + orientation  # Store message for logging
+
+                self.print_message(operation_type)  # printing the message
 
                 # Ensure the pose is valid before attempting to move
-                if pose_to_move: # if there is a pose to move
-                    for pose in pose_to_move: # iterating over the poses
+                if pose_to_move:  # if there is a pose to move
+                    for pose in pose_to_move:  # iterating over the poses
                         ServoX(robot=self.robot).movelinear_online(pose)  # Move to pose using movelinear_online
 
-            # else:
-            #     assert False, "Unexpected operation type"
-
-            self.active_request = 0  # Request finished - response from request received
-            return response # returning the response
+                self.active_request = 0  # Request finished - response from request received
+                return response  # returning the response
 
 
     def print_message(self, operation_type): #defining the print_message function

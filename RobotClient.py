@@ -26,7 +26,6 @@ def test_ls(): # main function for calling every function.
     robot.pho_request_start_solution(252) # starting the solution
     robot.scan_and_detect_objects(1,[1,2])
     robot.pick_objects_in_order(vs_id=1,object_ids=[1,2])
-    robot.gripper_control()
     robot.pho_request_ls_scan(1) # ls scan
     robot.pho_ls_wait_for_scan() # waiting for scan
    
