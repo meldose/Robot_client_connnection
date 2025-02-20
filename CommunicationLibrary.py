@@ -451,7 +451,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         print("Scanning environment...")
 
         # Step 2: Request All Detected Objects
-        response = self.pho_request_get_objects(vs_id=1, number_of_objects=2)
+        response = self.pho_request_get_objects(vs_id, number_of_objects=2)
         
         if response is None:
             logging.error("Failed to retrieve objects from the vision system.")
@@ -478,7 +478,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         :param object_ids: List of object IDs to detect and pick up (e.g., [1, 2])
         """
 
-        vs_id=1
+        vs_id
         object_ids=[1,2]
      
 

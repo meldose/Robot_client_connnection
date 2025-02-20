@@ -58,7 +58,7 @@ class VisionSystemController: # defining class Visioncontroller
         
 # 🚀 Example Usage
 if __name__ == "__main__":
-    vision_controller = VisionSystemController(vs_id=1)
+    vision_controller = VisionSystemController(vs_id)
     detected_objects = vision_controller.scan_and_detect_objects([1, 2])  # Detect Pipe & Trapezoid
     
 # Simulated response from vision system
