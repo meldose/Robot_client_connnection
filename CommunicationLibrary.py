@@ -168,6 +168,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 # import copy # importing copy module
 
+# r=Robot()
+
 # class ServoX: # defining servoX
 
 #     def __init__(self,robot): # initializing the robot
@@ -194,8 +196,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 #         r = self.robot #setting the robot
 
-#         #Switch to external servo mode
-#         r.activate_servo_interface('position') # activating the servo interface
+#         # #Switch to external servo mode
+#         # r.activate_servo_interface('position') # activating the servo interface
 
 #         cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
 
@@ -456,6 +458,8 @@ class RobotRequestResponseCommunication: # class used for storing data
 
         # Step 3: Filter the Required Objects
         detected_objects = [obj for obj in response if obj['id'] in object_ids]
+        
+        detected_objects.sort(key=lambda obj: obj["id"])
 
         # Display Detected Objects
         for obj in detected_objects:
@@ -464,6 +468,59 @@ class RobotRequestResponseCommunication: # class used for storing data
             print(f"  Orientation: {obj['orientation']}\n")
         
         return detected_objects
+    
+    def pick_objects_in_order(self,vs_id,object_ids):
+
+        """
+        Pick up the objects in the given order (e.g., Trapezoid first, then Pipe).
+        :param vs_id: Vision system ID
+        :param object_ids: List of object IDs to detect and pick up (e.g., [1, 2])
+        """
+
+        object_ids=[1,2]
+        vs_id=1
+
+        detected_objects = self.scan_and_detect_objects(vs_id, object_ids)
+
+        if not detected_objects:
+            logging.error("No objects detected.")
+            return
+
+        # Step 4: Pick Objects in the Correct Order (Sorted by ID)
+        for obj in detected_objects:
+            position = obj['position']
+            orientation = obj['orientation']
+
+            # Create a pose to move to
+            pose = position + orientation
+            
+            # Move to the pose of the object
+            self.move_to_position(pose)  # Assuming move_to_position can accept pose as input
+
+            # Trigger the gripper to pick up the object
+            self.gripper_control(grip=True)  # Assuming a method for gripper control
+            
+            print(f"Picked up: {obj['name']} (ID: {obj['id']})")
+            
+            # Wait for the robot to stabilize or the gripper action to complete
+            time.sleep(2)  # Adjust time as needed before moving to the next object
+            
+            # Optionally, release the gripper before moving to the next object
+            self.gripper_control(grip=False)
+            
+            print(f"Released: {obj['name']} (ID: {obj['id']})")
+
+
+    def gripper_control(self, grip=True):
+        """
+        Control the robot's gripper (grip=True to close, grip=False to release).
+        """
+        if grip:
+            print("Gripper closing...")
+            # Code to close gripper
+        else:
+            print("Gripper releasing...")
+            # Code to open gripper
 
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
         if tool_pose is None:
@@ -481,7 +538,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         if not object_ids is None:
             object_ids = [1,2]
         if not vs_id is None:
-            vs_id = [1,2]  # Default Vision System ID (modify as needed)
+            vs_id = 1  # Default Vision System ID (modify as needed)
 
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
         self.active_request = 0  # Request finished - response from request received
@@ -596,36 +653,39 @@ class RobotRequestResponseCommunication: # class used for storing data
 
 
     # def pho_receive_response(self, required_id=None, response=None,message=None):
-    def pho_receive_response(self, required_id=None, response=None):
-        # if message is None or len(message) <7:
-        #     logging.error("Invalid or missing message data")
-        #     return [],[]
-        
-        # message = [x/1000 for x in message] # converting the values to mm
-        
-        # x = message[0]  # setting the values
-        # y = message[1]  # setting the values
-        # z = message[2]  # setting the values
-        # a = message[3]  # setting the values
-        # b = message[4]  # setting the values
-        # c = message[5]  # setting the values
-        # d = message[6]  # setting the values
-        
-        # print(message) # printing the message
+    def pho_receive_response(self, required_id=None, response=None,message=None):
+        if message is None:
+            message=list(self.client.recv(OBJECT_POSE_SIZE))
 
-        # new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-        # print(new_message)
+        if not message or len(message) <7: 
+            logging.error("Invalid or missing message data")
+            return [],[]
+        
+        message = [x/1000 for x in message] # converting the values to mm
+        
+        x = message[0]  # setting the values
+        y = message[1]  # setting the values
+        z = message[2]  # setting the values
+        a = message[3]  # setting the values
+        b = message[4]  # setting the values
+        c = message[5]  # setting the values
+        d = message[6]  # setting the values
+        
+        print(message) # printing the message
+
+        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        print(new_message)
     
-        # position=[new_message[0],new_message[1],new_message[2],new_message[3]]
+        position=[new_message[0],new_message[1],new_message[2],new_message[3]]
 
-        # orientation=[new_message[4],new_message[5],new_message[6]]
+        orientation=[new_message[4],new_message[5],new_message[6]]
 
-        # # Simulated Response (Replace with actual data retrieval method)
-        # if response is None:
-        #     response = [
-        #         {"id": 1, "name": "Pipe", "position": position, "orientation": position},
-        #         {"id": 2, "name": "Trapezoid", "position": orientation, "orientation": orientation}
-        #     ]
+        # Simulated Response (Replace with actual data retrieval method)
+        if response is None:
+            response = [
+                {"id": 1, "name": "Pipe", "position": position, "orientation": position},
+                {"id": 2, "name": "Trapezoid", "position": orientation, "orientation": orientation}
+            ]
         
         # Receive header
         received_header = self.client.recv(HEADER_SIZE)
