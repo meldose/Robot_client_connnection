@@ -442,13 +442,16 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_request_ls_scan(self, vs_id=None, tool_pose=None):
 
-        if vs_id is None and tool_pose is not None:
+        if vs_id is None:
             assert vs_id in [1,2]
+
+        elif tool_pose is None:
+        
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
             payload = [vs_id, 0, 0, 0] 
-            payload.extend(floatArray2bytes(tool_pose))  # Use extend for readability
-
-        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+            payload = payload + floatArray2bytes(tool_pose) 
+            # payload.extend(floatArray2bytes(tool_pose))  # Use extend for readability
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
             # assert len(tool_pose) == 7, 'Wrong tool_pose size'
             # payload = [vs_id, 0, 0, 0]  # payload - vision system id
@@ -456,6 +459,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             # self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
     def pho_ls_wait_for_scan(self,vs_id):
+
         assert vs_id in [1, 2], "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
 
         logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
@@ -561,7 +565,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     def pho_send_request(self, request_id, payload=None):
-        # assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
+        assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
         self.active_request = request_id
         msg = PHO_HEADER  # header - PHO
         if payload is not None:
@@ -723,22 +727,25 @@ class RobotRequestResponseCommunication: # class used for storing data
                 info = int.from_bytes(self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
                 print('\033[94m' + "INFO: " + '\033[0m' + "[" + str(info) + "]")
         elif operation_type == OperationType.PHO_OBJECT_POSE:
-            if isinstance(self.message,(list,tuple)) and len(self.message) >=7:
+            # if isinstance(self.message,(list,tuple)) and len(self.message) >=7:
                 print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
                     round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
                     round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
                     round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
-            else:
-                print("Invalid object",self.message)
-                return self.message
+                
+        return self.message
+            # else:
+            #     print("Invalid object",self.message)
        
-        elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
-            data = self.client.recv(OBJECT_POSE_SIZE) # receiving the data
-            if len(data) >= 28: # checking if the data is valid
-                self.message = struct.unpack('<7f', data[:28])  # Ensure it's a tuple
-            else: # if the data is not valid
-                self.message = []  # Avoid indexing errors
-            self.print_message(operation_type) # printing the message
+        # elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
+        #     data = self.client.recv(OBJECT_POSE_SIZE) # receiving the data
+        #     if len(data) >= 28: # checking if the data is valid
+        #         self.message = struct.unpack('<7f', data[:28])  # Ensure it's a tuple
+        #     else: # if the data is not valid
+        #         self.message = []  # Avoid indexing errors
+        #     self.print_message(operation_type) # printing the message
+
+        # return self.message
 
 
 # -------------------------------------------------------------------
