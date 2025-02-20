@@ -450,12 +450,8 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload = payload + floatArray2bytes(tool_pose) 
             # payload.extend(floatArray2bytes(tool_pose)  # Use extend for readability
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-
-            # assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            # payload = [vs_id, 0, 0, 0]  # payload - vision system id
-            # payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            # self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
-
+            
+        
     def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
 
         if pay_load_1 is None:
