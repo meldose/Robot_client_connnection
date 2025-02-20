@@ -451,10 +451,9 @@ class RobotRequestResponseCommunication: # class used for storing data
             assert len(tool_pose) == 7, 'Wrong tool_pose size'
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
-            
-        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
-    def pho_ls_wait_for_scan(self,vs_id=None):
+    def pho_ls_wait_for_scan(self,vs_id):
         assert vs_id in [1, 2], "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
 
         logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
@@ -499,6 +498,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                     raise TimeoutError("Robot did not reach the target joint angles in time.")
 
                 time.sleep(0.5)
+
         except AttributeError:
             logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
@@ -612,6 +612,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         number_of_messages = int.from_bytes(received_header[4:7], "little") # setting the number of messages
         assert len(received_header) == HEADER_SIZE, 'Wrong header size' # checking if the header size is correct
         header = ResponseHeader(self,request_id, number_of_messages) # setting the header
+        assert header.request_id == request_id, "Wrong request_id recieved"
  
         # if required_id is not None:
         #     assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
