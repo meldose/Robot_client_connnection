@@ -441,18 +441,23 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     def pho_request_ls_scan(self, vs_id=None, tool_pose=None,pay_load_1=None,pay_load_2=None):
+        if vs_id not in [1,2]:
+            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
+        
+        if tool_pose is not None:
+            
+            assert len(tool_pose)==7,'Wrong tool_pose size'
+               
         pay_load_1 = [vs_id, 0, 0, 0]
         pay_load_2 = [vs_id, 0, 0, 0]
-        if vs_id is None and tool_pose is None: 
-            assert vs_id in pay_load_1 and pay_load_2, "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
-        else:
-            assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            pay_load_1= [vs_id, 0, 0, 0] 
-            pay_load_2=  [vs_id, 0, 0, 0]
-            payload = pay_load_1
+        
+        payload=pay_load_1
+        
+        if tool_pose is not None:
+            
             payload = payload + floatArray2bytes(tool_pose)
-            # payload.extend(floatArray2bytes(tool_pose)  # Use extend for readability
-            self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
+
+        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
             
         
     def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
