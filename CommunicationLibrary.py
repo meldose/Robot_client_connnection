@@ -442,7 +442,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_request_ls_scan(self, vs_id=None, tool_pose=None,pay_load_1=None,pay_load_2=None):
         pay_load_1 = [vs_id, 0, 0, 0]
-        pay_load_2 =  [vs_id, 0, 0, 0]
+        pay_load_2 = [vs_id, 0, 0, 0]
         if vs_id is None and tool_pose is None: 
             assert vs_id in pay_load_1 and pay_load_2, "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
         else:
