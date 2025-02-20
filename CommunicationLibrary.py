@@ -458,10 +458,10 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
 
-        if pay_load_1 is None:
-            pay_load_1 = [vs_id, 0, 0, 0]
-        elif pay_load_2 is None :      
-            pay_load_2 =  [vs_id, 0, 0, 0]
+        # if pay_load_1 is None:
+        #     pay_load_1 = [vs_id, 0, 0, 0]
+        # elif pay_load_2 is None :      
+        #     pay_load_2 =  [vs_id, 0, 0, 0]
 
         assert vs_id in pay_load_1 and pay_load_2, "Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid."
 
