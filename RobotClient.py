@@ -2,14 +2,14 @@
 # -------------------------------------------------------------------
 #                      IMPORTS
 # -------------------------------------------------------------------
-import CommunicationLibrary # importing communication library
+import CommunicationLibrary2 # importing communication library
 import time # importing time
 import json # importing json
 import logging # importing logging
 from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
-from CommunicationLibrary import ServoX,RobotRequestResponseCommunication,RobotStateCommunication
+from CommunicationLibrary2 import ServoX,RobotRequestResponseCommunication,RobotStateCommunication
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
@@ -20,12 +20,12 @@ PORT = 11003 # #port number
 #                      MAIN FUNCTION
 # -------------------------------------------------------------------
 def test_ls(): # main function for calling every function.
-    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
+    robot = CommunicationLibrary2.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_solution(252) # starting the solution
     robot.pho_request_ls_scan(1) # ls scan
-    robot.pho_ls_wait_for_scan(vs_id=[1, 2]) # waiting for scan
+    # robot.pho_ls_wait_for_scan(vs_id=[1, 2]) # waiting for scan
    
     robot.pho_request_get_objects(1, 5) # get objects
     time.sleep(0.01)
@@ -125,7 +125,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 #                      EXTRINSIC CALIBRATION
 # -------------------------------------------------------------------
 def calibration_extrinsic(): # function for extrinsic calibration
-    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
+    robot = CommunicationLibrary2.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
@@ -151,7 +151,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
 #                      HAND-EYE CALIBRATION
 # -------------------------------------------------------------------
 def calibration_handeye(): # function for handeye calibration
-    robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
+    robot = CommunicationLibrary2.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
