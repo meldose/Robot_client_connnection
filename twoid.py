@@ -79,7 +79,7 @@ cv.destroyAllWindows()
  
 
 
- ######  SAMPLE USAGE #################
+#######  SAMPLE USAGE #################
 
  import cv2
 
