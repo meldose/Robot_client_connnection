@@ -175,8 +175,15 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #     def __init__(self,robot): # initializing the robot
 #         self.robot = robot # setting the robot
 
-
+    
 #     def servo_x(self,message,*args,**kwargs): # defining servoX
+
+#         if self.robot is None:
+#             print("Failed to initialize")
+#         else:
+#             servo_instance = ServoX(robot=r)
+#             servo_instance.servo_x(message)
+
         
 #         message = [x/1000 for x in message] # converting the values to mm
         
@@ -254,14 +261,14 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         r.move_joint("P19")
 #         r.move_joint("P20") # moving to P20
 #         r.gripper("on") # setting gripper on
-#         r.move_joint("P16") # moving to P16
+#         r.move_joint("P27") # moving to P27
 
 #         # r.stop() # stopping the robot
     
 # # ServoX(robot=r).servo_x()
 #     r.set_mode("Automatic") # setting the mode to automatic
 #     r.gripper("on") # setting the gripper on
-#     r.move_joint("P16") # moving to P16
+#     r.move_joint("P27") # moving to P27
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
