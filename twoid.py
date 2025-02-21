@@ -77,3 +77,27 @@ if cropped_images is not None:
 cv.waitKey(0)
 cv.destroyAllWindows()
  
+
+
+ ######  SAMPLE USAGE #################
+
+ import cv2
+
+# Load the image (replace with a real-time camera feed)
+image = cv2.imread("conveyor_frame.jpg")
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+edges = cv2.Canny(blurred, 50, 150)
+
+# Find contours
+contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+for contour in contours:
+    x, y, w, h = cv2.boundingRect(contour)
+    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+cv2.imshow("Detected Items", image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+#########################################
