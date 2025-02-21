@@ -443,13 +443,11 @@ class RobotRequestResponseCommunication: # class used for storing data
     def pho_request_ls_scan(self, vs_id_1,vs_id_2,tool_pose=None,payload=None):
 
         valid_ids={1:"Trapezoid",2:"Pipe"}
-
-            
+    
         if vs_id_1 not in valid_ids or vs_id_2 not in valid_ids :
 
             raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
-    
-                        
+                  
         payload_1 = [vs_id_1, 0, 0, 0]
         payload_2 = [vs_id_2, 0, 0, 0]
 

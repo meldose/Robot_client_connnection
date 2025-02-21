@@ -24,8 +24,8 @@ def test_ls(): # main function for calling every function.
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_solution(252) # starting the solution
-    robot.pho_request_ls_scan(1) # ls scan
-    # robot.pho_request_ls_scan(vs_id_1=1,vs_id_2=2) # ls scan
+    # robot.pho_request_ls_scan(1) # ls scan
+    robot.pho_request_ls_scan(vs_id_1=1,vs_id_2=2) # ls scan
     
     # robot.pho_ls_wait_for_scan(vs_id=[1, 2]) # waiting for scan
    
