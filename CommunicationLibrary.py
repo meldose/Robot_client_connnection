@@ -516,14 +516,40 @@ class RobotRequestResponseCommunication: # class used for storing data
         except Exception as e:
             logging.error(f"Error in pho_ls_wait_for_scan: {e}")
 
-    def pho_request_get_objects(self, vs_id, number_of_objects):
-    
-        payload = [vs_id, 0, 0, 0]
-        payload = payload + [number_of_objects, 0, 0, 0]
-        self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+    def pho_request_get_objects(self, vs_id_1,number_of_objects_1):
+        
+        try:
+            # Validate input types
+            if not all(isinstance(x, int) for x in [vs_id_1, number_of_objects_1]):
+                raise ValueError("vs_id and number_of_objects must be integers.")
+            if number_of_objects_1 <= 0 :
+                raise ValueError("number_of_objects must be greater than zero.")
+        
+            payload_1 = [vs_id_1, 0, 0, 0, number_of_objects_1, 0, 0, 0]
+            
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1)
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+
+        except Exception as e:
+            logging.error(f"Error in pho_request_get_objects: {e}")
+
+    def pho_request_get_objects_2(self,vs_id_2, number_of_objects_2):
+        
+        try:
+            # Validate input types
+            if not all(isinstance(x, int) for x in [vs_id_2, number_of_objects_2]):
+                raise ValueError("vs_id and number_of_objects must be integers.")
+            
+            payload_2 = [vs_id_2, 0, 0, 0, number_of_objects_2, 0, 0, 0]
+            
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_2)
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+
+        except Exception as e:
+            logging.error(f"Error in pho_request_get_objects: {e}")
 
     def pho_request_ls_get_vision_system_status(self, vs_id):
+
         payload = [vs_id, 0, 0, 0]
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
