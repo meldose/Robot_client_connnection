@@ -440,16 +440,16 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    def pho_request_ls_scan(self, vs_id_1,vs_id_2,tool_pose=None,payload=None):
+    def pho_request_ls_scan(self, vs_id_1,tool_pose=None,payload=None):
 
         valid_ids={1:"Trapezoid",2:"Pipe"}
     
-        if vs_id_1 not in valid_ids or vs_id_2 not in valid_ids :
+        if vs_id_1 not in valid_ids :
 
             raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
                   
         payload_1 = [vs_id_1, 0, 0, 0]
-        payload_2 = [vs_id_2, 0, 0, 0]
+        # payload_2 = [vs_id_2, 0, 0, 0]
 
 
         if tool_pose is not None:
@@ -459,26 +459,62 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload_2 += floatArray2bytes(tool_pose)
 
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)
+        # self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2)
+
+    def pho_request_ls_scan_2(self,vs_id_2,tool_pose=None,payload=None):
+
+        valid_ids={1:"Trapezoid",2:"Pipe"}
+    
+        if vs_id_2 not in valid_ids :
+
+            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
+                  
+        payload_2 = [vs_id_2, 0, 0, 0]
+
+
+        if tool_pose is not None:
+
+            assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            payload_1 = payload_1 + floatArray2bytes(tool_pose)
+            payload_2 += floatArray2bytes(tool_pose)
+
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2)
 
             
     # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
-    def pho_ls_wait_for_scan(self):
-
-        # try:
-
-        #     if pay_load_1 is None:
-        #         pay_load_1 = [vs_id, 0, 0, 0]
-        #     elif pay_load_2 is None :      
-        #         pay_load_2 =  [vs_id, 0, 0, 0]
-            
-        #     # assert vs_id in pay_load_1 and pay_load_2
+    def pho_ls_wait_for_scan(self,vs_id_1,payload_1=None):
         
-        # except AttributeError:
+        try:
 
-        #     logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
+            if payload_1 is None:
+
+                payload_1 = [vs_id_1, 0, 0, 0]
+
+            logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
+
             self.pho_receive_response(PHO_SCAN_LS_REQUEST)
             self.active_request = 0  # Request finished - response received
+
+        except Exception as e:
+            logging.error(f"Error in pho_ls_wait_for_scan: {e}")
+   
+    
+        # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
+    def pho_ls_wait_for_scan_2(self,vs_id_2,payload_2=None):
+        
+        try:
+
+            if payload_2 is None:
+            
+                payload_2 = [vs_id_2, 0, 0, 0]
+
+            logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
+
+            self.pho_receive_response(PHO_SCAN_LS_REQUEST)
+            self.active_request = 0  # Request finished - response received
+
+        except Exception as e:
+            logging.error(f"Error in pho_ls_wait_for_scan: {e}")
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
     
