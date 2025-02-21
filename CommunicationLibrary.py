@@ -302,13 +302,14 @@ class ServoX: # defining servoX
         velocity = [0.3]*6 # setting the velocity 
         acceleration = [2.0]*6 # setting the acceleration
         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-        time.sleep(0.3) # setting the time
+        time.sleep(0.5) # setting the time
 
         # target=new_message # setting the target position 
         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
+        r.gripper("on")
 
-        time.sleep(0.3) # setting the time
+        time.sleep(0.5) # setting the time
 
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("on")
@@ -440,7 +441,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    def pho_request_ls_scan(self, vs_id_1,tool_pose=None,payload=None):
+    def pho_request_ls_scan(self, vs_id_1,tool_pose=None,payload=None): # defining an 
 
         valid_ids={1:"Trapezoid",2:"Pipe"}
     
