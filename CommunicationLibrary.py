@@ -327,10 +327,10 @@ class ServoX: # defining servoX
         # r.move_joint("P16") # moving to P16
 
         # r.stop() # stopping the robot
-    r.set_mode("Automatic")
-    r.move_joint("P28")
-    r.set_mode("Teach")
-    r.gripper("on")
+    r.set_mode("Automatic") # setting the robot to Automatic Mode
+    r.move_joint("P28") # movin robot to the position 28    
+    r.set_mode("Teach") # setting the mode to Teach mode
+    r.gripper("on") # setting the gripper 
 
 
     # r.set_mode("Automatic") # setting the mode to automatic
@@ -462,7 +462,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 
             assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the tool pose is 7
             payload_1 = payload_1 + floatArray2bytes(tool_pose) # setting the payload 1
-            payload_1 += floatArray2bytes(tool_pose)
 
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1) # sending the request to the camera with vision system1
  
@@ -480,10 +479,9 @@ class RobotRequestResponseCommunication: # class used for storing data
 
         if tool_pose is not None: # checking if the tool pose is None or not
 
-            assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            payload_1 = payload_1 + floatArray2bytes(tool_pose)
-            payload_2 += floatArray2bytes(tool_pose)
-
+            assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the lenght of the tool pose is 7 or not
+            payload_2 = payload_2 + floatArray2bytes(tool_pose) # setting the payload_2
+  
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2) # sending the request to the camera with vision system2
 
             
@@ -496,7 +494,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                 payload_1 = [vs_id_1, 0, 0, 0] # setting the vision system 1
 
-            logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
+            logging.info(f"Waiting for scan from Vision System {vs_id_1} ({'Trapezoid' if vs_id_1 == 1 else 'Pipe'})") # logging error
 
             self.pho_receive_response(PHO_SCAN_LS_REQUEST) # sending the request to the camera
             self.active_request = 0  # Request finished - response received
@@ -514,13 +512,13 @@ class RobotRequestResponseCommunication: # class used for storing data
             
                 payload_2 = [vs_id_2, 0, 0, 0] # setting the vision system 2
 
-            logging.info(f"Waiting for scan from Vision System {vs_id} ({'Pipe' if vs_id == 1 else 'Trapezoid'})")
+            logging.info(f"Waiting for scan from Vision System {vs_id_2} ({'Pipe' if vs_id_2 == 2 else 'Trapezoid'})") # logging error
 
             self.pho_receive_response(PHO_SCAN_LS_REQUEST) # sending the request to the camera
             self.active_request = 0  # Request finished - response received
 
         except Exception as e:
-            logging.error(f"Error in pho_ls_wait_for_scan: {e}")
+            logging.error(f"Error in pho_ls_wait_for_scan: {e}") # logging error
 
     def pho_request_get_objects(self, vs_id_1,number_of_objects_1): # defining the function for get objects
         
@@ -533,10 +531,10 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload_1 = [vs_id_1, 0, 0, 0, number_of_objects_1, 0, 0, 0] # setting the payload 1
             
             self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1) # sending the request to the camera with the vision system 1
-            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST) # getting tne reponse from the camera
 
         except Exception as e:
-            logging.error(f"Error in pho_request_get_objects: {e}") # else raise the error
+            logging.error(f"Error in pho_request_get_objects: {e}") # logging error
 
     def pho_request_get_objects_2(self,vs_id_2, number_of_objects_2): # defining the function for requesting the object for pipe
         
@@ -549,26 +547,37 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload_2 = [vs_id_2, 0, 0, 0, number_of_objects_2, 0, 0, 0] # setting the payload 2
             
             self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_2) # sending the request to the camera with the vision system 2
-            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST) # recieving the response from the camera
 
         except Exception as e:
-            logging.error(f"Error in pho_request_get_objects: {e}")
+            logging.error(f"Error in pho_request_get_objects: {e}") # getting the logging error
 
-    def pho_request_ls_get_vision_system_status(self, vs_id): # defining the function for getting the vision systeme status
+    def pho_request_ls_get_vision_system_status(self, vs_id_1,payload_1=None): # defining the function for getting the vision systeme status
+        
+        if payload_1 is None: # setting if the payload is None 
+             
+            payload_1= [vs_id_1, 0, 0, 0] # setting the payload
+            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_1) # sending the request to the camera having the vision system
+            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
 
-        payload = [vs_id, 0, 0, 0] # setting the payload
-        self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
 
+    def pho_request_ls_get_vision_system_status_2(self, vs_id_2,payload_2=None): # defining the function for getting the vision systeme status
+        
+        if payload_2 is None: # setting the payload2 as None
+             
+            payload_2= [vs_id_2, 0, 0, 0] # setting the payload
+            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2) # sending the request to the camera having the vision system
+            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
+            
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30): # defining the function for moving to the position
         try:
             start_time = time.time() # setting the start time
             while True:
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
-                distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
+                distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5 # setting the distance
 
                 if distance <= tolerance: # chceking if the distance is less than the tolerance
-                    logging.info(f"Robot reached target joint angles: {current_joint_angles}")
+                    logging.info(f"Robot reached target joint angles: {current_joint_angles}") # give the logging error
                     break
 
                 if time.time() - start_time > timeout: # if the start time is greater than timeout then
@@ -577,9 +586,9 @@ class RobotRequestResponseCommunication: # class used for storing data
                 time.sleep(0.5) # setting the time
 
         except AttributeError:
-            logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
+            logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.") # logging error
         except Exception as e:
-            logging.error(f"An error occurred while moving the robot to joint position: {e}")
+            logging.error(f"An error occurred while moving the robot to joint position: {e}") # logging error
     
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
@@ -632,11 +641,11 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                     REQUEST RELATED FUNCTIONS
 # -------------------------------------------------------------------
 
-    def pho_send_request(self, request_id, payload=None):
+    def pho_send_request(self, request_id, payload=None): # defining the function for sending the request to the camera
         # assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
-        self.active_request = request_id
+        self.active_request = request_id #setting the self.active_request to request_id
         msg = PHO_HEADER  # header - PHO
-        if payload is not None:
+        if payload is not None: # chhecking if the payload is not None
             msg = msg + [int(len(payload) / PACKET_SIZE), 0, 0, 0]  # header - payload size
             msg = msg + [request_id, 0, 0, 0]  # header - request ID
             msg = msg + payload  # payload
@@ -712,7 +721,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
                 if self.response_data.segment_id >= len(self.response_data.trajectory_data): # checking if the segment id is greater than the length of the trajectory data
                     self.response_data.add_segment()
-                waypoints = []
+                waypoints = [] # crating empty list for waypoints
                 waypoint_size = 8 * PACKET_SIZE  # 2 + 6
                 for i in range(data_size): # iterating over the data size
                     data = self.client.recv(waypoint_size)
@@ -734,7 +743,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = data # setting the message
                 self.print_message(operation_type) # printing the message
 
-            elif operation_type == OperationType.PHO_ERROR:
+            elif operation_type == OperationType.PHO_ERROR: # checking if the operation type PHO.error
                 data_size = data_size * 4 # setting the data size
                 data = self.client.recv(data_size) # receiving the data
                 error_code = int.from_bytes(data[0:3], "little") # setting the error code
@@ -749,21 +758,21 @@ class RobotRequestResponseCommunication: # class used for storing data
             elif operation_type == OperationType.PHO_OBJECT_POSE:  # checking if the operation type is PHO_OBJECT_POSE
                 # Use simulated response if available, otherwise fetch real data
                 if response:  # if there is a response
-                    logging.info("Using simulated response for object pose.")  # logging
+                    logging.info("Using simulated response for object pose.") # logging info
                     pose_to_move = [
-                        obj["position"] + obj["orientation"] for obj in response
+                        obj["position"] + obj["orientation"] for obj in response 
                     ]
                 else:
                     # Receiving real data (from robot's vision system)
-                    data = self.client.recv(OBJECT_POSE_SIZE)
-                    object_pose = struct.unpack('<7f', data[0:28])
+                    data = self.client.recv(OBJECT_POSE_SIZE) # setting the data 
+                    object_pose = struct.unpack('<7f', data[0:28]) # setting the object pose
 
                     # Extract position and orientation with correct order
                     position = list(object_pose[:3])  # First three values (x, y, z)
                     orientation = [object_pose[6], object_pose[3], object_pose[4], object_pose[5]]  # Reordering (d, a, b, c)
 
                     # Combine for movement
-                    pose_to_move = [position + orientation]
+                    pose_to_move = [position + orientation] # setting the pose_to_move having the combination of position and orientaiton
                     self.message = position + orientation  # Store message for logging
 
                 self.print_message(operation_type)  # printing the message
@@ -779,33 +788,32 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def print_message(self, operation_type): #defining the print_message function
         if self.print_messages is not True: # checking if the print messages is not true
-            return 
+            return [] # return the list values
 
-        if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
-            waypoints_size = int((len(self.message) + 1) / 6)
-            for x in range(waypoints_size):
+        if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # setting the operation type
+            waypoints_size = int((len(self.message) + 1) / 6) # setting the waypoints_size
+            for x in range(waypoints_size): # checking the waypointsize in a loop
                 print('\033[94m' + "ROBOT: " + '\033[0m' + "[" + str(round(self.message[x * 6 + 0], 2)) + "," + str(
                     round(self.message[x * 6 + 1], 2)) + "," + str(round(self.message[x * 6 + 2], 2)) + "," + str(
                     round(self.message[x * 6 + 3], 2)) + "," + str(
                     round(self.message[x * 6 + 4], 2)) + "," + str(round(self.message[x * 6 + 5], 2)) + "]")
-        elif operation_type == OperationType.PHO_GRIPPER:
+        elif operation_type == OperationType.PHO_GRIPPER: # setting the operaiton type to Gripper
             print('\033[94m' + "ROBOT GRIPPER: " + '\033[0m' + "[" + str(self.message[0]) + "]")
-        elif operation_type == OperationType.PHO_ERROR:
+        elif operation_type == OperationType.PHO_ERROR: # setting the operationtype to Photoneo Error
             print('\033[94m' + "ERROR CODE: " + '\033[0m' + "[" + str(self.message) + "]")
-        elif operation_type == OperationType.PHO_INFO:
-            data_size = int((len(self.message) + 1) / 4)
-            for iterator in range(data_size):
-                assert len(self.message) == data_size * PACKET_SIZE
+        elif operation_type == OperationType.PHO_INFO: # setting the operation type photoeneo.info
+            data_size = int((len(self.message) + 1) / 4) # setting the datasize having the integer 
+            for iterator in range(data_size): # checkign the iterator in the range for data size
+                assert len(self.message) == data_size * PACKET_SIZE # checking if the lenght of the self.message is equal to the data_size * PACKET_SIZE
                 info = int.from_bytes(self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
                 print('\033[94m' + "INFO: " + '\033[0m' + "[" + str(info) + "]")
-        elif operation_type == OperationType.PHO_OBJECT_POSE:
-            # if isinstance(self.message,(list,tuple)) and len(self.message) >=7:
+        elif operation_type == OperationType.PHO_OBJECT_POSE: # setting the operation type to the Photoneo object pose
                 print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
                     round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
                     round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
                     round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
                 
-        return self.message
+        return self.message # returning the self.messsage
 
 # -------------------------------------------------------------------
 #                     OTHER FUNCTIONS

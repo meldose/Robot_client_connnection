@@ -44,7 +44,9 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01)
     # robot.pho_get_current_position() # get current position
     time.sleep(0.01)
-    robot.pho_request_ls_get_vision_system_status(1) # get vision system status
+    robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
+    time.sleep(0.01)
+    robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
     time.sleep(0.01)
     robot.pho_request_change_solution(253) # change solution
     time.sleep(0.01)
@@ -74,72 +76,72 @@ def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
         # Replace 'objects' and 'coordinates' with actual attribute names from your response
         objects = robot.response_data.objects  # Example attribute; adjust accordingly
         
-        if not objects:
-            logging.info("No objects are found")
-            return None
+        if not objects: # if the objects not found
+            logging.info("No objects are found") # logging error
+            return None # return None
 
         # For simplicity, consider the first detected object
-        first_object = objects[0]
+        first_object = objects[0] # setting the first_object having the first element of the response_data.objects
         object_coords = first_object.coordinates  # Example attribute; adjust accordingly
 
-        logging.info(f"Extracted Object Coordinates: {object_coords}")
-        return object_coords
+        logging.info(f"Extracted Object Coordinates: {object_coords}") # giving the logging error
+        return object_coords # return the object_coords
 
     except AttributeError:
-        logging.error("Failed to extract object coordinates. Check the response data structure.")
-        return None
+        logging.error("Failed to extract object coordinates. Check the response data structure.") # logging error
+        return None # return None
     except Exception as e:
-        logging.error(f"An error occurred while extracting object coordinates: {e}")
-        return None
+        logging.error(f"An error occurred while extracting object coordinates: {e}") # logging error
+        return None # return None
 
 def format_coordinates(coords_mm): # function for formatting coordinates
 
     try:
-        coords_m = [x / 1000.0 for x in coords_mm]
-        return coords_m
+        coords_m = [x / 1000.0 for x in coords_mm] # setting the coords in mm
+        return coords_m # return the coordinates in mm
     except TypeError:
-        logging.error("Invalid type for coordinates. Expected list or tuple.")
-        return None
+        logging.error("Invalid type for coordinates. Expected list or tuple.") # logging error
+        return None # return None
     except Exception as e:
-        logging.error(f"An error occurred while formatting coordinates: {e}")
-        return None
+        logging.error(f"An error occurred while formatting coordinates: {e}") # logging error 
+        return None # return None
 
 def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
     
     try:
         # Replace 'pho_request_move_to_position' with the actual method name
         # and adjust parameters as required by your CommunicationLibrary
-        robot.pho_request_move_to_position(coords[0], coords[1], coords[2])
-        logging.info(f"Sent move command to position: {coords}")
+        robot.pho_request_move_to_position(coords[0], coords[1], coords[2]) # requesting the robot to move postion with respective coords
+        logging.info(f"Sent move command to position: {coords}") # logging info 
     except AttributeError:
-        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.")
+        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.") # loggig error
     except Exception as e:
-        logging.error(f"An error occurred while sending move command: {e}")
+        logging.error(f"An error occurred while sending move command: {e}") # logging error
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # deifining the function for robot to move the position
 
     robot=RobotRequestResponseCommunication() # object is created
     servo=ServoX.servo_x() # calling servo function
     r.gripper("off") # setting gripper off
     try:
-        start_time = time.time()
+        start_time = time.time() # setting the time
         while True:
             # Replace 'get_current_position' with the actual method to retrieve the robot's current position
-            current_coords = robot.pho_get_current_position()
+            current_coords = robot.pho_get_current_position() # getting the current position
             distance = ((current_coords[0] - target_coords[0]) ** 2 +
                         (current_coords[1] - target_coords[1]) ** 2 +
                         (current_coords[2] - target_coords[2]) ** 2) ** 0.5
-            if distance <= tolerance:
-                logging.info(f"Robot reached target position: {current_coords}")
+            if distance <= tolerance: # if the distance is less than the tolerance
+                logging.info(f"Robot reached target position: {current_coords}") # loggging error
                 break
-            if time.time() - start_time > timeout:
-                raise TimeoutError("Robot did not reach the target position in time.")
-            time.sleep(0.5)
+            if time.time() - start_time > timeout: # chceking if the start time is greater than the timeout
+                raise TimeoutError("Robot did not reach the target position in time.") # raise the TimeError
+            time.sleep(0.5) # settig the time
     except AttributeError:
-        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
+        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.") # logging error
     except Exception as e:
-        logging.error(f"An error occurred while moving the robot: {e}")
-    return servo
+        logging.error(f"An error occurred while moving the robot: {e}") # logging error
+    return servo # return sevo
 
 # -------------------------------------------------------------------
 #                      EXTRINSIC CALIBRATION
