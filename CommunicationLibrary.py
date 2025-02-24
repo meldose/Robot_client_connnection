@@ -199,7 +199,7 @@ class ServoX: # defining servoX
         # r = self.robot #setting the robot
 
         # #Switch to external servo mode
-        # r.activate_servo_interface('position') # activating the servo interface
+        r.activate_servo_interface('position') # activating the servo interface
 
         cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
 
@@ -251,12 +251,12 @@ class ServoX: # defining servoX
             out.pass_to_input(inp)
             time.sleep(0.001) # setting time 
             
-            r.deactivate_servo_interface() # deactivating the servo interface
-            r.gripper("off") # setting gripper close position
-            r.move_joint("P19")
-            r.move_joint("P20") # moving to P20
-            r.gripper("on") # setting gripper on
-            r.move_joint("P28") # moving to P27
+        r.deactivate_servo_interface() # deactivating the servo interface
+        r.gripper("off") # setting gripper close position
+        r.move_joint("P19")
+        r.move_joint("P20") # moving to P20
+        r.gripper("on") # setting gripper on
+        r.move_joint("P28") # moving to P27
 
         # r.stop() # stopping the robot
     
