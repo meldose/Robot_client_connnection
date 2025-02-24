@@ -10,7 +10,7 @@ from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
 from CommunicationLibrary import ServoX,RobotRequestResponseCommunication,RobotStateCommunication
-# from CommunicationLibrary import RobotRequestResponseCommunication,RobotStateCommunication
+# from CommunicationLibrary import RobotRequestResponseCommunication,RobotStateCommunication # for running camera only
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
