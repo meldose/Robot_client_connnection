@@ -178,6 +178,8 @@ class ServoX: # defining servoX
     
     def servo_x(self,message,*args,**kwargs): # defining servoX
 
+        r=Robot()
+
         if self.robot is None:
             print("Failed to initialize")
         else:
@@ -261,14 +263,14 @@ class ServoX: # defining servoX
         r.move_joint("P19")
         r.move_joint("P20") # moving to P20
         r.gripper("on") # setting gripper on
-        r.move_joint("P27") # moving to P27
+        r.move_joint("P28") # moving to P27
 
         # r.stop() # stopping the robot
     
 # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    r.move_joint("P27") # moving to P27
+    r.move_joint("P28") # moving to P27
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
@@ -768,7 +770,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 # Ensure the pose is valid before attempting to move
                 if pose_to_move:  # if there is a pose to move
                     for pose in pose_to_move:  # iterating over the poses
-                        ServoX(robot=self.robot).movelinear_online(pose)  # Move to pose using movelinear_online
+                        ServoX(robot=self.robot).servo_x(pose)  # Move to pose using movelinear_online
 
                 self.active_request = 0  # Request finished - response from request received
         return response  # returning the response
