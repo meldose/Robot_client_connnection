@@ -332,12 +332,6 @@ class ServoX: # defining servoX
     r.set_mode("Teach") # setting the mode to Teach mode
     r.gripper("on") # setting the gripper 
 
-
-    # r.set_mode("Automatic") # setting the mode to automatic
-    # r.gripper("on") # setting the gripper on
-    # r.move_joint("P16") # moving to P16
-    # r.move_joint("P27") # moving to P27
-
 # -------------------------------------------------------------------
 #                      CLASSES
 # -------------------------------------------------------------------
