@@ -253,7 +253,7 @@ class ServoX: # defining servoX
             
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off") # setting gripper close position
-        r.move_joint("P19")
+        r.move_joint("P19") # moving to p19
         r.move_joint("P20") # moving to P20
         r.gripper("on") # setting gripper on
         r.move_joint("P28") # moving to P28
