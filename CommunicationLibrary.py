@@ -297,10 +297,6 @@ class ServoX: # defining servoX
         
         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
         print(new_message) # printing the new ordered message
-
-        # self.robot=ServoX() # setting the robot
-        # servo=ServoX(self.robot)
-        # servo.movelinear_online()
         
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
