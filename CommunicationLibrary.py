@@ -8,7 +8,6 @@ import struct # importing struct
 import math # importing math
 import numpy as np # importing numpy
 from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
-# from StateServer import init_joint_state, base_quat
 import time # importing times
 import logging # importing logging
 from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig . output parameter,InputParameter and Result
