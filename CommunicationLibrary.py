@@ -306,17 +306,17 @@ class ServoX: # defining servoX
         r.activate_servo_interface('position') # activating the servo interface
 
         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-        velocity = [0.3]*6 # setting the velocity 
+        velocity = [0.2]*6 # setting the velocity 
         acceleration = [2.0]*6 # setting the acceleration
         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-        time.sleep(0.5) # setting the time
+        time.sleep(0.8) # setting the time
 
         # target=new_message # setting the target position 
         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
         r.gripper("on")
 
-        time.sleep(0.5) # setting the time
+        time.sleep(0.8) # setting the time
 
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("on")
