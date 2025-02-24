@@ -256,14 +256,14 @@ class ServoX: # defining servoX
         r.move_joint("P19")
         r.move_joint("P20") # moving to P20
         r.gripper("on") # setting gripper on
-        r.move_joint("P28") # moving to P27
+        r.move_joint("P28") # moving to P28
 
         # r.stop() # stopping the robot
     
 # ServoX(robot=r).servo_x()
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    r.move_joint("P28") # moving to P27
+    r.move_joint("P28") # moving to P28
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
