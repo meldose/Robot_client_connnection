@@ -605,7 +605,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 a = self.print_message(operation_type)
                 print(a)
                 # ServoX(robot=r).servo_x(a) # servoX function calling
-                ServoX(robot=r).movelinear_online(a) # move_öinear function calling
+                ServoX(robot=r).servo_x(a) # move_öinear function calling
                 # ServoJ(robot=r).servo_j(a) # move_öinear function calling
 
             else:
