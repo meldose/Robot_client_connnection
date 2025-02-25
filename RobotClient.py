@@ -32,28 +32,14 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01)
     robot.pho_request_get_objects(vs_id_1=1,number_of_objects_1=1) # get objects for first object trapezoid and vision system 1
     time.sleep(0.01)
-    robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
-    time.sleep(0.01)
-    robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
-    time.sleep(0.01)
-    robot.pho_request_get_objects(vs_id_1=1,number_of_objects_1=1) # get objects for first object trapezoid and vision system 1
-    time.sleep(0.01)
     robot.pho_request_ls_scan_2(vs_id_2=2) # ls scan for vision system 2 (pipe)
     time.sleep(0.01)
     robot.pho_ls_wait_for_scan_2(vs_id_2=2) # waiting for scan for vision system2 
     time.sleep(0.01)
     robot.pho_request_get_objects_2(vs_id_2=2,number_of_objects_2=2) # get objects for object2 and vision system 2(pipe)
-    robot.pho_request_ls_scan_2(vs_id_2=2) # ls scan for vision system 2 (pipe)
-    time.sleep(0.01)
-    robot.pho_ls_wait_for_scan_2(vs_id_2=2) # waiting for scan for vision system2 
-    time.sleep(0.01)
-    robot.pho_request_get_objects_2(vs_id_2=2,number_of_objects_2=2) # get objects for object2 and vision system 2(pipe)
-    
     # robot.pho_ls_wait_for_scan(vs_id=[1, 2]) # waiting for scan
-   
     # robot.pho_request_get_objects(1, 5) # get objects
     # robot.pho_request_get_objects() # get objects
-    time.sleep(0.01)
     # robot.pho_get_current_position() # get current position
     time.sleep(0.01)
     robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
