@@ -221,10 +221,10 @@ class ServoX: # defining servoX
         inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
         inp.max_jerk = [10.]*cart_pose_length # setting the jerk values
 
-        servox_proportional_gain = 30 # setting the servox propotional gain as 25
+        servox_proportional_gain = 25 # setting the servox propotional gain as 25
 
-        velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
-        acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
+        velocity = [0.] * 8 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
+        acceleration = [0.] * 8 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
         
         res=Result.Working # setting the result
 
@@ -240,7 +240,7 @@ class ServoX: # defining servoX
                 # velocity[i] = out.new_velocity[i]
                 # acceleration[i] = out.new_acceleration[i]
 
-            zeros = [0.] * 6 #setting the zeros
+            zeros = [0.] * 8 #setting the zeros
 
             error_code = r.servo_x(position, zeros, zeros, servox_proportional_gain) # passing the error code variable with having servo_j function having position, velocity and acceleration
             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
