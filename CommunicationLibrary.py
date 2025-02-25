@@ -217,8 +217,8 @@ class ServoX: # defining servoX
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
-        inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
-        inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
+        inp.max_velocity = [1.0]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
+        inp.max_acceleration = [8.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
         inp.max_jerk = [10.]*cart_pose_length # setting the jerk values
 
         servox_proportional_gain = 15 # setting the servox propotional gain as 25
@@ -249,7 +249,7 @@ class ServoX: # defining servoX
             
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off") # setting gripper close position
-        r.move_joint("P19")
+        r.move_joint("P30")
         r.move_joint("P20") # moving to P20
         r.gripper("on") # setting gripper on
         r.move_joint("P28") # moving to P16
