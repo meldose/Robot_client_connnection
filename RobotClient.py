@@ -34,7 +34,7 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01)
     robot.pho_request_change_solution(253) # change solution
     time.sleep(0.01)
-    robot.pho_request_ls_scan() # ls scan
+    robot.pho_request_ls_scan(1) # ls scan
     robot.pho_ls_wait_for_scan() # waiting for scan
     robot.pho_request_get_objects(1, 5) # get objects
     time.sleep(0.01) # sleep
