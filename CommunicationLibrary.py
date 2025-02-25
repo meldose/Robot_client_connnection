@@ -240,7 +240,7 @@ class ServoX: # defining servoX
                 # velocity[i] = out.new_velocity[i]
                 # acceleration[i] = out.new_acceleration[i]
 
-            zeros = [0.] * 8 #setting the zeros
+            zeros = [0.] * 6 #setting the zeros
 
             error_code = r.servo_x(position, zeros, zeros, servox_proportional_gain) # passing the error code variable with having servo_j function having position, velocity and acceleration
             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
