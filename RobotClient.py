@@ -124,7 +124,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 #                      EXTRINSIC CALIBRATION
 # -------------------------------------------------------------------
 def calibration_extrinsic(): # function for extrinsic calibration
-    robot = Communication_Library1.RobotRequestResponseCommunication()  # object is created
+    robot = Communication_Library.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
@@ -150,7 +150,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
 #                      HAND-EYE CALIBRATION
 # -------------------------------------------------------------------
 def calibration_handeye(): # function for handeye calibration
-    robot = Communication_Library1.RobotRequestResponseCommunication()  # object is created
+    robot = Communication_Library.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
