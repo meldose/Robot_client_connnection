@@ -604,7 +604,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 print(a)
-                # ServoX(robot=r).servo_x(a) # servoX function calling
+                # ServoX(robot=r).move_linear(a) # movelinear function calling
                 ServoX(robot=r).servo_x(a) # move_öinear function calling
                 # ServoJ(robot=r).servo_j(a) # move_öinear function calling
 
