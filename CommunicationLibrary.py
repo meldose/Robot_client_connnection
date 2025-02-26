@@ -221,7 +221,7 @@ class ServoX: # defining servoX
         inp.max_acceleration = [50.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
         inp.max_jerk = [5.0]*cart_pose_length # setting the jerk values
 
-        servox_proportional_gain = 20 # setting the servox propotional gain as 25
+        servox_proportional_gain = 30 # setting the servox propotional gain as 25
 
         velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
         acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
@@ -292,7 +292,7 @@ class ServoX: # defining servoX
         
 #         #Switch to external servo mode
 #         r.activate_servo_interface('position') # activating the servo interface
-
+#         r.gripper("on")
 #         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
 #         velocity = [0.3]*6 # setting the velocity 
 #         acceleration = [2.0]*6 # setting the acceleration
@@ -306,24 +306,17 @@ class ServoX: # defining servoX
 #         time.sleep(0.3) # setting the time
 
 #         r.deactivate_servo_interface() # deactivating the servo interface
-#         r.gripper("on")
-#         # r.gripper("off") # setting gripper close position
-#         # r.move_joint("P19") # moving to P19
-#         # r.move_joint("P20") # moving to P20
-#         # r.gripper("on") # setting gripper close position
-#         # r.move_joint("P16") # moving to P16
+#         r.gripper("on") # setting gripper close position
+#         r.set_mode("Automatic")
+#         # r.move_joint("P30") # moving to P19
+#         r.move_joint("P31") # moving to P31
+#         r.move_joint("P28") # moving to P28
 
-#         # r.stop() # stopping the robot
-#     r.set_mode("Automatic")
-#     r.move_joint("P28")
-#     r.set_mode("Teach")
-#     r.gripper("on")
+# r.set_mode("Automatic")
+# r.move_joint("P28") # movin robot to the position 28    
+# r.set_mode("Teach") # setting the mode to Teach mode
+# r.gripper("on") # setting the gripper 
 
-
-#     # r.set_mode("Automatic") # setting the mode to automatic
-#     # r.gripper("on") # setting the gripper on
-#     # r.move_joint("P16") # moving to P16
-#     # r.move_joint("P27") # moving to P27
 
 # -------------------------------------------------------------------
 #                      CLASSES
@@ -603,7 +596,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 print(a)
-                # ServoX(robot=r).move_linear(a) # movelinear function calling
+                # ServoX(robot=r).movelinear_online(a) # movelinear function calling
                 ServoX(robot=r).servo_x(a) # move_öinear function calling
                 # ServoJ(robot=r).servo_j(a) # move_öinear function calling
 
