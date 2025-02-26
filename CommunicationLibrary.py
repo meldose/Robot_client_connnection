@@ -135,9 +135,9 @@ class ServoJ:  # defining servoJ
         # inp.target_position = [0.31764351712572647, -1.5097579644424788, -1.115881588855747, 1.8344006543935802, -2.4782356003958528, -0.6248432487824395] # setting the target position
         # inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passigng the values by fixing the [X,Y,z and fixign the d,a,b,c]
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
-        inp.max_velocity = [0.5] * dof #    defining the maximum velocity
-        inp.max_acceleration = [3.0] * dof # defining the maximum acceleration
-        inp.max_jerk = [10.0] * dof # defining the maximum jerk
+        inp.max_velocity = [0.8] * dof #    defining the maximum velocity
+        inp.max_acceleration = [7.0] * dof # defining the maximum acceleration
+        inp.max_jerk = [5.0] * dof # defining the maximum jerk
 
         res = Result.Working # setting the res variable as Result.Working
 
