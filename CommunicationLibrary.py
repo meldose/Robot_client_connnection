@@ -169,10 +169,12 @@ import time
 class ServoJ:
     def __init__(self, robot):
         self.robot = robot
+        
+    r=self.robot
 
     def convert_quaternion_to_euler_pose(self, quaternion_pose):
         """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
-        euler_pose = self.robot.convert_quaternion_to_euler_pose(quaternion_pose)
+        euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
         return euler_pose  # Returns [X, Y, Z, Roll, Pitch, Yaw]
 
     def servo_j(self, message):
@@ -186,11 +188,12 @@ class ServoJ:
         print("Reordered Quaternion Message:", new_message)
 
         # Convert quaternion to Euler angles
-        euler_pose = self.convert_quaternion_to_euler_pose(new_message)
+        euler_pose = r.convert_quaternion_to_euler_pose(new_message)
         print("Converted Euler Pose:", euler_pose)  # [X, Y, Z, Roll, Pitch, Yaw]
 
         # Activate servo interface
-        self.robot.activate_servo_interface('position')
+        r.activate_servo_interface('position')
+
         dof = 6
         otg = Ruckig(dof, 0.001)
 
@@ -199,12 +202,12 @@ class ServoJ:
         out = OutputParameter(dof)
 
         # Get current state
-        inp.current_position = self.robot.get_current_joint_angles()
+        inp.current_position = r.get_current_joint_angles()
         inp.current_velocity = [0.0] * dof
         inp.current_acceleration = [0.0] * dof
 
         # Compute inverse kinematics using Euler pose
-        target_joint_angles = self.robot.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
+        target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
 
         if target_joint_angles is None:
             print("IK failed: Could not compute target joint angles")
@@ -224,25 +227,23 @@ class ServoJ:
         res = Result.Working
         while res == Result.Working:
             res = otg.update(inp, out)
-            self.robot.servo_j(out.new_position, out.new_velocity, out.new_acceleration)
+            r.servo_j(out.new_position, out.new_velocity, out.new_acceleration)
             out.pass_to_input(inp)
             time.sleep(0.001)
-
-        # Cleanup
-        self.robot.deactivate_servo_interface()
-        
-        # Perform additional movements
-        self.robot.move_joint("P34")
-        self.robot.gripper("off")
-        self.robot.move_joint("P33")
-        self.robot.gripper("on")
-        self.robot.move_joint("P32")
+            
+            r.deactivate_servo_interface()
+            # Perform additional movements
+            r.move_joint("P34")
+            r.gripper("off")
+            r.move_joint("P33")
+            r.gripper("on")
+            r.move_joint("P32")
 
         # Set mode and reset gripper state
-        self.robot.set_mode("Automatic")
-        self.robot.gripper("on")
-        self.robot.move_joint("P32")
-        self.robot.gripper("off")
+    r.set_mode("Automatic")
+    r.gripper("on")
+    r.move_joint("P32")
+    r.gripper("off")
 
 
 # -------------------------------------------------------------------
@@ -538,11 +539,11 @@ class RobotRequestResponseCommunication: # class used for storing data
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
                 distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
                 
-                if distance <= tolerance:
+                if distance= tolerance:
                     logging.info(f"Robot reached target joint angles: {current_joint_angles}")
                     break
                 
-                if time.time() - start_time > timeout:
+                if time.time() - start_time  timeout:
                     raise TimeoutError("Robot did not reach the target joint angles in time.")
                 
                 time.sleep(0.5)
