@@ -399,7 +399,9 @@ class ServoX: # defining servoX
         r.gripper("off") # setting gripper close position
         r.set_mode("Automatic")
         r.move_joint("P31") # moving to P31
+        r.gripper("on")
         r.move_joint("P32") # moving to P28
+
 
 r.set_mode("Automatic")
 r.move_joint("P32") # movin robot to the position 28    
