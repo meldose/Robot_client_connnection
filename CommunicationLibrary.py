@@ -383,7 +383,7 @@ class ServoX: # defining servoX
         
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
-        r.gripper("off")
+   
         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
         velocity = [0.3]*6 # setting the velocity 
         acceleration = [2.0]*6 # setting the acceleration
@@ -393,12 +393,11 @@ class ServoX: # defining servoX
         # target=new_message # setting the target position 
         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
-        r.gripper("on")
-
+        r.gripper("off")
         time.sleep(1.0) # setting the time
 
         r.deactivate_servo_interface() # deactivating the servo interface
-        r.gripper("on") # setting gripper close position
+        r.gripper("off") # setting gripper close position
         r.set_mode("Automatic")
         r.move_joint("P31") # moving to P31
         r.move_joint("P32") # moving to P28
