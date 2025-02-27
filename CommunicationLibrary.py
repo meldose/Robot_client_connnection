@@ -383,7 +383,7 @@ class ServoX: # defining servoX
         
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
-        r.gripper("on")
+        r.gripper("off")
         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
         velocity = [0.3]*6 # setting the velocity 
         acceleration = [2.0]*6 # setting the acceleration
