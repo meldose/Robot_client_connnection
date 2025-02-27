@@ -388,22 +388,23 @@ class ServoX: # defining servoX
         velocity = [0.3]*6 # setting the velocity 
         acceleration = [2.0]*6 # setting the acceleration
         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-        time.sleep(0.3) # setting the time
+        time.sleep(1.0) # setting the time
 
         # target=new_message # setting the target position 
         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
+        r.gripper("on")
 
-        time.sleep(0.3) # setting the time
+        time.sleep(1.0) # setting the time
 
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("on") # setting gripper close position
         r.set_mode("Automatic")
         r.move_joint("P31") # moving to P31
-        r.move_joint("P28") # moving to P28
+        r.move_joint("P32") # moving to P28
 
 r.set_mode("Automatic")
-r.move_joint("P28") # movin robot to the position 28    
+r.move_joint("P32") # movin robot to the position 28    
 r.set_mode("Teach") # setting the mode to Teach mode
 r.gripper("on") # setting the gripper 
 
