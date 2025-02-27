@@ -385,8 +385,8 @@ class ServoX: # defining servoX
         r.activate_servo_interface('position') # activating the servo interface
    
         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-        velocity = [0.4]*6 # setting the velocity 
-        acceleration = [3.0]*6 # setting the acceleration
+        velocity = [0.6]*6 # setting the velocity 
+        acceleration = [8.0]*6 # setting the acceleration
         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
         time.sleep(2.0) # setting time sleep
 
