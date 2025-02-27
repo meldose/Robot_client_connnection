@@ -385,8 +385,8 @@ class ServoX: # defining servoX
         r.activate_servo_interface('position') # activating the servo interface
    
         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-        velocity = [0.3]*6 # setting the velocity 
-        acceleration = [2.0]*6 # setting the acceleration
+        velocity = [0.4]*6 # setting the velocity 
+        acceleration = [3.0]*6 # setting the acceleration
         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
         time.sleep(3.0) # setting time sleep
 
@@ -398,15 +398,80 @@ class ServoX: # defining servoX
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off") # setting gripper close position
         r.set_mode("Automatic")
-        r.move_joint("P31") # moving to P31
+        r.move_joint("P37") # moving to P37
         r.gripper("on")
-        r.move_joint("P32") # moving to P28
-
+        r.move_joint("P32") # moving to P32
+        r.set_mode("Teach")
 
 r.set_mode("Automatic")
-r.move_joint("P32") # movin robot to the position 28    
+r.move_joint("P32") # movin robot to the position 32    
 r.set_mode("Teach") # setting the mode to Teach mode
-r.gripper("on") # setting the gripper 
+
+
+
+# import copy
+# import time
+
+# class ServoX:
+#     def __init__(self, robot):
+#         self.robot = robot  # Setting the robot
+#         self.servo_ref = robot  # Assuming robot itself provides `reachedMoveLinearOnlineTarget()`
+
+#     def movelinear_online(self, message, *args, **kwargs):
+#         message = [x / 1000 for x in message]  # Convert to meters
+
+#         # Extract values
+#         x, y, z = message[:3]
+#         qw, qx, qy, qz = message[3:]  # Assuming input order is already X, Y, Z, qw, qx, qy, qz
+
+#         print("Original Message:", message)
+        
+#         # Set new pose format
+#         new_message = [x, y, z, qw, qx, qy, qz]
+#         print("Reordered Message:", new_message)
+
+#         r = self.robot  # Get robot reference
+        
+#         # Switch to external servo mode
+#         r.activate_servo_interface('position')
+
+#         velocity = [0.3] * 6
+#         acceleration = [2.0] * 6
+
+#         # Get current pose and modify it with new values
+#         target = copy.deepcopy(r.get_current_cartesian_pose())
+#         target[:7] = new_message  # Overwrite position & quaternion
+        
+#         # Move robot
+#         error_code = r.movelinear_online(target, velocity, acceleration)
+#         time.sleep(1.5)  # Reduce sleep time
+
+#         # Wait until robot reaches the target
+#         while not self.is_robot_at_target():
+#             time.sleep(0.1)  # Check every 100ms
+
+#         # Deactivate servo and handle post-movement operations
+#         r.deactivate_servo_interface()
+#         r.gripper("off")  # Close gripper
+#         r.set_mode("Automatic")
+#         r.move_joint("P31")
+#         r.gripper("on")
+#         r.move_joint("P32")
+
+#     def is_robot_at_target(self):
+#         """Checks if the robot has reached its target position."""
+#         return self.servo_ref.reachedMoveLinearOnlineTarget()
+
+
+# # Ensure robot instance is available before calling the methods
+# robot_instance = None # Replace with actual robot initialization
+# servo_controller = ServoX(robot_instance)
+
+
+# r.set_mode("Automatic")
+# r.move_joint("P32")  # Move to initial position
+# r.set_mode("Teach")
+# r.gripper("on")
 
 
 # -------------------------------------------------------------------
