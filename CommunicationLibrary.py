@@ -212,7 +212,7 @@ class ServoJ:
         inp.current_acceleration = [0.0] * dof
 
         # Compute inverse kinematics using Euler pose
-        target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
+        target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=r.get_current_joint_angles())
 
         print("Target Joint Angles:", target_joint_angles)
 
