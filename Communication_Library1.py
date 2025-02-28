@@ -96,7 +96,7 @@ class ServoJ:
         
         r=robot
 
-    def convert_quaternion_to_euler_pose(self, quaternion_pose):
+    def convert_quaternion_to_euler_pose(self, quaternion_pose,new_message):
         """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
 
         message = [x / 1000 for x in message]  # Scale values
