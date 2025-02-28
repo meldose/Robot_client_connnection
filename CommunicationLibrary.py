@@ -211,7 +211,7 @@ class ServoJ:
 
         if target_joint_angles is None:
             print("IK failed: Could not compute target joint angles")
-            self.robot.deactivate_servo_interface()
+            r.deactivate_servo_interface()
             return
 
         print("Target Joint Angles:", target_joint_angles)
