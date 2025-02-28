@@ -174,6 +174,20 @@ class ServoJ:
 
     def convert_quaternion_to_euler_pose(self, quaternion_pose):
         """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
+
+
+        message = [x / 1000 for x in message]  # Scale values
+        
+        x = message[0] # Scale values
+        y = message[1] # Scale values
+        z = message[2] # Scale values
+        a = message[3] # Scale values
+        b = message[4] # Scale values
+        c = message[5] # Scale values
+        d = message[6] # Scale values
+
+        new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
+        quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
         euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
         return euler_pose  # Returns [X, Y, Z, Roll, Pitch, Yaw]
     
@@ -208,11 +222,6 @@ class ServoJ:
 
         # Compute inverse kinematics using Euler pose
         target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
-
-        if target_joint_angles is None:
-            print("IK failed: Could not compute target joint angles")
-            r.deactivate_servo_interface()
-            return
 
         print("Target Joint Angles:", target_joint_angles)
 
