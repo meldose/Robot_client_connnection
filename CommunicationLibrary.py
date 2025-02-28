@@ -168,7 +168,7 @@ class ServoJ:
         r.set_mode("Teach")
 
         # Set mode and reset gripper state
-    r.set_mode("Automatic")
+    # r.set_mode("Automatic")
     r.gripper("on")
     # r.move_joint("P32")
     # r.move_joint("P40")
