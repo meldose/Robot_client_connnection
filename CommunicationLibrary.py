@@ -164,18 +164,19 @@ class ServoJ:
             out.pass_to_input(inp)
             time.sleep(0.001)
             
-            r.deactivate_servo_interface()
-            # Perform additional movements
-            r.move_joint("P34")
-            r.gripper("off")
-            r.move_joint("P33")
-            r.gripper("on")
-            r.move_joint("P32")
+        r.deactivate_servo_interface()
+        # Perform additional movements
+        r.move_joint("P34")
+        r.gripper("off")
+        r.move_joint("P33")
+        r.gripper("on")
+        # r.move_joint("P32")
+        r.set_mode("Teach")
 
         # Set mode and reset gripper state
     r.set_mode("Automatic")
     r.gripper("on")
-    r.move_joint("P32")
+    # r.move_joint("P32")
     r.gripper("off")
 
 # -------------------------------------------------------------------
