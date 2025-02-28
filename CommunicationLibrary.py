@@ -116,7 +116,7 @@ class ServoJ:
         return euler_pose  # Returns [X, Y, Z, Roll, Pitch, Yaw]
     
     def servo_j(self, message):
-        """Processes a message containing a pose in quaternion format and moves the robot."""
+
         message = [x / 1000 for x in message]  # Scale values
 
         # Reorder quaternion values
