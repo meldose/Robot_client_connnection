@@ -172,12 +172,13 @@ class ServoJ:
         
         r=robot
 
-    def convert_quaternion_to_euler_pose(self, quaternion_pose):
-        """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
+    # def convert_quaternion_to_euler_pose(self, quaternion_pose):
+    #     """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
 
 
+    def servo_j(self, message):
         message = [x / 1000 for x in message]  # Scale values
-        
+
         x = message[0] # Scale values
         y = message[1] # Scale values
         z = message[2] # Scale values
@@ -189,11 +190,6 @@ class ServoJ:
         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
         quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
         euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
-        return euler_pose  # Returns [X, Y, Z, Roll, Pitch, Yaw]
-    
-    def servo_j(self, message):
-        """Processes a message containing a pose in quaternion format and moves the robot."""
-        message = [x / 1000 for x in message]  # Scale values
 
         # Reorder quaternion values
         new_message = [message[0], message[1], message[2], message[6], message[3], message[4], message[5]]
