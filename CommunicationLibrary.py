@@ -92,6 +92,7 @@ import copy
 import time
 
 class ServoJ:
+    
     def __init__(self, robot):
         self.robot = robot
         
