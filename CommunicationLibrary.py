@@ -170,7 +170,7 @@ class ServoJ:
     def __init__(self, robot):
         self.robot = robot
         
-    r=self.robot
+        r=robot
 
     def convert_quaternion_to_euler_pose(self, quaternion_pose):
         """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
@@ -539,11 +539,11 @@ class RobotRequestResponseCommunication: # class used for storing data
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
                 distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
                 
-                if distance= tolerance:
+                if distance == tolerance:
                     logging.info(f"Robot reached target joint angles: {current_joint_angles}")
                     break
                 
-                if time.time() - start_time  timeout:
+                if time.time() - start_time > timeout:
                     raise TimeoutError("Robot did not reach the target joint angles in time.")
                 
                 time.sleep(0.5)
