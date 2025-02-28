@@ -170,7 +170,7 @@ class ServoJ:
     def __init__(self, robot):
         self.robot = robot
         
-        r=robot
+        robot=r
 
     # def convert_quaternion_to_euler_pose(self, quaternion_pose):
     #     """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
