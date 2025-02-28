@@ -88,97 +88,16 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J
 # -------------------------------------------------------------------
 
-# import copy # importing copy moudule
+import copy # importing copy moudule
 
-# class ServoJ:  # defining servoJ
+class ServoJ:  # defining servoJ
     
-#     def __init__(self, robot):  # initializing the robot
-#         self.robot = robot  # setting the robot
+    def __init__(self, robot):  # initializing the robot
+        self.robot = robot  # setting the robot
 
-#     def servo_j(self, message): # defining the servo_j function
-#         message = [x / 1000 for x in message]  # Scale values
-        
-#         x = message[0] # Scale values
-#         y = message[1] # Scale values
-#         z = message[2] # Scale values
-#         a = message[3] # Scale values
-#         b = message[4] # Scale values
-#         c = message[5] # Scale values
-#         d = message[6] # Scale values
-
-#         print(message)# printing the message
-        
-#         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-
-#         print(new_message)# printing the new ordered message
-
-#         # Activate servo interface
-#         r.activate_servo_interface('position')
-#         dof = 6  # Degrees of freedom
-#         otg = Ruckig(dof, 0.001)  # Online trajectory generator
-
-#         # Input/Output parameters
-#         inp = InputParameter(dof) #setting the input parameter
-#         out = OutputParameter(dof) #setting the output parameter
-
-#         # Current state
-#         inp.current_position = r.get_current_joint_angles() # getting the current joint angles
-#         inp.current_velocity = [0.0] * dof # setting the current velocity as zero
-#         inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
-
-#         target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
-#         current_joint=[0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973])
-#         print("Target Joint Angles:", target_joint_angles) # print the target joint angles
-
-#         inp.target_position = target_joint_angles # setting the target position
-#         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-#         # inp.target_position = [0.31764351712572647, -1.5097579644424788, -1.115881588855747, 1.8344006543935802, -2.4782356003958528, -0.6248432487824395] # setting the target position
-#         inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passigng the values by fixing the [X,Y,z and fixign the d,a,b,c]
-#         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
-#         inp.max_velocity = [0.8] * dof #    defining the maximum velocity
-#         inp.max_acceleration = [7.0] * dof # defining the maximum acceleration
-#         inp.max_jerk = [5.0] * dof # defining the maximum jerk
-
-#         res = Result.Working # setting the res variable as Result.Working
-
-#         while res == Result.Working: # while the result is working
-#             res = otg.update(inp, out) # updating the input and output
-#             error_code = r.servo_j(out.new_position, out.new_velocity, out.new_acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration
-#             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
-#             out.pass_to_input(inp) # passing the output to the input
-#             time.sleep(0.001) # setting the time sleep to 0.001 seconds
-
-#         r.deactivate_servo_interface() # deactivating the servo interface
-#         # r.stop() # stopped the robot
-#         r.move_joint("P34") # moving to P34
-#         r.gripper("off")
-#         r.move_joint("P33") # moving to P33
-#         r.gripper("on") # setting gripper on
-#         r.move_joint("P32") # moving to P32
-
-#     # ServoX(robot=r).servo_x()
-#     r.set_mode("Automatic") # setting the mode to automatic
-#     r.gripper("on") # setting the gripper on
-#     r.move_joint("P32") # moving to P32
-#     r.gripper("off") # setting the gripper off
-
-
-import copy
-import time
-
-class ServoJ:
-    def __init__(self, robot):
-        self.robot = robot
-        
-        robot=r
-
-    # def convert_quaternion_to_euler_pose(self, quaternion_pose):
-    #     """Convert quaternion pose [X, Y, Z, W, EX, EY, EZ] to Euler [X, Y, Z, R, P, Y]."""
-
-
-    def servo_j(self, message):
+    def servo_j(self, message): # defining the servo_j function
         message = [x / 1000 for x in message]  # Scale values
-
+        
         x = message[0] # Scale values
         y = message[1] # Scale values
         z = message[2] # Scale values
@@ -187,65 +106,61 @@ class ServoJ:
         c = message[5] # Scale values
         d = message[6] # Scale values
 
+        print(message)# printing the message
+        
         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-        # new_message = [message[0], message[1], message[2], message[6], message[3], message[4], message[5]]
-        quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
 
-        print(message)
-        print(new_message)
-
-        euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
+        print(new_message)# printing the new ordered message
 
         # Activate servo interface
         r.activate_servo_interface('position')
-
-        dof = 6
-        otg = Ruckig(dof, 0.001)
+        dof = 6  # Degrees of freedom
+        otg = Ruckig(dof, 0.001)  # Online trajectory generator
 
         # Input/Output parameters
-        inp = InputParameter(dof)
-        out = OutputParameter(dof)
+        inp = InputParameter(dof) #setting the input parameter
+        out = OutputParameter(dof) #setting the output parameter
 
-        # Get current state
-        inp.current_position = r.get_current_joint_angles()
-        inp.current_velocity = [0.0] * dof
-        inp.current_acceleration = [0.0] * dof
+        # Current state
+        inp.current_position = r.get_current_joint_angles() # getting the current joint angles
+        inp.current_velocity = [0.0] * dof # setting the current velocity as zero
+        inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
 
-        # Compute inverse kinematics using Euler pose
-        target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=r.get_current_joint_angles())
+        target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
+        current_joint=[0.4129184862608269,-0.04035147853479624,-1.6033459562606136,-0.07107998043766754,-1.5406373722142601,0.910522489241973])
+        print("Target Joint Angles:", target_joint_angles) # print the target joint angles
 
-        print(target_joint_angles)
+        inp.target_position = target_joint_angles # setting the target position
+        target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+        # inp.target_position = [0.31764351712572647, -1.5097579644424788, -1.115881588855747, 1.8344006543935802, -2.4782356003958528, -0.6248432487824395] # setting the target position
+        # inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passigng the values by fixing the [X,Y,z and fixign the d,a,b,c]
+        inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
+        inp.max_velocity = [0.8] * dof #    defining the maximum velocity
+        inp.max_acceleration = [7.0] * dof # defining the maximum acceleration
+        inp.max_jerk = [5.0] * dof # defining the maximum jerk
 
-        # Assign motion parameters
-        inp.target_position = target_joint_angles
-        # inp.target_position = [0.5135919517173785, -0.5076654927777713, -1.3344886661177129, 0.07806282305649488, -1.3233393988665954, -2.134091094484832]
-        inp.target_acceleration = [0.0] * dof
-        inp.max_velocity = [0.8] * dof
-        inp.max_acceleration = [7.0] * dof
-        inp.max_jerk = [5.0] * dof
+        res = Result.Working # setting the res variable as Result.Working
 
-        # Execute motion
-        res = Result.Working
-        while res == Result.Working:
-            res = otg.update(inp, out)
-            r.servo_j(out.new_position, out.new_velocity, out.new_acceleration)
-            out.pass_to_input(inp)
-            time.sleep(0.001)
-            
-            r.deactivate_servo_interface()
-            # Perform additional movements
-            r.move_joint("P34")
-            r.gripper("off")
-            r.move_joint("P33")
-            r.gripper("on")
-            r.move_joint("P32")
+        while res == Result.Working: # while the result is working
+            res = otg.update(inp, out) # updating the input and output
+            error_code = r.servo_j(out.new_position, out.new_velocity, out.new_acceleration) # passing the error code variable with having servo_j function having position, velocity and acceleration
+            scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
+            out.pass_to_input(inp) # passing the output to the input
+            time.sleep(0.001) # setting the time sleep to 0.001 seconds
 
-        # Set mode and reset gripper state
-    r.set_mode("Automatic")
-    r.gripper("on")
-    r.move_joint("P32")
-    r.gripper("off")
+        r.deactivate_servo_interface() # deactivating the servo interface
+        # r.stop() # stopped the robot
+        r.move_joint("P34") # moving to P34
+        r.gripper("off")
+        r.move_joint("P33") # moving to P33
+        r.gripper("on") # setting gripper on
+        r.move_joint("P32") # moving to P32
 
+    # ServoX(robot=r).servo_x()
+    r.set_mode("Automatic") # setting the mode to automatic
+    r.gripper("on") # setting the gripper on
+    r.move_joint("P32") # moving to P32
+    r.gripper("off") # setting the gripper off
 
 # -------------------------------------------------------------------
 #                      SERVO_X (WORKING)
@@ -373,29 +288,30 @@ class ServoJ:
         
 #         #Switch to external servo mode
 #         r.activate_servo_interface('position') # activating the servo interface
-   
+#         r.gripper("on")
 #         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-#         velocity = [0.6]*6 # setting the velocity 
-#         acceleration = [8.0]*6 # setting the acceleration
+#         velocity = [0.3]*6 # setting the velocity 
+#         acceleration = [2.0]*6 # setting the acceleration
 #         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-#         time.sleep(2.0) # setting time sleep
+#         time.sleep(0.3) # setting the time
 
 #         # target=new_message # setting the target position 
 #         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
 #         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
-#         time.sleep(2.0) # setting time sleep
+
+#         time.sleep(0.3) # setting the time
 
 #         r.deactivate_servo_interface() # deactivating the servo interface
-#         r.gripper("off") # setting gripper close position
+#         r.gripper("on") # setting gripper close position
 #         r.set_mode("Automatic")
-#         r.move_joint("P37") # moving to P37
-#         r.gripper("on")
-#         r.move_joint("P32") # moving to P32
-#         r.set_mode("Teach")
+#         r.move_joint("P31") # moving to P31
+#         r.move_joint("P28") # moving to P28
 
 # r.set_mode("Automatic")
-# r.move_joint("P32") # movin robot to the position 32    
+# r.move_joint("P28") # movin robot to the position 28    
 # r.set_mode("Teach") # setting the mode to Teach mode
+# r.gripper("on") # setting the gripper 
+
 
 # -------------------------------------------------------------------
 #                      CLASSES
@@ -540,7 +456,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
                 distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5
                 
-                if distance == tolerance:
+                if distance <= tolerance:
                     logging.info(f"Robot reached target joint angles: {current_joint_angles}")
                     break
                 
