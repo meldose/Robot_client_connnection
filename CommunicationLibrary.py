@@ -188,7 +188,7 @@ class ServoJ:
         d = message[6] # Scale values
 
         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-        new_message = [message[0], message[1], message[2], message[6], message[3], message[4], message[5]]
+        # new_message = [message[0], message[1], message[2], message[6], message[3], message[4], message[5]]
         quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
 
         print(message)
@@ -217,7 +217,8 @@ class ServoJ:
         print("Target Joint Angles:", target_joint_angles)
 
         # Assign motion parameters
-        inp.target_position = target_joint_angles
+        # inp.target_position = target_joint_angles
+        inp.target_position = [0.5135919517173785, -0.5076654927777713, -1.3344886661177129, 0.07806282305649488, -1.3233393988665954, -2.134091094484832]
         inp.target_acceleration = [0.0] * dof
         inp.max_velocity = [0.8] * dof
         inp.max_acceleration = [7.0] * dof
