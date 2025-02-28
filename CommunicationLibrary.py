@@ -188,18 +188,13 @@ class ServoJ:
         d = message[6] # Scale values
 
         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-        quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
-        euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
-
-        # Reorder quaternion values
         new_message = [message[0], message[1], message[2], message[6], message[3], message[4], message[5]]
+        quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
 
         print(message)
         print(new_message)
 
-        # Convert quaternion to Euler angles
-        euler_pose = r.convert_quaternion_to_euler_pose(new_message)
-        print("Converted Euler Pose:", euler_pose)  # [X, Y, Z, Roll, Pitch, Yaw]
+        euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
 
         # Activate servo interface
         r.activate_servo_interface('position')
