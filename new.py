@@ -66,7 +66,7 @@ def create_grid(grid_size=1.0, spacing=0.1, axis="xy"):
 
 # Example position and quaternion
 position = np.array([-0.495,-0.307,0.055])
-quaternion = np.array([0.011,-0.504,0.863,-0.038])  # 90-degree rotation around Z-axis
+quaternion = np.array([ 0.07675785323856764, -3.122286946395002, 1.0561112514591882])  # 90-degree rotation around Z-axis
 
 # Create elements
 origin_frame = create_frame(np.array([0, 0, 0]), [0, 0, 0, 1])
