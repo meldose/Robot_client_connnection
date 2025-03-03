@@ -1,10 +1,10 @@
 
-# from neurapy.robot import Robot # import the robot class
-# r = Robot() # create an instance of the robot class
-# target_angle = r.ik_fk("ik", target_pose =[-0.495, -0.307, 0.055, 0.07675785323856764, -3.122286946395002, 1.0561112514591882],
-# current_joint=[0.4129863573167266, -0.040367615708926226, -1.603394842405772,-0.07106004628138933, -1.5406368975914917, -2.2229109243340384])
+from neurapy.robot import Robot # import the robot class
+r = Robot() # create an instance of the robot class
+target_angle = r.ik_fk("ik", target_pose =[-0.495, -0.307, 0.055, 0.07675785323856764, -3.122286946395002, 1.0561112514591882],
+current_joint=[0.4129863573167266, -0.040367615708926226, -1.603394842405772,-0.07106004628138933, -1.5406368975914917, -2.2229109243340384])
 
-# print(target_angle) # print the target joint angles
+print(target_angle) # print the target joint angles
 
 
 # from neurapy.robot import Robot # import the robot class
@@ -14,8 +14,3 @@
 # print(target_angle) # print the target joint angles
 
 
-from neurapy.robot import Robot
-r = Robot()
-target_end_effector_pose = [-0.495, -0.307, 0.055, 0.07675785323856764, -3.122286946395002, 1.0561112514591882]
-reference_joint_angles = [0.4129863573167266, -0.040367615708926226, -1.603394842405772,-0.07106004628138933, -1.5406368975914917, -2.2229109243340384]
-joint_angle_solution = r.compute_inverse_kinematics(target_end_effector_pose, reference_joint_angles)
