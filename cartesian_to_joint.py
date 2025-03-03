@@ -6,11 +6,3 @@ current_joint=[0.4129863573167266, -0.040367615708926226, -1.603394842405772,-0.
 
 print(target_angle) # print the target joint angles
 
-
-# from neurapy.robot import Robot # import the robot class
-# r = Robot() # create an instance of the robot class
-# target_angle = r.ik_fk("ik", target_pose =[x,y,z,d,a,b,c], # object pose values in radians
-# current_joint = r.get_current_joint_angles()) # current joint angles in radians
-# print(target_angle) # print the target joint angles
-
-
