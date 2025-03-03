@@ -71,7 +71,9 @@ quaternion = np.array([0.011,-0.504,0.863,-0.038])  # 90-degree rotation around 
 # Create elements
 origin_frame = create_frame(np.array([0, 0, 0]), [0, 0, 0, 1])
 target_frame = create_frame(position, quaternion)
-grid = create_grid(grid_size=1.0, spacing=0.1, axis="xy")  # XY plane grid
+grid = create_grid(grid_size=6.0, spacing=0.1, axis="xy")  # XY plane grid
 
 # Visualize
 o3d.visualization.draw_geometries([origin_frame, target_frame, grid])
+
+

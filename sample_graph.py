@@ -29,7 +29,6 @@ def plot_euler_coordinates(coords):
     ax.quiver(x, y, z, x_axis[0] - x, x_axis[1] - y, x_axis[2] - z, color='r', label='X-axis')
     ax.quiver(x, y, z, y_axis[0] - x, y_axis[1] - y, y_axis[2] - z, color='g', label='Y-axis')
     ax.quiver(x, y, z, z_axis[0] - x, z_axis[1] - y, z_axis[2] - z, color='b', label='Z-axis')
-    
     # Labels
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
