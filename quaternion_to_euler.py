@@ -11,4 +11,3 @@ def convert_quaternion_to_euler_pose(): # defining the function for convertin th
 
 convert_quaternion_to_euler_pose() # calling the function
  
-
