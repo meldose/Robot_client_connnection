@@ -3,10 +3,9 @@ from scipy.spatial.transform import Rotation
 
 # Define the rotation matrix
 rotation_matrix = np.array([
-    [-0.9968,  0.0524,  0.0599],
-    [-0.0773, -0.4585, -0.8853],
-    [-0.0189, -0.8871,  0.4611]
-])
+ [-0.99682484 ,0.0524341  ,0.05992412],
+ [-0.07733951, -0.45853349, -0.88530539],
+ [-0.01894298, -0.88712891, 0.4611328 ]])
 
 # Convert to Euler angles (XYZ convention)
 rotation = Rotation.from_matrix(rotation_matrix)
