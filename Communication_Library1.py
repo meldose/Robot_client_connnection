@@ -169,12 +169,12 @@ class ServoJ:
             r.gripper("off")
             r.move_joint("P33")
             r.gripper("on")
-            r.move_joint("P32")
+            r.move_joint("P46")
 
         # Set mode and reset gripper state
     r.set_mode("Automatic")
     r.gripper("on")
-    r.move_joint("P32")
+    r.move_joint("P46")
     r.gripper("off")
 # -------------------------------------------------------------------
 #                      SERVO_X (WORKING)
