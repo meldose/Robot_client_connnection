@@ -277,7 +277,7 @@ class ServoJ:  # defining servoJ
 #     def __init__(self,robot):
 #         self.robot = robot # setting the robot
 
-#     def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
+#     def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online function
 
 #       # message = [x/1000 for x in message] # converting the values to mm
         
