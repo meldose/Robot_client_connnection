@@ -137,22 +137,12 @@ class ServoJ:
         inp.current_position = r.get_current_joint_angles()
         inp.current_velocity = [0.0] * dof
         inp.current_acceleration = [0.0] * dof
-
-        # try:
-        #     # Compute inverse kinematics using Euler pose
-        #     target_angle = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
-        #     if target_angle is None:
-        #         raise ValueError("IK failed: No valid joint angles found.")
-        #     print("Target Joint Angles:", target_angle)
-        # except Exception as e:
-        #     print(f"Error during IK calculation: {e}")
-        #     r.deactivate_servo_interface()
-        #     return  # Exit early to avoid passing invalid data
         
         try:
             # Compute inverse kinematics using Euler pose
             target_end_effector_pose = euler_pose
             target_end_effector_pose[2] += 0.05
+            r.gripper("on")
             reference_joint_angles = r.get_current_joint_angles()
             joint_angle_solution = r.compute_inverse_kinematics(target_end_effector_pose, reference_joint_angles)
             if joint_angle_solution is None:
