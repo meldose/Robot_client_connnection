@@ -108,11 +108,6 @@ class ServoJ:
         c = message[5] # Scale values
         d = message[6] # Scale values
 
-
-        # if len(cartesian_pose) == 6:
-        #     return cartesian_pose
-        #     return cartesian_pose[:3] +  self.quaternion_to_rpy(cartesian_pose[3],cartesian_pose[4],cartesian_pose[5],cartesian_pose[6])
-
         new_message = [x, y,z, a, b, c,d]
         
         print(message)
