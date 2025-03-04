@@ -185,13 +185,13 @@ class ServoJ:  # defining servoJ
         
 #         message = [x/1000 for x in message] # converting the values to mm
         
-#         x = message[0]  # setting the values
-#         y = message[1]  # setting the values
-#         z = message[2]  # setting the values
-#         a = message[3]  # setting the values
-#         b = message[4]  # setting the values
-#         c = message[5]  # setting the values
-#         d = message[6]  # setting the values
+        # x = message[0] / 1000 # Scale values
+        # y = message[1] / 1000 # Scale values
+        # z = message[2] / 1000 # Scale values
+        # w = message[3] # Scale values
+        # ex= message[4] # Scale values
+        # ey= message[5] # Scale values
+        # ez= message[6] # Scale values
         
 #         print(message) # printing the message
         
@@ -278,13 +278,13 @@ class ServoJ:  # defining servoJ
 
 #         message = [x/1000 for x in message] # converting the values to mm
         
-#         x = message[0]  # setting the values
-#         y = message[1]  # setting the values
-#         z = message[2]  # setting the values
-#         a = message[3]  # setting the values
-#         b = message[4]  # setting the values
-#         c = message[5]  # setting the values
-#         d = message[6]  # setting the values
+        # x = message[0] / 1000 # Scale values
+        # y = message[1] / 1000 # Scale values
+        # z = message[2] / 1000 # Scale values
+        # w = message[3] # Scale values
+        # ex= message[4] # Scale values
+        # ey= message[5] # Scale values
+        # ez= message[6] # Scale values
         
 #         print(message) # printing the message
         
