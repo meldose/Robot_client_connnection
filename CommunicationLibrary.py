@@ -183,7 +183,7 @@ class ServoJ:  # defining servoJ
 
 #     def servo_x(self,message,*args,**kwargs): # defining servoX
         
-#         message = [x/1000 for x in message] # converting the values to mm
+#       # message = [x/1000 for x in message] # converting the values to mm
         
         # x = message[0] / 1000 # Scale values
         # y = message[1] / 1000 # Scale values
@@ -276,7 +276,7 @@ class ServoJ:  # defining servoJ
 
 #     def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
 
-#         message = [x/1000 for x in message] # converting the values to mm
+#       # message = [x/1000 for x in message] # converting the values to mm
         
         # x = message[0] / 1000 # Scale values
         # y = message[1] / 1000 # Scale values
