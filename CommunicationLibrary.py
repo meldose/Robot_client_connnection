@@ -136,12 +136,12 @@ class ServoJ:
         inp.current_acceleration = [0.0] * dof
 
         # Compute inverse kinematics using Euler pose
-        target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
+        target_angle = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
 
-        print("Target Joint Angles:", target_joint_angles)
+        print("Target Joint Angles:", target_angle)
 
         # Assign motion parameters
-        inp.target_position = target_joint_angles
+        inp.target_position = target_angle
         inp.target_acceleration = [0.0] * dof
         inp.max_velocity = [0.8] * dof
         inp.max_acceleration = [7.0] * dof
