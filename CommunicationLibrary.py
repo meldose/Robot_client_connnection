@@ -101,7 +101,7 @@ class ServoJ:
     def servo_j(self, message):
 
         x = message[0]/ 1000 # Scale values
-        y = message[1] /1000# Scale values
+        y = message[1]/1000# Scale values
         z = message[2]/ 1000 # Scale values
         a = message[3] # Scale values
         b = message[4] # Scale values
