@@ -147,6 +147,8 @@ class ServoJ:
             print(f"Error during IK calculation: {e}")
             r.deactivate_servo_interface()
             return  # Exit early to avoid passing invalid data
+        
+        r.gripper("on")
 
 
         # Assign motion parameters
@@ -164,21 +166,18 @@ class ServoJ:
             out.pass_to_input(inp)
             time.sleep(0.001)
             
-        time.sleep(20)
-        r.deactivate_servo_interface()
-        # Perform additional movements
-        r.move_joint("P34")
-        r.gripper("off")
-        r.move_joint("P33")
+        r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("on")
-        r.move_joint("P28")
-        r.set_mode("Teach")
-
-        # Set mode and reset gripper state
-    r.set_mode("Automatic")
-    r.gripper("on")
-    r.move_joint("P28")
-    r.gripper("off")
+        r.move_joint("P34") # moving to P34
+        r.gripper("off")
+        r.move_joint("P33") # moving to P33
+        r.gripper("on") # setting gripper on
+        r.move_joint("P28") # moving to P32
+        # r.stop() # stopping the robot
+    
+    r.set_mode("Automatic") # setting the mode to automatic
+    r.gripper("off") # setting the gripper on
+    r.move_joint("P28") # moving to P32
 
 # -------------------------------------------------------------------
 #                      SERVO_X (WORKING)
