@@ -167,9 +167,9 @@ class ServoJ:
             time.sleep(0.001)
             
         r.deactivate_servo_interface() # deactivating the servo interface
-        r.gripper("on")
-        r.move_joint("P34") # moving to P34
         r.gripper("off")
+        r.move_joint("P34") # moving to P34
+        r.gripper("on")
         r.move_joint("P33") # moving to P33
         r.gripper("on") # setting gripper on
         r.move_joint("P28") # moving to P32
