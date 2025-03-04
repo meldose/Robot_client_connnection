@@ -100,17 +100,20 @@ class ServoJ:
     
     def servo_j(self, message):
 
-        message = [x / 1000 for x in message]  # Scale values
-
-        x = message[0] # Scale values
-        y = message[1] # Scale values
-        z = message[2] # Scale values
+        x = message[0]/ 1000 # Scale values
+        y = message[1] /1000# Scale values
+        z = message[2]/ 1000 # Scale values
         a = message[3] # Scale values
         b = message[4] # Scale values
         c = message[5] # Scale values
         d = message[6] # Scale values
 
-        new_message = [x, y,z,d, a, b, c]
+
+        # if len(cartesian_pose) == 6:
+        #     return cartesian_pose
+        #     return cartesian_pose[:3] +  self.quaternion_to_rpy(cartesian_pose[3],cartesian_pose[4],cartesian_pose[5],cartesian_pose[6])
+
+        new_message = [x, y,z, a, b, c,d]
         
         print(message)
         print(new_message)
@@ -135,19 +138,34 @@ class ServoJ:
         inp.current_velocity = [0.0] * dof
         inp.current_acceleration = [0.0] * dof
 
+        # try:
+        #     # Compute inverse kinematics using Euler pose
+        #     target_angle = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
+        #     if target_angle is None:
+        #         raise ValueError("IK failed: No valid joint angles found.")
+        #     print("Target Joint Angles:", target_angle)
+        # except Exception as e:
+        #     print(f"Error during IK calculation: {e}")
+        #     r.deactivate_servo_interface()
+        #     return  # Exit early to avoid passing invalid data
+        
         try:
             # Compute inverse kinematics using Euler pose
-            target_angle = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
-            if target_angle is None:
+            target_end_effector_pose = euler_pose
+            target_end_effector_pose[2] += 0.05
+            reference_joint_angles = r.get_current_joint_angles()
+            joint_angle_solution = r.compute_inverse_kinematics(target_end_effector_pose, reference_joint_angles)
+            if joint_angle_solution is None:
                 raise ValueError("IK failed: No valid joint angles found.")
-            print("Target Joint Angles:", target_angle)
+            print("Target Joint Angles:", joint_angle_solution)
         except Exception as e:
             print(f"Error during IK calculation: {e}")
             r.deactivate_servo_interface()
             return  # Exit early to avoid passing invalid data
 
+
         # Assign motion parameters
-        inp.target_position = target_angle
+        inp.target_position = joint_angle_solution
         inp.target_acceleration = [0.0] * dof
         inp.max_velocity = [0.8] * dof
         inp.max_acceleration = [7.0] * dof
@@ -161,19 +179,20 @@ class ServoJ:
             out.pass_to_input(inp)
             time.sleep(0.001)
             
+        time.sleep(20)
         r.deactivate_servo_interface()
         # Perform additional movements
         r.move_joint("P34")
         r.gripper("off")
         r.move_joint("P33")
         r.gripper("on")
-        # r.move_joint("P28")
+        r.move_joint("P28")
         r.set_mode("Teach")
 
         # Set mode and reset gripper state
     r.set_mode("Automatic")
     r.gripper("on")
-    # r.move_joint("P28")
+    r.move_joint("P28")
     r.gripper("off")
 
 # -------------------------------------------------------------------
