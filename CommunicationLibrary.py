@@ -116,6 +116,10 @@ class ServoJ:  # defining servoJ
         r.activate_servo_interface('position')
         dof = 6  # Degrees of freedom
         otg = Ruckig(dof, 0.001)  # Online trajectory generator
+    
+        quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
+        euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose) # getting te euler pose
+        print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
         # Input/Output parameters
         inp = InputParameter(dof) #setting the input parameter
@@ -126,15 +130,16 @@ class ServoJ:  # defining servoJ
         inp.current_velocity = [0.0] * dof # setting the current velocity as zero
         inp.current_acceleration = [0.0] * dof # setting the current acceleration as zero
 
-        target_joint_angles = r.ik_fk("ik",target_pose=new_message, # conversion of target pose
-        current_joint= r.get_current_joint_angles()
-        
-        print("Target Joint Angles:", target_joint_angles) # print the target joint angles
+        target_end_effector_pose = euler_pose
+        reference_joint_angles = r.get_current_joint_angles()
+        joint_angle_solution = r.compute_inverse_kinematics(target_end_effector_pose, reference_joint_angles)
 
-        inp.target_position = target_joint_angles # setting the target position
+        print("Target Joint Angles:", joint_angle_solution) # print the target joint angles
+
+        inp.target_position = joint_angle_solution # setting the target position
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        # inp.target_position = [0.31764351712572647, -1.5097579644424788, -1.115881588855747, 1.8344006543935802, -2.4782356003958528, -0.6248432487824395] # setting the target position
-        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passigng the values by fixing the [X,Y,z and fixign the d,a,b,c]
+        inp.target_position = new_message
+        inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passing the values by fixing the [X,Y,z and fixign the d,a,b,c]
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
         inp.max_velocity = [0.8] * dof #    defining the maximum velocity
         inp.max_acceleration = [7.0] * dof # defining the maximum acceleration
