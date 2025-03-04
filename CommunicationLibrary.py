@@ -136,7 +136,7 @@ class ServoJ:
         try:
             # Compute inverse kinematics using Euler pose
             target_end_effector_pose = euler_pose
-            target_end_effector_pose[2] += 0.05
+            # target_end_effector_pose[2] += 0.05
             r.gripper("on")
             reference_joint_angles = r.get_current_joint_angles()
             joint_angle_solution = r.compute_inverse_kinematics(target_end_effector_pose, reference_joint_angles)
@@ -169,7 +169,7 @@ class ServoJ:
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off")
         r.move_joint("P34") # moving to P34
-        r.gripper("on")
+        # r.gripper("on")
         r.move_joint("P33") # moving to P33
         r.gripper("on") # setting gripper on
         r.move_joint("P28") # moving to P32
