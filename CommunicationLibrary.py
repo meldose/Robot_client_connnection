@@ -193,21 +193,21 @@ class ServoX: # defining servoX
 
     def servo_x(self,message,*args,**kwargs): # defining servoX
         
-        message = [x/1000 for x in message] # converting the values to mm
+        # message = [x/1000 for x in message] # converting the values to mm
         
-        x = message[0]  # setting the values
-        y = message[1]  # setting the values
-        z = message[2]  # setting the values
-        a = message[3]  # setting the values
-        b = message[4]  # setting the values
-        c = message[5]  # setting the values
-        d = message[6]  # setting the values
+        x = message[0] /1000  # setting the values
+        y = message[1] /1000  # setting the values
+        z = message[2] /1000 # setting the values
+        w = message[3]  # setting the values
+        ex = message[4]  # setting the values
+        ey= message[5]  # setting the values
+        ez = message[6]  # setting the values
+
+
+        new_message = [x,y,z,w,ex,ey,ez] # added new order for quaternion values
         
         print(message) # printing the message
-        
-        new_message = [x,y,z,a,b,c,d] # added new order for quaternion values
         print(new_message) # printing the new ordered message
-
 
         r = self.robot #setting the robot
 
