@@ -224,8 +224,8 @@ class ServoX: # defining servoX
 
         servox_proportional_gain = 25 # setting the servox propotional gain as 25
 
-        velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
-        acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
+        velocity = [0.] * 6 # Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
+        acceleration = [0.] * 6 # Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
         
         res=Result.Working # setting the result
 
