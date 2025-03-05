@@ -101,10 +101,10 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         x = message[0] / 1000 # Scale values
 #         y = message[1] / 1000 # Scale values
 #         z = message[2] / 1000 # Scale values
-#         w = message[3] # Scale values
-#         ex= message[4] # Scale values
-#         ey= message[5] # Scale values
-#         ez= message[6] # Scale values
+#         w = message[3] 
+#         ex= message[4] 
+#         ey= message[5] 
+#         ez= message[6] 
         
 #         new_message = [x, y,z,w,ex,ey,ez] # added new order for quaternion values
         
@@ -186,10 +186,10 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         x = message[0] / 1000 # Scale values
 #         y = message[1] / 1000 # Scale values
 #         z = message[2] / 1000 # Scale values
-#         w = message[3] # Scale values
-#         ex= message[4] # Scale values
-#         ey= message[5] # Scale values
-#         ez= message[6] # Scale values
+#         w = message[3] 
+#         ex= message[4] 
+#         ey= message[5] 
+#         ez= message[6] 
         
 #         print(message) # printing the message
 
@@ -279,10 +279,10 @@ class ServoX: # defining servoX
         x = message[0] / 1000 # Scale values
         y = message[1] / 1000 # Scale values
         z = message[2] / 1000 # Scale values
-        w = message[3] # Scale values
-        ex= message[4] # Scale values
-        ey= message[5] # Scale values
-        ez= message[6] # Scale values
+        w = message[3] 
+        ex= message[4] 
+        ey= message[5] 
+        ez= message[6] 
         
 
         new_message = [x, y,z,w,ex,ey,ez] # added new order for quaternion values
