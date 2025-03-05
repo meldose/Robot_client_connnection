@@ -138,7 +138,6 @@ class ServoJ:  # defining servoJ
         
         inp.target_position = joint_angle_solution # setting the target position 
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
-        inp.target_position = new_message
         # inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # passing the values by fixing the [X,Y,z and fixing the d,a,b,c]
         inp.target_acceleration = [0.0] * dof # setting the target acceleration as zero
         inp.max_velocity = [0.8] * dof #    defining the maximum velocity
