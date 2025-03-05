@@ -106,7 +106,7 @@ class ServoJ:  # defining servoJ
         ey= message[5] # Scale values
         ez= message[6] # Scale values
         
-        new_message = [x, y,z,ex,ey,ez,w] # added new order for quaternion values
+        new_message = [x, y,z,w,ex,ey,ez] # added new order for quaternion values
         
         print(message)# printing the message
         
