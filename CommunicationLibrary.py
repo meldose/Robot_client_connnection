@@ -155,19 +155,17 @@ class ServoJ:  # defining servoJ
             time.sleep(0.001) # setting the time sleep to 0.001 seconds
 
         r.deactivate_servo_interface() # deactivating the servo interface
-        # r.stop() # stopped the robot
+        r.gripper("off")
         r.move_joint("P34") # moving to P34
         r.gripper("off")
         r.move_joint("P33") # moving to P33
         r.gripper("on") # setting gripper on
-        r.move_joint("P32") # moving to P32
-
-    # ServoX(robot=r).servo_x()
+        r.move_joint("P28") # moving to P28
+        # r.stop() # stopping the robot
+    
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    r.move_joint("P32") # moving to P32
-    r.gripper("off") # setting the gripper off
-
+    r.move_joint("P28") # moving to P28
 
 # -------------------------------------------------------------------
 #                      SERVO_X (WORKING)
