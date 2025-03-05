@@ -119,7 +119,8 @@ class ServoJ:  # defining servoJ
     
         quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
         euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose) # getting te euler pose
-        print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
+
+        print("converted euler Angles are:", euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
         # Input/Output parameters
         inp = InputParameter(dof) #setting the input parameter
