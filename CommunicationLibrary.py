@@ -88,7 +88,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J (WORKING)
 # -------------------------------------------------------------------
 
-# import copy # importing copy moudule
+# import copy # importing copy module
 
 # class ServoJ:  # defining servoJ
     
