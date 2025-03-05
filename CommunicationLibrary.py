@@ -202,7 +202,7 @@ class ServoX: # defining servoX
         #Switch to external servo mode
         r.activate_servo_interface('position') # activating the servo interface
 
-        cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
+        cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz
 
         otg = Ruckig(cart_pose_length, 0.001)  # control cycle
         inp = InputParameter(cart_pose_length) # setting the inputparameter with cart pose length
