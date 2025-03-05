@@ -222,7 +222,7 @@ class ServoX: # defining servoX
         inp.max_acceleration = [65.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
         inp.max_jerk = [1.0]*cart_pose_length # setting the jerk values
 
-        servox_proportional_gain = 45 # setting the servox propotional gain as 25
+        servox_proportional_gain = 25 # setting the servox propotional gain as 25
 
         velocity = [0.] * 6 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
         acceleration = [0.] * 6 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
