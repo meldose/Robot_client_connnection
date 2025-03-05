@@ -11,7 +11,5 @@ def convert_quaternion_to_euler_pose(): # defining the function for convertin th
     print(euler_pose)  # Output: [X, Y, Z, R, P, Y] with Euler angle values.
 
 convert_quaternion_to_euler_pose() # calling the function
- 
-
 
 
