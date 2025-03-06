@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import socket
+import socket # for socket connection
 import time
 import CommunicationLibrary
 import random
