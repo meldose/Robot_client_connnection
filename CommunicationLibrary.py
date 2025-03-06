@@ -304,7 +304,7 @@ class ServoX: # defining servoX
         time.sleep(2.0) # setting time sleep
 
         target=new_message # setting the target position
-        target[2] += 0.02
+        target[2] += 0.01
         # target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
         time.sleep(2.0) # setting time sleep
