@@ -97,7 +97,7 @@ class ServoJ:  # defining servoJ
 
     def servo_j(self, message): # defining the servo_j function
         # message = [x / 1000 for x in message]  # Scale values
-        z_offset=0.01
+        z_offset=0.04
         x = message[0] / 1000 # Scale values
         y = message[1] / 1000 # Scale values
         z = message[2] / 1000 + z_offset
