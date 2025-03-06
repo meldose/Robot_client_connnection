@@ -250,16 +250,16 @@ class ServoX: # defining servoX
             
         r.deactivate_servo_interface() # deactivating the servo interface
         r.gripper("off") # setting gripper close position
-        r.move_joint("P34") # moving to P34
-        r.gripper("off") # setting gripper close position
-        r.move_joint("P33") # moving to P33
+        # r.move_joint("P50") # moving to P34
+        # r.gripper("off") # setting gripper close position
+        r.move_joint("P50") # moving to P33
         r.gripper("on") # setting gripper on
-        r.move_joint("P32") # moving to P32
+        r.move_joint("P52") # moving to P32
         # r.stop() # stopping the robot
     
     r.set_mode("Automatic") # setting the mode to automatic
     r.gripper("on") # setting the gripper on
-    r.move_joint("P32") # moving to P32
+    r.move_joint("P52") # moving to P32
 
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
@@ -597,8 +597,8 @@ class RobotRequestResponseCommunication: # class used for storing data
                 a = self.print_message(operation_type)
                 print(a)
                 # ServoX(robot=r).movelinear_online(a) # movelinear function calling
-                # ServoX(robot=r).servo_x(a) # move_linear function calling
-                ServoJ(robot=r).servo_j(a) # servo_j function calling
+                ServoX(robot=r).servo_x(a) # move_linear function calling
+                # ServoJ(robot=r).servo_j(a) # servo_j function calling
 
             else:
                 assert False, "Unexpected operation type"
