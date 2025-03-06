@@ -182,10 +182,10 @@ class ServoX: # defining servoX
     def servo_x(self,message,*args,**kwargs): # defining servoX
         
       # message = [x/1000 for x in message] # converting the values to mm
-        
+        z_offset = 0.03
         x = message[0] / 1000 # Scale values
         y = message[1] / 1000 # Scale values
-        z = message[2] / 1000 # Scale values
+        z = message[2] / 1000  + z_offset  # scale values
         w = message[3] # orientation values
         ex= message[4] # orientation values
         ey= message[5] # orientation values
@@ -215,6 +215,8 @@ class ServoX: # defining servoX
         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
         # inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         inp.target_position = new_message
+        inp.target_position[3] += 0.03
+
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # defining the target acceleration
 
@@ -252,7 +254,7 @@ class ServoX: # defining servoX
         r.gripper("off") # setting gripper close position
         # r.move_joint("P50") # moving to P34
         # r.gripper("off") # setting gripper close position
-        r.move_joint("P50") # moving to P33
+        r.move_joint("P54") # moving to P33
         r.gripper("on") # setting gripper on
         r.move_joint("P52") # moving to P32
         # r.stop() # stopping the robot
@@ -302,22 +304,24 @@ class ServoX: # defining servoX
 #         time.sleep(2.0) # setting time sleep
 
 #         target=new_message # setting the target position
+#         target[2] += 0.03
 #         # target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
 #         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
 #         time.sleep(2.0) # setting time sleep
 
-#         r.deactivate_servo_interface() # deactivating the servo interface
-#         r.gripper("off") # setting gripper close position
-#         r.set_mode("Automatic")
-#         r.move_joint("P37") # moving to P37
-#         r.gripper("on")
-#         r.move_joint("P32") # moving to P32
-#         r.set_mode("Teach")
+        # r.deactivate_servo_interface() # deactivating the servo interface
+        # r.gripper("off") # setting gripper close position
+        # # r.move_joint("P50") # moving to P34
+        # # r.gripper("off") # setting gripper close position
+        # r.move_joint("P54") # moving to P33
+        # r.gripper("on") # setting gripper on
+        # r.move_joint("P52") # moving to P32
+        # # r.stop() # stopping the robot
+    
 
-# r.set_mode("Automatic")
-# r.move_joint("P32") # movin robot to the position 32    
-# r.set_mode("Teach") # setting the mode to Teach mode
-
+# r.set_mode("Automatic") # setting the mode to automatic
+# r.gripper("on") # setting the gripper on
+# r.move_joint("P52") # moving to P32
 # -------------------------------------------------------------------
 #                      CLASSES
 # -------------------------------------------------------------------
