@@ -2,7 +2,7 @@
 # -------------------------------------------------------------------
 #                      IMPORTS
 # -------------------------------------------------------------------
-import Communication_Library1 # importing communication library
+import Communication_Library_VS_2ID # importing communication library
 import time # importing time
 import json # importing json
 import logging # importing logging
