@@ -96,7 +96,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 #     def servo_j(self, message): # defining the servo_j function
 #         # message = [x / 1000 for x in message]  # Scale values
-#         z_offset=0.04
+#         z_offset=0.04 # setting the offset value
 #         x = message[0] / 1000 # Scale values
 #         y = message[1] / 1000 # Scale values
 #         z = message[2] / 1000 + z_offset # created an offset
@@ -112,7 +112,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         print(new_message)# printing the new ordered message
 
 #         # Activate servo interface
-#         r.activate_servo_interface('position')
+#         r.activate_servo_interface('position') # activating the servo interface
 #         dof = 6  # Degrees of freedom
 #         otg = Ruckig(dof, 0.001)  # Online trajectory generator
     
@@ -213,8 +213,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 #         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
 #         # inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
-#         inp.target_position = new_message
-#         inp.target_position[3] += 0.03
+#         inp.target_position = new_message # setting the new target position
 
 #         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
 #         inp.target_acceleration = [0.]*cart_pose_length # defining the target acceleration
@@ -303,7 +302,7 @@ class ServoX: # defining servoX
         time.sleep(0.9) # setting time sleep
 
         target=new_message # setting the target position
-        target[2] += 0.01
+        target[2] += 0.01 # setting the z offset
         # target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
         time.sleep(0.9) # setting time sleep
@@ -317,7 +316,6 @@ class ServoX: # defining servoX
         r.move_joint("P52") # moving to P32
         # r.stop() # stopping the robot
     
-
 r.set_mode("Automatic") # setting the mode to automatic
 r.gripper("on") # setting the gripper on
 r.move_joint("P52") # moving to P32
