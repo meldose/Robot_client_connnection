@@ -640,7 +640,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                         time.sleep(0.1)
                         continue
 
-                    target_joint_angles = [0.2] * r.dof
+                    target_joint_angles = r.get_current_joint_angles()
                     tcp_pose = r.compute_forward_kinematics(target_joint_angles)
 
                     dist_to_object = np.linalg.norm(tcp_pose - X)
