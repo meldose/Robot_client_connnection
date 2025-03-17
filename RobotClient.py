@@ -27,7 +27,7 @@ def test_ls(): # main function for calling every function.
     robot.pho_request_start_solution(252) # starting the solution
     robot.pho_request_ls_scan(1) # ls scan completion 
     robot.pho_ls_wait_for_scan() # waiting for scan for calibration
-    object_data=robot.pho_request_get_objects(1,5)
+    object_data=robot.pho_request_get_objects(1,2)
     if object_data:
         print(f"Objects received: {object_data}")
         print(f"Timestamp: {object_data['timestamp']}")
@@ -40,7 +40,7 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01)
     robot.pho_request_ls_scan(1) # ls scan
     robot.pho_ls_wait_for_scan() # waiting for scan completion for calibration
-    robot.pho_request_get_objects(1, 5) # get objects
+    robot.pho_request_get_objects(1, 2) # get objects
     time.sleep(0.01) # sleep
     robot.pho_request_get_running_solution() # get running solution
     time.sleep(0.01)
