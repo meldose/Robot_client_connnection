@@ -621,39 +621,39 @@ class RobotRequestResponseCommunication: # class used for storing data
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose
                 a = self.print_message(operation_type)
-                # print(a)
                 X = np.zeros(3)
-                vel = np.zeros(3)
+                vel = np.array([0.1, 0.1, 0.1])  # Define a velocity
                 X0 = a
                 start_time = time.time()
 
                 object_not_grasped = True
+                timeout = 10  # Set a timeout to avoid infinite loops
 
-                while object_not_grasped:
+                while object_not_grasped and (time.time() - start_time < timeout):
                     t = time.time() - start_time
-                    X[:3]= X0[:3] + vel * t
-                    dist = np.sqrt(X[0]**2 + X[1]**2 + X[2]**2)
+                    X[:3] = X0[:3] + vel * t
+                    dist = np.linalg.norm(X)
+
                     if dist < 1.0:
-                        ServoX(robot=r).servo_x(a) # move_linear function calling
-                        # ServoJ(robot=r).servo_j(a) # servo_j function calling
-                        # ServoX(robot=r).movelinear_online(a) # movelinear function calling
+                        ServoX(robot=r).servo_x(a)  # Move towards object
                     else:
                         time.sleep(0.1)
                         continue
 
                     target_joint_angles = [0.2] * r.dof
                     tcp_pose = r.compute_forward_kinematics(target_joint_angles)
-                
-                    dist_to_object =  np.norm(tcp_pose - X)
+
+                    dist_to_object = np.linalg.norm(tcp_pose - X)
                     if dist_to_object < 0.01:
                         r.gripper("on")
                         object_not_grasped = False
-                        pass
+
                     time.sleep(0.01)
             else:
-                assert False, "Unexpected operation type"
+                print("Object not grasped within timeout!")
 
-        self.active_request = 0  # request finished - response from request received
+        self.active_request = 0  # Request finished
+
 
     def print_message(self, operation_type):
         if self.print_messages is not True:
