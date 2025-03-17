@@ -453,10 +453,18 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.active_request = 0  # request finished - response from request received
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
+        timestamp=time.time()
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+        response =  self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+       
+        # Assuming response contains object data in dictionary format
+        if response is not None:
+            response["timestamp"] = timestamp  # Add timestamp to response
+            return response
+        else:
+            return None
 
     def pho_request_ls_get_vision_system_status(self, vs_id):
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
