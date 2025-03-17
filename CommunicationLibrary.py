@@ -437,8 +437,8 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    # parameter tool_pose used only in Hand-eye
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
+        timestamp = time.time()  # Capture timestamp when the scan request is made
         if tool_pose is None:
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
@@ -448,29 +448,37 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
+        return timestamp  # Return timestamp when the request was made
+
     def pho_ls_wait_for_scan(self):
+        timestamp = time.time()  # Capture timestamp when waiting for scan response
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
         self.active_request = 0  # request finished - response from request received
+        print(f"Scan request completed at {timestamp}")  # You can log or print the timestamp
+        return timestamp  # Return timestamp when the scan wait is completed
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
-        timestamp=time.time()
+        timestamp = time.time()  # Capture timestamp when request is made
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        response =  self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
-       
+        response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+        
         # Assuming response contains object data in dictionary format
         if response is not None:
             response["timestamp"] = timestamp  # Add timestamp to response
-            print(f"The response is :",response)
+            print(f"The response is: {response}")
             return response
         else:
             return None
 
     def pho_request_ls_get_vision_system_status(self, vs_id):
+        timestamp = time.time()  # Capture timestamp for the request
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
+        print(f"Vision system status request completed at {timestamp}")  # You can log or print the timestamp
+        return timestamp  # Return timestamp when the vision system status request is completed
 
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
         try:
@@ -493,7 +501,6 @@ class RobotRequestResponseCommunication: # class used for storing data
             logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
-
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
