@@ -640,11 +640,13 @@ class RobotRequestResponseCommunication: # class used for storing data
                     else:
                         time.sleep(0.1)
                         continue
-                    
-                    # pos = fk
-                    dist_of_ee_to_object =  np.norm(pos - X)
-                    if dist_of_ee_to_object < 0.01:
-                        #r.gripper_close()
+
+                    target_joint_angles = [0.2] * r.dof
+                    tcp_pose = r.compute_forward_kinematics(target_joint_angles)
+                
+                    dist_to_object =  np.norm(tcp_pose - X)
+                    if dist_to_object < 0.01:
+                        r.gripper("on")
                         object_not_grasped = False
                         pass
                     time.sleep(0.01)
