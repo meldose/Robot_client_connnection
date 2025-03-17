@@ -463,7 +463,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         if response is not None:
             response["timestamp"] = timestamp  # Add timestamp to response
             # return response
-            print(response)
+            print(f"The timestamp is :",response)
         else:
             return None
 
