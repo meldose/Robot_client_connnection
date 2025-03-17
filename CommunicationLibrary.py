@@ -462,8 +462,8 @@ class RobotRequestResponseCommunication: # class used for storing data
         # Assuming response contains object data in dictionary format
         if response is not None:
             response["timestamp"] = timestamp  # Add timestamp to response
-            # return response
             print(f"The timestamp is :",response)
+            return response
         else:
             return None
 
