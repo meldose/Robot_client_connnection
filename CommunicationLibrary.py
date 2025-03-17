@@ -458,19 +458,19 @@ class RobotRequestResponseCommunication: # class used for storing data
         return timestamp  # Return timestamp when the scan wait is completed
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
-        timestamp = time.time()  # Capture timestamp when request is made
+        # timestamp = time.time()  # Capture timestamp when request is made
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
-        response = self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+        self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
         
-        # Assuming response contains object data in dictionary format
-        if response is not None:
-            response["timestamp"] = timestamp  # Add timestamp to response
-            print(f"The response is: {response}")
-            return response
-        else:
-            return None
+        # # Assuming response contains object data in dictionary format
+        # if response is not None:
+        #     response["timestamp"] = timestamp  # Add timestamp to response
+        #     print(f"The response is: {response}")
+        #     return response
+        # else:
+        #     return None
 
     def pho_request_ls_get_vision_system_status(self, vs_id):
         timestamp = time.time()  # Capture timestamp for the request
@@ -622,20 +622,21 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 # print(a)
-                # ServoX(robot=r).movelinear_online(a) # movelinear function calling
                 X = np.zeros(3)
                 vel = np.zeros(3)
                 X0 = a
                 start_time = time.time()
 
                 object_not_grasped = True
+
                 while object_not_grasped:
                     t = time.time() - start_time
                     X[:3]= X0[:3] + vel * t
                     dist = np.sqrt(X[0]**2 + X[1]**2 + X[2]**2)
                     if dist < 1.0:
                         ServoX(robot=r).servo_x(a) # move_linear function calling
-                    # ServoJ(robot=r).servo_j(a) # servo_j function calling
+                        # ServoJ(robot=r).servo_j(a) # servo_j function calling
+                        # ServoX(robot=r).movelinear_online(a) # movelinear function calling
                     else:
                         time.sleep(0.1)
                         continue
@@ -647,8 +648,6 @@ class RobotRequestResponseCommunication: # class used for storing data
                         object_not_grasped = False
                         pass
                     time.sleep(0.01)
-
-
             else:
                 assert False, "Unexpected operation type"
 
