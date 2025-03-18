@@ -627,7 +627,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                 X = np.zeros(3)
                 object_not_grasped = True
-                timeout = 60  # Set a timeout to avoid infinite loops
+                timeout = 5  # Set a timeout to avoid infinite loops
 
                 while object_not_grasped and (time.time() - start_time < timeout):
                     t = time.time() - start_time
