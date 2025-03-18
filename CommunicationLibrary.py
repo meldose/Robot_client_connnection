@@ -624,8 +624,9 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                 a = self.print_message(operation_type)
                 X0 = np.array(object_pose[:3])  # Convert to meters
-                vel = np.array([0.00436, 0.01228, -0.000109])*1000 # Define a velocity
-
+                # vel = np.array([0.00436, 0.01228, -0.000109])*1000 # Define a velocity
+                vel = np.array([0.00853,0.01727,0])*1000 # Define a velocity
+                
                 X = np.zeros(3)
                 object_not_grasped = True
                 timeout = 60 # Set a timeout to avoid infinite loops
@@ -664,7 +665,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                     time.sleep(0.01)
 
-                    if time.time() - start_time >= timeout:
+                    if time.time() - self.start_time >= timeout:
                         print("Forcing exit due to timeout.")
                         break
 
@@ -672,7 +673,6 @@ class RobotRequestResponseCommunication: # class used for storing data
                     print("Object not grasped within timeout!")
 
             self.active_request = 0  # Request finished
-
 
     def print_message(self, operation_type):
         if self.print_messages is not True:
