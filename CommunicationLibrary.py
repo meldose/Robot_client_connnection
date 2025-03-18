@@ -624,7 +624,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                 a = self.print_message(operation_type)
                 X0 = np.array(object_pose[:3])  # Convert to meters
-                vel = np.array([0.00436, 0.01228, -0.000109]) * 1000  # Define a velocity
+                vel = np.array([0.00436, 0.01228, -0.000109]) # Define a velocity
                 start_time = time.time()
 
                 X = np.zeros(3)
