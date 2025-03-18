@@ -621,16 +621,15 @@ class RobotRequestResponseCommunication: # class used for storing data
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose
                 a = self.print_message(operation_type)
-                ServoX(robot=r).servo_x(a)  # Move towards object
+                # ServoX(robot=r).servo_x(a)  # Move towards object
                 X0 = a
-                X0=np.array(object_pose[:3])
-                vel = np.array([0.1, 0.1, 0.1])  # Define a velocity
+                # X0=np.array(object_pose[:3]/1000.0)
+                print(type(object_pose))
+                X0=np.array(object_pose[:3])/1000.0
+                vel = np.array([0.00436,0.01228,-0.000109])  # Define a velocity
                 start_time=time.time()
                 
                 X = np.zeros(3)
-                vel = np.array([0.1, 0.1, 0.1])  # Define a velocity
-
-                start_time = time.time()
 
                 object_not_grasped = True
                 timeout = 60  # Set a timeout to avoid infinite loops
@@ -638,9 +637,11 @@ class RobotRequestResponseCommunication: # class used for storing data
                 while object_not_grasped and (time.time() - start_time < timeout):
                     t = time.time() - start_time
                     X[:3] = X0[:3] + vel * t
+                    print(X,a)
                     dist = np.linalg.norm(X)
 
-                    if dist < 1.0:
+                    if dist < 0.7:
+                        print("Error #################")
                         ServoX(robot=r).servo_x(a)  # Move towards object
                     else:
                         time.sleep(0.1)
@@ -651,6 +652,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                     dist_to_object = np.linalg.norm(tcp_pose - X)
                     if dist_to_object < 0.01:
+                        print("error.................")
                         r.gripper("on")
                         object_not_grasped = False
 
