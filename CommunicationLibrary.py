@@ -218,19 +218,19 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
 #         inp.target_acceleration = [0.]*cart_pose_length # defining the target acceleration
 
-#         inp.max_velocity = [100.0]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose length
-#         inp.max_acceleration = [100.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
-#         inp.max_jerk = [5.0]*cart_pose_length # setting the jerk values
+#         inp.max_velocity = [80.0]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose length
+#         inp.max_acceleration = [65.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
+#         inp.max_jerk = [1.0]*cart_pose_length # setting the jerk values
 
 #         servox_proportional_gain = 25 # setting the servox propotional gain as 25
 
 #         velocity = [0.] * 6 # Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
 #         acceleration = [0.] * 6 # Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
-        
+
 #         res=Result.Working # setting the result
 
 #         while res == Result.Working: # while the result is working
-            
+
 #             error_code = 0 # setting the error code
 
 #             res = otg.update(inp, out) # updating the input and output
@@ -247,22 +247,20 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
 #             out.pass_to_input(inp)
 #             time.sleep(0.00000000002) # setting time 
-            
+ 
 #         r.deactivate_servo_interface() # deactivating the servo interface
 #         r.gripper("off") # setting gripper close position
 #         # r.move_joint("P50") # moving to P34
 #         # r.gripper("off") # setting gripper close position
 #         r.move_joint("P54") # moving to P33
 #         r.gripper("on") # setting gripper on
-#         # r.move_joint("P52") # moving to P32
-#         r.move_joint("P59") # moving to P32
+#         r.move_joint("P58") # moving to P32
 #         # r.move_joint("P57") # moving to P32
 #         # r.stop() # stopping the robot
-
+ 
 # r.set_mode("Automatic") # setting the mode to automatic
 # r.gripper("on") # setting the gripper on
-# # r.move_joint("P52") # moving to P32
-# r.move_joint("P59") # moving to P32
+# r.move_joint("P58") # moving to P32
 # # r.move_joint("P57") # moving to P32
 
 # -------------------------------------------------------------------
@@ -317,15 +315,13 @@ class ServoX: # defining servoX
         # r.gripper("off") # setting gripper close position
         r.move_joint("P54") # moving to P33
         r.gripper("on") # setting gripper on
-        # r.move_joint("P52") # moving to P32
-        r.move_joint("P59") # moving to P32
+        r.move_joint("P52") # moving to P32
         # r.move_joint("P57") # moving to P32
         # r.stop() # stopping the robot
 
 r.set_mode("Automatic") # setting the mode to automatic
 r.gripper("on") # setting the gripper on
-# r.move_joint("P52") # moving to P32
-r.move_joint("P59") # moving to P32
+r.move_joint("P52") # moving to P32
 # r.move_joint("P57") # moving to P32
 
 # -------------------------------------------------------------------
@@ -437,8 +433,8 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
+    # parameter tool_pose used only in Hand-eye
     def pho_request_ls_scan(self, vs_id, tool_pose=None):
-        timestamp = time.time()  # Capture timestamp when the scan request is made
         if tool_pose is None:
             payload = [vs_id, 0, 0, 0]  # payload - vision system id
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
@@ -448,37 +444,20 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload = payload + floatArray2bytes(tool_pose)  # payload - start
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload)
 
-        return timestamp  # Return timestamp when the request was made
-
     def pho_ls_wait_for_scan(self):
-        timestamp = time.time()  # Capture timestamp when waiting for scan response
         self.pho_receive_response(PHO_SCAN_LS_REQUEST)
         self.active_request = 0  # request finished - response from request received
-        print(f"Scan request completed at {timestamp}")  # You can log or print the timestamp
-        return timestamp  # Return timestamp when the scan wait is completed
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
-        self.start_time = time.time()
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
-        
-        # # Assuming response contains object data in dictionary format
-        # if response is not None:
-        #     response["timestamp"] = timestamp  # Add timestamp to response
-        #     print(f"The response is: {response}")
-        #     return response
-        # else:
-        #     return None
 
     def pho_request_ls_get_vision_system_status(self, vs_id):
-        timestamp = time.time()  # Capture timestamp for the request
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
-        print(f"Vision system status request completed at {timestamp}")  # You can log or print the timestamp
-        return timestamp  # Return timestamp when the vision system status request is completed
 
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
         try:
@@ -501,6 +480,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
             logging.error(f"An error occurred while moving the robot to joint position: {e}")
+
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
@@ -620,59 +600,16 @@ class RobotRequestResponseCommunication: # class used for storing data
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose
-                print(f"Received object pose: {object_pose}")
-
                 a = self.print_message(operation_type)
-                X0 = np.array(object_pose[:3])  # Convert to meters
-                # vel = np.array([0.00436, 0.01228, -0.000109])*1000 # Define a velocity
-                vel = np.array([0.00853,0.01727,0])*1000 # Define a velocity
-                
-                X = np.zeros(3)
-                object_not_grasped = True
-                timeout = 60 # Set a timeout to avoid infinite loops
-                old_start = time.time()
-                while object_not_grasped and (time.time() - self.start_time < timeout):
-                    t = time.time() - self.start_time
-                    print(f"the old time is :", time.time() - old_start)
-                    print(f"the time is :",t)
-                    X = X0 + vel * t  # Update X position
-                    target = np.append(X, np.array(a[3:]))
+                print(a)
+                ServoX(robot=r).movelinear_online(a) # movelinear function calling
+                # ServoX(robot=r).servo_x(a) # move_linear function calling
+                # ServoJ(robot=r).servo_j(a) # servo_j function calling
 
-                    dist = np.linalg.norm(X)  # Distance from initial position
-                    print(f"X: {X}, Distance from start: {dist}")
+            else:
+                assert False, "Unexpected operation type"
 
-                    if dist < 700:
-                        print("Moving towards object...")
-                        success = ServoX(robot=r).movelinear_online(target)
-                        if not success:
-                            print("Servo motion failed!")
-                            break
-                    else:
-                        print("Target too far, waiting...")
-                        time.sleep(0.1)
-                        continue
-
-                    target_joint_angles = r.get_current_joint_angles()
-                    tcp_pose = r.compute_forward_kinematics(target_joint_angles)
-                    dist_to_object = np.linalg.norm(tcp_pose[:3] - X)  # Ensure correct dimension
-
-                    print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}")
-
-                    if dist_to_object < 5:
-                        print("Grasping object...")
-                        r.gripper("on")
-                        object_not_grasped = False
-
-                    time.sleep(0.01)
-
-                    if time.time() - self.start_time >= timeout:
-                        print("Forcing exit due to timeout.")
-                        break
-
-                if object_not_grasped:
-                    print("Object not grasped within timeout!")
-
-            self.active_request = 0  # Request finished
+        self.active_request = 0  # request finished - response from request received
 
     def print_message(self, operation_type):
         if self.print_messages is not True:
