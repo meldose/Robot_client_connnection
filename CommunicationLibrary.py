@@ -640,7 +640,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                     X[:3] = X0[:3] + vel * t
                     dist = np.linalg.norm(X)
 
-                    if dist < 1.0:
+                    if dist < 0.5:
                         ServoX(robot=r).servo_x(a)  # Move towards object
                     else:
                         time.sleep(0.1)
