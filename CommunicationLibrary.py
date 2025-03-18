@@ -621,7 +621,6 @@ class RobotRequestResponseCommunication: # class used for storing data
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose
                 a = self.print_message(operation_type)
-                # ServoX(robot=r).servo_x(a)  # Move towards object
                 X0 = np.array(object_pose[:3]) # Convert to meters
                 vel = np.array([0.00436, 0.01228, -0.000109])*1000  # Define a velocity
                 start_time = time.time()
