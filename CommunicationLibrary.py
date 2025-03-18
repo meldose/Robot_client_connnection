@@ -218,9 +218,9 @@ class ServoX: # defining servoX
         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
         inp.target_acceleration = [0.]*cart_pose_length # defining the target acceleration
 
-        inp.max_velocity = [80.0]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose length
-        inp.max_acceleration = [65.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
-        inp.max_jerk = [1.0]*cart_pose_length # setting the jerk values
+        inp.max_velocity = [100.0]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose length
+        inp.max_acceleration = [100.0]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
+        inp.max_jerk = [5.0]*cart_pose_length # setting the jerk values
 
         servox_proportional_gain = 25 # setting the servox propotional gain as 25
 
@@ -622,8 +622,8 @@ class RobotRequestResponseCommunication: # class used for storing data
                 self.message = object_pose
                 a = self.print_message(operation_type)
                 # ServoX(robot=r).servo_x(a)  # Move towards object
-                X0 = np.array(object_pose[:3]) / 1000.0  # Convert to meters
-                vel = np.array([0.00436, 0.01228, -0.000109])  # Define a velocity
+                X0 = np.array(object_pose[:3]) # Convert to meters
+                vel = np.array([0.00436, 0.01228, -0.000109])*1000  # Define a velocity
                 start_time = time.time()
 
                 X = np.zeros(3)
@@ -633,13 +633,14 @@ class RobotRequestResponseCommunication: # class used for storing data
                 while object_not_grasped and (time.time() - start_time < timeout):
                     t = time.time() - start_time
                     X = X0 + vel * t  # Update X position
+                    target = np.append(X, np.array(a[3:]))
 
                     print(X)
                     dist = np.linalg.norm(X - X0)  # Distance from initial position
 
                     if dist < 0.7:
                         print("Moving towards object...")
-                        r.servo_x(X)  # Corrected call
+                        ServoX(robot=r).servo_x(target)  # Move towards object
                     else:
                         time.sleep(0.1)
                         continue
