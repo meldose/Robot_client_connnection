@@ -620,34 +620,42 @@ class RobotRequestResponseCommunication: # class used for storing data
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose
+                print(f"Received object pose: {object_pose}")
+
                 a = self.print_message(operation_type)
-                X0 = np.array(object_pose[:3]) # Convert to meters
-                vel = np.array([0.00436, 0.01228, -0.000109])*1000  # Define a velocity
+                X0 = np.array(object_pose[:3])  # Convert to meters
+                vel = np.array([0.00436, 0.01228, -0.000109]) * 1000  # Define a velocity
                 start_time = time.time()
 
                 X = np.zeros(3)
                 object_not_grasped = True
-                timeout = 5  # Set a timeout to avoid infinite loops
+                timeout = 20 # Set a timeout to avoid infinite loops
 
                 while object_not_grasped and (time.time() - start_time < timeout):
                     t = time.time() - start_time
                     X = X0 + vel * t  # Update X position
                     target = np.append(X, np.array(a[3:]))
 
-                    print(X)
                     dist = np.linalg.norm(X - X0)  # Distance from initial position
+                    print(f"X: {X}, Distance from start: {dist}")
 
                     if dist < 0.7:
                         print("Moving towards object...")
-                        ServoX(robot=r).servo_x(target)  # Move towards object
+                        success = ServoX(robot=r).servo_x(target)
+                        if not success:
+                            print("Servo motion failed!")
+                            break
                     else:
+                        print("Target too far, waiting...")
                         time.sleep(0.1)
                         continue
 
                     target_joint_angles = r.get_current_joint_angles()
                     tcp_pose = r.compute_forward_kinematics(target_joint_angles)
-
                     dist_to_object = np.linalg.norm(tcp_pose[:3] - X)  # Ensure correct dimension
+
+                    print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}")
+
                     if dist_to_object < 0.01:
                         print("Grasping object...")
                         r.gripper("on")
@@ -655,10 +663,15 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                     time.sleep(0.01)
 
+                    if time.time() - start_time >= timeout:
+                        print("Forcing exit due to timeout.")
+                        break
+
                 if object_not_grasped:
                     print("Object not grasped within timeout!")
 
             self.active_request = 0  # Request finished
+
 
     def print_message(self, operation_type):
         if self.print_messages is not True:
