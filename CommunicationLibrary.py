@@ -458,7 +458,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         return timestamp  # Return timestamp when the scan wait is completed
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
-        # timestamp = time.time()  # Capture timestamp when request is made
+        self.start_time = time.time()
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
@@ -624,22 +624,23 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                 a = self.print_message(operation_type)
                 X0 = np.array(object_pose[:3])  # Convert to meters
-                vel = np.array([0.00436, 0.01228, -0.000109]) # Define a velocity
-                start_time = time.time()
+                vel = np.array([0.00436, 0.01228, -0.000109])*1000 # Define a velocity
 
                 X = np.zeros(3)
                 object_not_grasped = True
-                timeout = 20 # Set a timeout to avoid infinite loops
-
-                while object_not_grasped and (time.time() - start_time < timeout):
-                    t = time.time() - start_time
+                timeout = 60 # Set a timeout to avoid infinite loops
+                old_start = time.time()
+                while object_not_grasped and (time.time() - self.start_time < timeout):
+                    t = time.time() - self.start_time
+                    print(f"the old time is :", time.time() - old_start)
+                    print(f"the time is :",t)
                     X = X0 + vel * t  # Update X position
                     target = np.append(X, np.array(a[3:]))
 
-                    dist = np.linalg.norm(X - X0)  # Distance from initial position
+                    dist = np.linalg.norm(X)  # Distance from initial position
                     print(f"X: {X}, Distance from start: {dist}")
 
-                    if dist < 0.7:
+                    if dist < 700:
                         print("Moving towards object...")
                         success = ServoX(robot=r).servo_x(target)
                         if not success:
@@ -656,7 +657,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                     print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}")
 
-                    if dist_to_object < 0.01:
+                    if dist_to_object < 5:
                         print("Grasping object...")
                         r.gripper("on")
                         object_not_grasped = False
