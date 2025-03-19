@@ -499,7 +499,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             logging.error(f"Error in pho_ls_wait_for_scan: {e}") # logging error
 
     def pho_request_get_objects(self, vs_id_1,number_of_objects_1): # defining the function for get objects
-        
+        self.time=time.time()
         try:
             # Validate input types
             if not all(isinstance(x, int) for x in [vs_id_1, number_of_objects_1]): # checking the element in the list of vision system 1 is integer or not
@@ -515,7 +515,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             logging.error(f"Error in pho_request_get_objects: {e}") # logging error
 
     def pho_request_get_objects_2(self,vs_id_2, number_of_objects_2): # defining the function for requesting the object for pipe
-        
+        self.time=time.time()
         try:
             # Validate input types
             if not all(isinstance(x, int) for x in [vs_id_2, number_of_objects_2]): # checking the element in the list of vision system 2 is integer or not
