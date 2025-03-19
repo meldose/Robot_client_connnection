@@ -648,7 +648,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                             print("Servo motion failed!")
                             break
                     else:
-                        print("Target too far, waiting...")
+                        print("Target too far, waiting to grab..")
                         time.sleep(0.1)
                         continue
 
