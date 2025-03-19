@@ -609,7 +609,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                 object_not_grasped = True # condition for object not grapsed as True
                 timeout = 60 # Set a timeout to avoid infinite loops
                 old_start = time.time() # setting the old time
-                while object_not_grasped and (time.time() - self.start_time < timeout):
+                while object_not_grasped and (time.time() - self.start_time < timeout):# while condition setting to true as object_not_grapsed
                     t = time.time() - self.start_time # setting the time t
                     print(f"the old time is :", time.time() - old_start) # printing the old time
                     print(f"the time is :",t) # printing the time
@@ -651,7 +651,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                     print("Object not grasped within timeout!") # print the statement
 
                 else:
-                    
+
                     assert False, "Unexpected operation type" # setting the condition to False
 
             self.active_request = 0  # request finished - response from request received
