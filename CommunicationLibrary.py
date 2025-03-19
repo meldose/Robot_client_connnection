@@ -599,46 +599,46 @@ class RobotRequestResponseCommunication: # class used for storing data
             elif operation_type == OperationType.PHO_OBJECT_POSE:
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
-                self.message = object_pose
-                a = self.print_message(operation_type)
+                self.message = object_pose # setting the object_pose
+                a = self.print_message(operation_type) # creating object pose
                 X0 = np.array(object_pose[:3])  # Convert to meters
                 # vel = np.array([0.00436, 0.01228, -0.000109])*1000 # Define a velocity
                 vel = np.array([0.00853,0.01727,0])*1000 # Define a velocity
                 X = np.zeros(3)
-                object_not_grasped = True
+                object_not_grasped = True # condition for object not grapsed as True
                 timeout = 60 # Set a timeout to avoid infinite loops
-                old_start = time.time()
+                old_start = time.time() # setting the old time
                 while object_not_grasped and (time.time() - self.start_time < timeout):
-                    t = time.time() - self.start_time
-                    print(f"the old time is :", time.time() - old_start)
-                    print(f"the time is :",t)
+                    t = time.time() - self.start_time # setting the time t
+                    print(f"the old time is :", time.time() - old_start) # printing the old time
+                    print(f"the time is :",t) # printing the time
                     X = X0 + vel * t  # Update X position
-                    target = np.append(X, np.array(a[3:]))
+                    target = np.append(X, np.array(a[3:])) # appending the quaternion values
 
                     dist = np.linalg.norm(X)  # Distance from initial position
-                    print(f"X: {X}, Distance from start: {dist}")
+                    print(f"X: {X}, Distance from start: {dist}") # printing the distance
 
-                    if dist < 700:
-                        print("Moving towards object...")
-                        success = ServoX(robot=r).movelinear_online(target)
-                        if not success:
-                            print("Servo motion failed!")
+                    if dist < 700: # if distance is less than 700
+                        print("Moving towards object...") # print the statement
+                        success = ServoX(robot=r).movelinear_online(target) # function for moving towards the object
+                        if not success: # if not moved
+                            print("Servo motion failed!") # print the statement
                             break
                     else:
-                        print("Target too far, waiting to grab..")
+                        print("Target too far, waiting to grab..") # else target is too far
                         time.sleep(0.1)
                         continue
 
-                    target_joint_angles = r.get_current_joint_angles()
-                    tcp_pose = r.compute_forward_kinematics(target_joint_angles)
+                    target_joint_angles = r.get_current_joint_angles() # getting the current target joint angles
+                    tcp_pose = r.compute_forward_kinematics(target_joint_angles) # setting the tcp_pose
                     dist_to_object = np.linalg.norm(tcp_pose[:3] - X)  # Ensure correct dimension
 
                     print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}")
 
-                    if dist_to_object < 5:
-                        print("Grasping object...")
-                        r.gripper("on")
-                        object_not_grasped = False
+                    if dist_to_object < 5: # if distance to objects is less than 5
+                        print("Grasping object...") # picking the object
+                        r.gripper("on") # close the gripper
+                        object_not_grasped = False # conditon that object not grapsed as False
 
                     time.sleep(0.01)
 
@@ -646,8 +646,8 @@ class RobotRequestResponseCommunication: # class used for storing data
                         print("Forcing exit due to timeout.")
                         break
 
-                if object_not_grasped:
-                    print("Object not grasped within timeout!")
+                if object_not_grasped: # if object not grasped
+                    print("Object not grasped within timeout!") # print the statement
 
                 else:
                     assert False, "Unexpected operation type"
