@@ -634,7 +634,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                     tcp_pose = r.compute_forward_kinematics(target_joint_angles) # setting the tcp_pose
                     dist_to_object = np.linalg.norm(tcp_pose[:3] - X)  # Ensure correct dimension
 
-                    print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}")
+                    print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}") # printing the statement for tcp_pose and dist_to_object
 
                     if dist_to_object < 5: # if distance to objects is less than 5
                         print("Grasping object...") # picking the object
@@ -643,15 +643,15 @@ class RobotRequestResponseCommunication: # class used for storing data
 
                     time.sleep(0.01)
 
-                    if time.time() - self.start_time >= timeout:
-                        print("Forcing exit due to timeout.")
-                        break
+                    if time.time() - self.start_time >= timeout: # condition that the time difference is greater than timeout then:
+                        print("Forcing exit due to timeout.") # print the statement
+                        break # break the statement
 
                 if object_not_grasped: # if object not grasped
                     print("Object not grasped within timeout!") # print the statement
 
                 else:
-                    assert False, "Unexpected operation type"
+                    assert False, "Unexpected operation type" # setting the condition to False
 
             self.active_request = 0  # request finished - response from request received
 
