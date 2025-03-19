@@ -449,6 +449,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.active_request = 0  # request finished - response from request received
 
     def pho_request_get_objects(self, vs_id, number_of_objects):
+        self.start_time=time.time()
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         payload = payload + [number_of_objects, 0, 0, 0]  # payload - number of objects
         self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload)
