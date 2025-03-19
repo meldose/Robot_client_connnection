@@ -651,6 +651,7 @@ class RobotRequestResponseCommunication: # class used for storing data
                     print("Object not grasped within timeout!") # print the statement
 
                 else:
+                    
                     assert False, "Unexpected operation type" # setting the condition to False
 
             self.active_request = 0  # request finished - response from request received
