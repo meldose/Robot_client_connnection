@@ -87,80 +87,80 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      SERVO_J
 # -------------------------------------------------------------------
 
-import copy
-import time
+# import copy
+# import time
 
-class ServoJ:
-    def __init__(self, robot):
-        self.robot = robot
+# class ServoJ:
+#     def __init__(self, robot):
+#         self.robot = robot
         
-        r=robot
+#         r=robot
 
-    def servo_j(self, message):
+#     def servo_j(self, message):
 
-        message = [x / 1000 for x in message]  # Scale values
+#         message = [x / 1000 for x in message]  # Scale values
         
-        x = message[0] # Scale values
-        y = message[1] # Scale values
-        z = message[2] # Scale values
-        a = message[3] # Scale values
-        b = message[4] # Scale values
-        c = message[5] # Scale values
-        d = message[6] # Scale values
+#         x = message[0] # Scale values
+#         y = message[1] # Scale values
+#         z = message[2] # Scale values
+#         a = message[3] # Scale values
+#         b = message[4] # Scale values
+#         c = message[5] # Scale values
+#         d = message[6] # Scale values
 
-        new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
-        quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
-        euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
-        print(euler_pose)
+#         new_message = [x, y,z,d, a, b, c] # added new order for quaternion values
+#         quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
+#         euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
+#         print(euler_pose)
         
-        # Activate servo interface
-        r.activate_servo_interface('position')
+#         # Activate servo interface
+#         r.activate_servo_interface('position')
 
-        dof = 6
-        otg = Ruckig(dof, 0.001)
+#         dof = 6
+#         otg = Ruckig(dof, 0.001)
 
-        # Input/Output parameters
-        inp = InputParameter(dof)
-        out = OutputParameter(dof)
+#         # Input/Output parameters
+#         inp = InputParameter(dof)
+#         out = OutputParameter(dof)
 
-        # Get current state
-        inp.current_position = r.get_current_joint_angles()
-        inp.current_velocity = [0.0] * dof
-        inp.current_acceleration = [0.0] * dof
+#         # Get current state
+#         inp.current_position = r.get_current_joint_angles()
+#         inp.current_velocity = [0.0] * dof
+#         inp.current_acceleration = [0.0] * dof
 
-        # Compute inverse kinematics using Euler pose
-        target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
+#         # Compute inverse kinematics using Euler pose
+#         target_joint_angles = r.ik_fk("ik", target_pose=euler_pose, current_joint=inp.current_position)
 
-        print("Target Joint Angles:", target_joint_angles)
+#         print("Target Joint Angles:", target_joint_angles)
 
-        # Assign motion parameters
-        inp.target_position = target_joint_angles
-        inp.target_acceleration = [0.0] * dof
-        inp.max_velocity = [0.8] * dof
-        inp.max_acceleration = [7.0] * dof
-        inp.max_jerk = [5.0] * dof
+#         # Assign motion parameters
+#         inp.target_position = target_joint_angles
+#         inp.target_acceleration = [0.0] * dof
+#         inp.max_velocity = [0.8] * dof
+#         inp.max_acceleration = [7.0] * dof
+#         inp.max_jerk = [5.0] * dof
 
-        # Execute motion
-        res = Result.Working
-        while res == Result.Working:
-            res = otg.update(inp, out)
-            r.servo_j(out.new_position, out.new_velocity, out.new_acceleration)
-            out.pass_to_input(inp)
-            time.sleep(0.001)
+#         # Execute motion
+#         res = Result.Working
+#         while res == Result.Working:
+#             res = otg.update(inp, out)
+#             r.servo_j(out.new_position, out.new_velocity, out.new_acceleration)
+#             out.pass_to_input(inp)
+#             time.sleep(0.001)
             
-            r.deactivate_servo_interface()
-            # Perform additional movements
-            r.move_joint("P34")
-            r.gripper("off")
-            r.move_joint("P33")
-            r.gripper("on")
-            r.move_joint("P46")
+#             r.deactivate_servo_interface()
+#             # Perform additional movements
+#             r.move_joint("P34")
+#             r.gripper("off")
+#             r.move_joint("P33")
+#             r.gripper("on")
+#             r.move_joint("P46")
 
-        # Set mode and reset gripper state
-    r.set_mode("Automatic")
-    r.gripper("on")
-    r.move_joint("P46")
-    r.gripper("off")
+#         # Set mode and reset gripper state
+#     r.set_mode("Automatic")
+#     r.gripper("on")
+#     r.move_joint("P46")
+#     r.gripper("off")
 # -------------------------------------------------------------------
 #                      SERVO_X (WORKING)
 # -------------------------------------------------------------------
@@ -264,57 +264,57 @@ class ServoJ:
 #                      MOVE_LINEAR (WORKING)
 # -------------------------------------------------------------------
 
-# import copy # importing copy module
+import copy # importing copy module
 
-# class ServoX: # defining servoX
+class ServoX: # defining servoX
 
-#     def __init__(self,robot):
-#         self.robot = robot # setting the robot
+    def __init__(self,robot):
+        self.robot = robot # setting the robot
 
-#     def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
+    def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
 
-#         message = [x/1000 for x in message] # converting the values to mm
+        message = [x/1000 for x in message] # converting the values to mm
         
-#         x = message[0]  # setting the values
-#         y = message[1]  # setting the values
-#         z = message[2]  # setting the values
-#         a = message[3]  # setting the values
-#         b = message[4]  # setting the values
-#         c = message[5]  # setting the values
-#         d = message[6]  # setting the values
+        x = message[0]  # setting the values
+        y = message[1]  # setting the values
+        z = message[2]  # setting the values
+        a = message[3]  # setting the values
+        b = message[4]  # setting the values
+        c = message[5]  # setting the values
+        d = message[6]  # setting the values
         
-#         print(message) # printing the message
+        print(message) # printing the message
         
-#         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-#         print(new_message) # printing the new ordered message
+        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
+        print(new_message) # printing the new ordered message
         
-#         #Switch to external servo mode
-#         r.activate_servo_interface('position') # activating the servo interface
+        #Switch to external servo mode
+        r.activate_servo_interface('position') # activating the servo interface
 
-#         cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-#         velocity = [0.2]*6 # setting the velocity 
-#         acceleration = [2.0]*6 # setting the acceleration
-#         target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-#         time.sleep(1.0) # setting the time
+        cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
+        velocity = [0.2]*6 # setting the velocity 
+        acceleration = [2.0]*6 # setting the acceleration
+        target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
+        time.sleep(1.0) # setting the time
 
-#         # target=new_message # setting the target position 
-#         target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
-#         error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
-#         r.gripper("on")
+        # target=new_message # setting the target position 
+        target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
+        error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
+        r.gripper("on")
 
-#         time.sleep(1.0) # setting the time
+        time.sleep(1.0) # setting the time
 
-#         r.deactivate_servo_interface() # deactivating the servo interface
-#         r.gripper("off") # setting gripper close position
-#         r.move_joint("P19") # moving to P19
-#         r.move_joint("P20") # moving to P20
-#         r.gripper("on") # setting gripper close position
-#         r.move_joint("P28") # moving to P28
+        r.deactivate_servo_interface() # deactivating the servo interface
+        r.gripper("off") # setting gripper close position
+        r.move_joint("P19") # moving to P19
+        r.move_joint("P20") # moving to P20
+        r.gripper("on") # setting gripper close position
+        r.move_joint("P28") # moving to P28
 
-#     r.set_mode("Automatic") # setting the robot to Automatic Mode
-#     r.move_joint("P28") # movin robot to the position 28    
-#     r.set_mode("Teach") # setting the mode to Teach mode
-#     r.gripper("on") # setting the gripper 
+    r.set_mode("Automatic") # setting the robot to Automatic Mode
+    r.move_joint("P28") # movin robot to the position 28    
+    r.set_mode("Teach") # setting the mode to Teach mode
+    r.gripper("on") # setting the gripper 
 
 # -------------------------------------------------------------------
 #                      CLASSES
@@ -744,24 +744,78 @@ class RobotRequestResponseCommunication: # class used for storing data
                     # Receiving real data (from robot's vision system)
                     data = self.client.recv(OBJECT_POSE_SIZE) # setting the data 
                     object_pose = struct.unpack('<7f', data[0:28]) # setting the object pose
+                    self.message = object_pose # setting the object_pose
+                    a = self.print_message(operation_type) # creating object pose
+                    X0 = np.array(object_pose[:3])  # Convert to meters
+                    velocity = np.array([0.00853,0.01727,0])*4000 # Define a velocity
+                    X = np.zeros(3)
+                    object_not_grasped = True # condition for object not grapsed as True
+                    timeout = 60 # Set a timeout to avoid infinite loops
+                    old_start = time.time() # setting the old time
+                    while object_not_grasped and (time.time() - self.start_time < timeout):# while condition setting to true as object_not_grapsed
+                        t = time.time() - self.start_time # setting the time t
+                        print(f"the old time is :", time.time() - old_start) # printing the old time
+                        print(f"the time is :",t) # printing the time
+                        X = X0 + velocity * t  # Update X position
+                        target = np.append(X, np.array(a[3:])) # appending the quaternion values
 
-                    # Extract position and orientation with correct order
-                    position = list(object_pose[:3])  # First three values (x, y, z)
-                    orientation = [object_pose[6], object_pose[3], object_pose[4], object_pose[5]]  # Reordering (d, a, b, c)
+                        dist = np.linalg.norm(X)  # Distance from initial position
+                        print(f"X: {X}, Distance from start: {dist}") # printing the distance
 
-                    # Combine for movement
-                    pose_to_move = [position + orientation] # setting the pose_to_move having the combination of position and orientaiton
-                    self.message = position + orientation  # Store message for logging
+                        if dist < 700: # if distance is less than 700
+                            print("Moving towards object...") # print the statement
+                            success = ServoX(robot=r).movelinear_online(target) # function for moving towards the object
+                            if not success: # if not moved
+                                print("Servo motion failed!") # print the statement
+                                break
+                        else:
+                            print("Target too far, waiting to grab..") # else target is too far
+                            time.sleep(0.1)
+                            continue
 
-                self.print_message(operation_type)  # printing the message
+                        target_joint_angles = r.get_current_joint_angles() # getting the current target joint angles
+                        tcp_pose = r.compute_forward_kinematics(target_joint_angles) # setting the tcp_pose
+                        dist_to_object = np.linalg.norm(tcp_pose[:3] - X)  # Ensure correct dimension
 
-                # Ensure the pose is valid before attempting to move
-                if pose_to_move:  # if there is a pose to move
-                    for pose in pose_to_move:  # iterating over the poses
-                        ServoX(robot=self.robot).servo_x(pose)  # Move to pose using movelinear_online
+                        print(f"TCP Pose: {tcp_pose}, Target Pose: {X}, Distance to Object: {dist_to_object}") # printing the statement for tcp_pose and dist_to_object
 
-                self.active_request = 0  # Request finished - response from request received
-        return response  # returning the response
+                        if dist_to_object < 5: # if distance to objects is less than 5
+                            print("Grasping object...") # picking the object
+                            r.gripper("on") # close the gripper
+                            object_not_grasped = False # conditon that object not grapsed as False
+
+                        time.sleep(0.01)
+
+                        if time.time() - self.start_time >= timeout: # condition that the time difference is greater than timeout then:
+                            print("Forcing exit due to timeout.") # print the statement
+                            break # break the statement
+
+                    if object_not_grasped: # if object not grasped
+                        print("Object not grasped within timeout!") # print the statement
+
+                    else:
+
+                        assert False, "Unexpected operation type" # setting the condition to False
+
+                self.active_request = 0  # request finished - response from request received
+
+        #             # Extract position and orientation with correct order
+        #             position = list(object_pose[:3])  # First three values (x, y, z)
+        #             orientation = [object_pose[6], object_pose[3], object_pose[4], object_pose[5]]  # Reordering (d, a, b, c)
+
+        #             # Combine for movement
+        #             pose_to_move = [position + orientation] # setting the pose_to_move having the combination of position and orientaiton
+        #             self.message = position + orientation  # Store message for logging
+
+        #         self.print_message(operation_type)  # printing the message
+
+        #         # Ensure the pose is valid before attempting to move
+        #         if pose_to_move:  # if there is a pose to move
+        #             for pose in pose_to_move:  # iterating over the poses
+        #                 ServoX(robot=self.robot).servo_x(pose)  # Move to pose using movelinear_online
+
+        #         self.active_request = 0  # Request finished - response from request received
+        # return response  # returning the response
 
 
     def print_message(self, operation_type): #defining the print_message function
