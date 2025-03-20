@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Function to generate speed graph
-def generate_speed_graph(t1, t2, robot_velocities, conveyor_speeds):
+def generate_speed_graph(change_in_time, robot_velocities, conveyor_speeds):
     time_stamps = np.linspace(t1, t2, len(conveyor_speeds))
     
     # Extract robot velocity magnitudes
