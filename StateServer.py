@@ -136,7 +136,7 @@ def normalize_quaternion(q):
 
 
 def test_loop_communication():
-    server = Communication_Library1.RobotStateCommunication() # create server object
+    server = CommunicationLibrary.RobotStateCommunication() # create server object
     server.create_server(ROBOT_CONTROLLER_IP, PORT)
     server.wait_for_client()
     while True:
