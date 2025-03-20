@@ -548,7 +548,6 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.client.send(bytearray(msg))
 
     def pho_receive_response(self, required_id):
-        # receive header
         received_header = self.client.recv(HEADER_SIZE)
         request_id = int.from_bytes(received_header[0:3], "little")
         number_of_messages = int.from_bytes(received_header[4:7], "little")
