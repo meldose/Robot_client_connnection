@@ -57,10 +57,6 @@ def test_ls(): # main function for calling every function.
     robot.pho_request_get_objects_2(vs_id_2=2,number_of_objects_2=2) # get objects for object2 and vision system 2(pipe)
     robot.pho_request_get_running_solution() # get running solution
     time.sleep(0.01)
-    #robot.pho_request_move_to_position()
-    # time.sleep(0.2)
-    # robot.pho_request_stop_solution()
-    # time.sleep(2)
     robot.pho_request_get_available_solution() # get available solution
     robot.close_connection()  #communication needs to be closed
     time.sleep(0.01)
