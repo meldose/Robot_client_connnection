@@ -639,44 +639,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 
 
     def pho_receive_response(self, required_id=None, response=None):
-        # if message is None:
-        #     message=list(self.client.recv(OBJECT_POSE_SIZE))
-
-        # if not message:
-        #     logging.error("Invalid or missing message data")
-        #     return [],[]
-
-        # if len(message) != OBJECT_POSE_SIZE:
-        #     logging.error("Incomplete data received")
-        #     return [], []
-        
-        # message = [x/1000 for x in message] # converting the values to mm
-        
-        # x = message[0]  # setting the values
-        # y = message[1]  # setting the values
-        # z = message[2]  # setting the values
-        # a = message[3]  # setting the values
-        # b = message[4]  # setting the values
-        # c = message[5]  # setting the values
-        # d = message[6]  # setting the values
-        
-        # print(message) # printing the message
-
-        # new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-        # logging.info(f"Processed message: {new_message}")
-
-        # print(new_message)
-    
-        # position=new_message[:3]
-        # orientation=new_message[3:]
-
-        # # Simulated Response (Replace with actual data retrieval method)
-        # if response is None:
-        #     response = [
-        #         {"vs_id": 1,"id": 1, "name": "Pipe", "position": position, "orientation": orientation},
-        #         {"vs_id": 2,"id": 2, "name": "Trapezoid", "position": position, "orientation": orientation}
-        #     ]
-        # Receive header
         received_header = self.client.recv(HEADER_SIZE)
         if len(received_header) < HEADER_SIZE: # checking if the header is empty
             return[],[] # returning empty response
