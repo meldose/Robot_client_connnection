@@ -21,8 +21,9 @@ def generate_speed_graph(t1, t2, robot_velocities, conveyor_speeds):
     plt.show()
 
 # Example input
-t1, t2 = 0, 100
-robot_velocities = [np.array([0.5, 0.2, 0.1]) for _ in range(100)]  # Example constant velocities
+t1, t2 = 1742319295,47,1742319299,702
+change_in_time= t2-t1
+robot_velocities = [np.array([0.00853,0.01727,0])*6500 for _ in range(100)]  # Example constant velocities
 conveyor_speeds = np.linspace(1.0, 2.0, 100)  # Example conveyor speeds
 
-generate_speed_graph(t1, t2, robot_velocities, conveyor_speeds)
+generate_speed_graph(change_in_time, robot_velocities, conveyor_speeds)
