@@ -458,7 +458,6 @@ class RobotRequestResponseCommunication: # class used for storing data
                   
         payload_2 = [vs_id_2, 0, 0, 0] # setting the payload for vision system 2
 
-
         if tool_pose is not None: # checking if the tool pose is None or not
 
             assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the lenght of the tool pose is 7 or not
@@ -466,7 +465,6 @@ class RobotRequestResponseCommunication: # class used for storing data
   
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2) # sending the request to the camera with vision system2
 
-            
     # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
     def pho_ls_wait_for_scan(self,vs_id_1,payload_1=None): # defining the function for scan wait
         
@@ -484,7 +482,6 @@ class RobotRequestResponseCommunication: # class used for storing data
         except Exception as e:
             logging.error(f"Error in pho_ls_wait_for_scan: {e}") # popping up the error 
    
-    
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
     def pho_ls_wait_for_scan_2(self,vs_id_2,payload_2=None): # defining the function for the wait for the scan for the object 2
         
