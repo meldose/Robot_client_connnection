@@ -753,25 +753,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 
             self.active_request = 0  # request finished - response from request received
 
-        #             # Extract position and orientation with correct order
-        #             position = list(object_pose[:3])  # First three values (x, y, z)
-        #             orientation = [object_pose[6], object_pose[3], object_pose[4], object_pose[5]]  # Reordering (d, a, b, c)
-
-        #             # Combine for movement
-        #             pose_to_move = [position + orientation] # setting the pose_to_move having the combination of position and orientaiton
-        #             self.message = position + orientation  # Store message for logging
-
-        #         self.print_message(operation_type)  # printing the message
-
-        #         # Ensure the pose is valid before attempting to move
-        #         if pose_to_move:  # if there is a pose to move
-        #             for pose in pose_to_move:  # iterating over the poses
-        #                 ServoX(robot=self.robot).servo_x(pose)  # Move to pose using movelinear_online
-
-        #         self.active_request = 0  # Request finished - response from request received
-        # return response  # returning the response
-
-
     def print_message(self, operation_type): #defining the print_message function
         if self.print_messages is not True: # checking if the print messages is not true
             return [] # return the list values
