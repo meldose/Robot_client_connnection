@@ -431,6 +431,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 
     def pho_request_ls_scan(self, vs_id_1,tool_pose=None,payload=None): # defining an function for locator scan (for trapezoid )
+        self.start_time=time.time()
 
         valid_ids={1:"Trapezoid",2:"Pipe"} # setting the list for trapezoid and pipe
     
@@ -484,6 +485,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             logging.error(f"Error in pho_request_get_objects: {e}") # logging error
 
     def pho_request_ls_get_vision_system_status(self, vs_id_1,payload_1=None): # defining the function for getting the vision systeme status
+        self.start_time=time.time()
     
         if payload_1 is None: # setting if the payload is None 
                 
@@ -492,6 +494,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
 
     def pho_request_ls_scan_2(self,vs_id_2,tool_pose=None,payload=None): # setting the function for request scan 2
+        self.start_time=time.time()
 
         valid_ids={1:"Trapezoid",2:"Pipe"} # setting the list for trapezoid and pipe
     
@@ -510,6 +513,7 @@ class RobotRequestResponseCommunication: # class used for storing data
    
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
     def pho_ls_wait_for_scan_2(self,vs_id_2,payload_2=None): # defining the function for the wait for the scan for the object 2
+        self.start_time=time.time()
         
         try:
 
