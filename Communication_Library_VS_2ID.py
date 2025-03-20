@@ -646,10 +646,6 @@ class RobotRequestResponseCommunication: # class used for storing data
         number_of_messages = int.from_bytes(received_header[4:7], "little") # setting the number of messages
         assert len(received_header) == HEADER_SIZE, 'Wrong header size' # checking if the header size is correct
         header = ResponseHeader(self,request_id, number_of_messages) # setting the header
-        # assert header.request_id == request_id, "Wrong request_id recieved"
- 
-        # if required_id is not None:
-        #     assert header.request_id == required_id, f"Expected request id {required_id}, but got {header.request_id}"
 
         if request_id == PHO_TRAJECTORY_REQUEST: # if the request id is PHO_TRAJECTORY_REQUEST
             self.response_data.init_trajectory_data()  # empty variable for receiving new trajectory
