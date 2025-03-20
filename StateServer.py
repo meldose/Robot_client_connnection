@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import socket # for socket connection
 import time
-import Communication_Library_VS_2ID
+import CommunicationLibrary
 import random
 import math
 import numpy as np
