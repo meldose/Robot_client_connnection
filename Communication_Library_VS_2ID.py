@@ -451,7 +451,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
     def pho_ls_wait_for_scan(self,vs_id_1,payload_1=None): # defining the function for scan wait
-        
+        self.start_time=time.time()
         try:
 
             if payload_1 is None: # if the payload is None then
