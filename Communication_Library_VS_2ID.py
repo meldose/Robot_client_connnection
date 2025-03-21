@@ -636,13 +636,12 @@ class RobotRequestResponseCommunication:  # class used for storing data
                 time.sleep(0.5)  # setting the time
 
         except AttributeError:
-            # logging error
             logging.error(
-                "The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
+                "The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")  # logging error
         except Exception as e:
-            # logging error
+
             logging.error(
-                f"An error occurred while moving the robot to joint position: {e}")
+                f"An error occurred while moving the robot to joint position: {e}")  # logging error
 
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
