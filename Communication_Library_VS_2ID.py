@@ -476,7 +476,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
                 payload_1 = [vs_id_1, 0, 0, 0]  # setting the vision system 1
 
-
             logging.info(f"Waiting for scan from Vision System {vs_id_1} ({'Trapezoid' if vs_id_1 == 1 else 'Pipe'})")# logging error
             
             self.pho_receive_response(PHO_SCAN_LS_REQUEST)# sending the request to the camera
