@@ -485,7 +485,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
         except Exception as e:
             logging.error(f"Error in pho_ls_wait_for_scan: {e}") # popping up the error
 
-
     def pho_request_get_objects(self, vs_id_1, number_of_objects_1): # defining the function for get objects
         self.start_time = time.time()  # setting the start time
         try:
