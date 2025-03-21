@@ -681,14 +681,12 @@ class RobotRequestResponseCommunication:  # class used for storing data
         received_header = self.client.recv(HEADER_SIZE)
         if len(received_header) < HEADER_SIZE:  # checking if the header is empty
             return [], []  # returning empty response
-        request_id = int.from_bytes(
-            received_header[0:3], "little")  # setting the request id
-        number_of_messages = int.from_bytes(
-            received_header[4:7], "little")  # setting the number of messages
+        request_id = int.from_bytes(received_header[0:3], "little")  # setting the request id
+        
+        number_of_messages = int.from_bytes(received_header[4:7], "little")  # setting the number of messages
         # checking if the header size is correct
         assert len(received_header) == HEADER_SIZE, 'Wrong header size'
-        header = ResponseHeader(
-            self, request_id, number_of_messages)  # setting the header
+        header = ResponseHeader(self, request_id, number_of_messages)  # setting the header
 
         if request_id == PHO_TRAJECTORY_REQUEST:  # if the request id is PHO_TRAJECTORY_REQUEST
             # empty variable for receiving new trajectory
@@ -697,17 +695,12 @@ class RobotRequestResponseCommunication:  # class used for storing data
         # Fix: using correct header field
         for message_count in range(header.number_of_messages):
             # Receive subheader
-            received_subheader = self.client.recv(
-                SUBHEADER_SIZE)  # receiving the subheader
-            operation_type = int.from_bytes(
-                received_subheader[0:3], "little")  # setting the operation type
-            operation_number = int.from_bytes(
-                received_subheader[4:7], "little")  # setting the operation number
-            data_size = int.from_bytes(
-                received_subheader[8:11], "little")  # setting the data size
+            received_subheader = self.client.recv(SUBHEADER_SIZE)  # receiving the subheader
+            operation_type = int.from_bytes(received_subheader[0:3], "little")  # setting the operation type
+            operation_number = int.from_bytes(received_subheader[4:7], "little")  # setting the operation number
+            data_size = int.from_bytes(received_subheader[8:11], "little")  # setting the data size
             # checking if the subheader size is correct
-            assert len(
-                received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size'
+            assert len(received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size'
 
             if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
 
