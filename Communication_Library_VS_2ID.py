@@ -572,7 +572,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
             logging.error(f"Error in pho_request_get_objects: {e}") # getting the logging error
 
-
     def pho_request_ls_get_vision_system_status_2(self, vs_id_2, payload_2=None): # defining the function for getting the vision systeme status
 
         if payload_2 is None:  # setting the payload2 as None
