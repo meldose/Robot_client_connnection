@@ -274,7 +274,7 @@ class ServoX:  # defining servoX
     def __init__(self, robot):
         self.robot = robot  # setting the robot
 
-    # defining movelinear_online functionq
+    # defining movelinear_online function
     def movelinear_online(self, message, *args, **kwargs):
 
         message = [x/1000 for x in message]  # converting the values to mm
@@ -305,12 +305,10 @@ class ServoX:  # defining servoX
         time.sleep(1.0)  # setting the time
 
         # target=new_message # setting the target position
-        target = [new_message[0], new_message[1], new_message[2],
-                  target[3], target[4], target[5], target[6]]
-        error_code = r.movelinear_online(
-            target, velocity, acceleration)  # moving the robot
+        target = [new_message[0], new_message[1], new_message[2],target[3], target[4], target[5], target[6]]
+        error_code = r.movelinear_online(target, velocity, acceleration)  # moving the robot
         print(error_code)  # printing the error code value
-        r.gripper("on")
+        r.gripper("on") # setting the gripper on position
 
         time.sleep(1.0)  # setting the time
 
@@ -535,7 +533,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
         payload_2 = [vs_id_2, 0, 0, 0]
 
         if tool_pose is not None:  # checking if the tool pose is None or not
-
 
             assert len(tool_pose) == 7, 'Wrong tool_pose size'# checking if the length of the tool pose is 7 or not
 
