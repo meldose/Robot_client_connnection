@@ -577,7 +577,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         if payload_2 is None:  # setting the payload2 as None
 
             payload_2 = [vs_id_2, 0, 0, 0]  # setting the payload
-            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2)  # sending the request to the camera having the vision system
+            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2) # sending the request to the camera having the vision system
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
 
 
