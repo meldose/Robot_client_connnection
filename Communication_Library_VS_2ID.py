@@ -17,8 +17,8 @@ from neurapy.robot import Robot  # importing robot
 r = Robot()  # defining the robot
 
 # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
-BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX"
-BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX"
+BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX" # setting the Brand identification
+BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX" # setting the Brand identification server
 
 DEG2RAD = math.pi / 180  # converting degrees to radians
 
