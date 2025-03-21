@@ -773,7 +773,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
                     X = X0 + velocity * t  # Update X position
                     target = np.append(X, np.array(a[3:])) # appending the quaternion values
 
-                    dist = np.linalg.norm(X)  # Distance from initial position
+                    dist = np.linalg.norm(X)  # Using the Euclidean distance (taking the square distance and then taking the square root)
                     print(f"X: {X}, Distance from start: {dist}") # printing the distance
 
                     if dist < 700: # if distance is less than 700
