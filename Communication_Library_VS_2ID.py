@@ -499,10 +499,10 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
             payload_1 = [vs_id_1, 0, 0, 0, number_of_objects_1,0, 0, 0]  # setting the payload 1
 
-            # sending the request to the camera with the vision system 1
-            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1)
-            # getting tne reponse from the camera
-            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1) # sending the request to the camera with the vision system 1
+
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)# getting the reponse from the camera
 
         except Exception as e:
             logging.error(f"Error in pho_request_get_objects: {e}")# logging error
@@ -537,15 +537,11 @@ class RobotRequestResponseCommunication:  # class used for storing data
         if tool_pose is not None:  # checking if the tool pose is None or not
 
 
-            assert len(tool_pose) == 7, 'Wrong tool_pose size'# checking if the lenght of the tool pose is 7 or not
+            assert len(tool_pose) == 7, 'Wrong tool_pose size'# checking if the length of the tool pose is 7 or not
 
             payload_2 = payload_2 + floatArray2bytes(tool_pose) # setting the payload_2
 
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2) # sending the request to the camera with vision system2
-
-
-        # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
-
 
     def pho_ls_wait_for_scan_2(self, vs_id_2, payload_2=None): # defining the function for the wait for the scan for the object 2
         self.start_time = time.time()  # setting the start time
@@ -600,8 +596,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
             start_time = time.time()  # setting the start time
             while True:
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
-                distance = sum((current - target) ** 2 for current, target in zip(
-                    current_joint_angles, joint_angles)) ** 0.5  # setting the distance
+                distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5  # setting the distance
 
                 if distance <= tolerance:  # checking if the distance is less than the tolerance
 
