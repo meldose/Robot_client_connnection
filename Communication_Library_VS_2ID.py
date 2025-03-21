@@ -668,8 +668,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         self.active_request = request_id  # setting the self.active_request to request_id
         msg = PHO_HEADER  # header - PHO
         if payload is not None:  # chhecking if the payload is not None
-            msg = msg + [int(len(payload) / PACKET_SIZE), 0,
-                         0, 0]  # header - payload size
+            msg = msg + [int(len(payload) / PACKET_SIZE), 0,0, 0]  # header - payload size
             msg = msg + [request_id, 0, 0, 0]  # header - request ID
             msg = msg + payload  # payload
         else:
@@ -824,11 +823,9 @@ class RobotRequestResponseCommunication:  # class used for storing data
                     round(self.message[x * 6 + 3], 2)) + "," + str(
                     round(self.message[x * 6 + 4], 2)) + "," + str(round(self.message[x * 6 + 5], 2)) + "]")
         elif operation_type == OperationType.PHO_GRIPPER:  # setting the operaiton type to Gripper
-            print('\033[94m' + "ROBOT GRIPPER: " +
-                  '\033[0m' + "[" + str(self.message[0]) + "]")
+            print('\033[94m' + "ROBOT GRIPPER: " +'\033[0m' + "[" + str(self.message[0]) + "]")
         elif operation_type == OperationType.PHO_ERROR:  # setting the operationtype to Photoneo Error
-            print('\033[94m' + "ERROR CODE: " +
-                  '\033[0m' + "[" + str(self.message) + "]")
+            print('\033[94m' + "ERROR CODE: " +'\033[0m' + "[" + str(self.message) + "]")
         elif operation_type == OperationType.PHO_INFO:  # setting the operation type photoeneo.info
             # setting the datasize having the integer
             data_size = int((len(self.message) + 1) / 4)
@@ -838,8 +835,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
                 assert len(self.message) == data_size * PACKET_SIZE
                 info = int.from_bytes(
                     self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
-                print('\033[94m' + "INFO: " +
-                      '\033[0m' + "[" + str(info) + "]")
+                print('\033[94m' + "INFO: " +'\033[0m' + "[" + str(info) + "]")
         # setting the operation type to the Photoneo object pose
         elif operation_type == OperationType.PHO_OBJECT_POSE:
             print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
