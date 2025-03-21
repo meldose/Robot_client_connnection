@@ -721,11 +721,9 @@ class RobotRequestResponseCommunication:  # class used for storing data
                     waypoint = struct.unpack('<6f', data[4:28])
                     check_sum = struct.unpack('<f', data[28:32])[0]
                     joint_sum = sum(waypoint)
-                    assert abs(
-                        joint_sum - check_sum) < 0.01, "Wrong joints sum"
+                    assert abs(joint_sum - check_sum) < 0.01, "Wrong joints sum"
                     waypoints.append(waypoint)  # appending the waypoint
-                    self.response_data.add_waypoint(
-                        self.response_data.segment_id, waypoint)
+                    self.response_data.add_waypoint(self.response_data.segment_id, waypoint)
                 self.response_data.segment_id += 1  # incrementing the segment id
                 self.message = waypoints  # setting the message
                 self.print_message(operation_type)  # printing the message
@@ -733,22 +731,19 @@ class RobotRequestResponseCommunication:  # class used for storing data
             elif operation_type == OperationType.PHO_GRIPPER:  # checking if the operation type is PHO_GRIPPER
                 data_size = data_size * 4  # setting the data size
                 data = self.client.recv(data_size)  # receiving the data
-                self.response_data.gripper_command.append(
-                    int(data[0]))  # store gripper command
+                self.response_data.gripper_command.append(int(data[0]))  # store gripper command
                 self.message = data  # setting the message
                 self.print_message(operation_type)  # printing the message
 
             elif operation_type == OperationType.PHO_ERROR:  # checking if the operation type PHO.error
                 data_size = data_size * 4  # setting the data size
                 data = self.client.recv(data_size)  # receiving the data
-                error_code = int.from_bytes(
-                    data[0:3], "little")  # setting the error code
+                error_code = int.from_bytes(data[0:3], "little")  # setting the error code
                 self.message = error_code  # setting the message
                 self.print_message(operation_type)  # printing the message
 
             elif operation_type == OperationType.PHO_INFO:  # checking if the operation type is PHO_INFO
-                data = self.client.recv(
-                    data_size * PACKET_SIZE)  # receiving the data
+                data = self.client.recv(data_size * PACKET_SIZE)  # receiving the data
                 self.message = data  # setting the message
                 self.print_message(operation_type)  # printing the message
 
