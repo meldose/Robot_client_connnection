@@ -2,30 +2,34 @@
 #                      IMPORTS
 # -------------------------------------------------------------------
 
-import socket # importing socket
-from copy import deepcopy # importing copy
-import struct # importing struct
-import math # importing math
-import numpy as np # importing numpy
+import copy  # importing copy module
+import socket  # importing socket
+from copy import deepcopy  # importing copy
+import struct  # importing struct
+import math  # importing math
+import numpy as np  # importing numpy
 from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
-import time # importing times
-import logging # importing logging
-from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig . output parameter,InputParameter and Result
-from neurapy.robot import Robot # importing robot
-r=Robot() # defining the robot
+import time  # importing times
+import logging  # importing logging
+# importing ruckig . output parameter,InputParameter and Result
+from ruckig import InputParameter, OutputParameter, Result, Ruckig
+from neurapy.robot import Robot  # importing robot
+r = Robot()  # defining the robot
 
-BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX"  # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
+# "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
+BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX"
 BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX"
 
-DEG2RAD = math.pi / 180 # converting degrees to radians
+DEG2RAD = math.pi / 180  # converting degrees to radians
 
-class OperationType: # defining operation type
-    PHO_TRAJECTORY_CNT = 0  # defining operation type    
-    PHO_TRAJECTORY_FINE = 1 # defining operation type
-    PHO_GRIPPER = 2 # defining operation type
-    PHO_ERROR = 3 # defining operation type
-    PHO_INFO = 4 # defining operation type
-    PHO_OBJECT_POSE = 5 # defining operation type
+
+class OperationType:  # defining operation type
+    PHO_TRAJECTORY_CNT = 0  # defining operation type
+    PHO_TRAJECTORY_FINE = 1  # defining operation type
+    PHO_GRIPPER = 2  # defining operation type
+    PHO_ERROR = 3  # defining operation type
+    PHO_INFO = 4  # defining operation type
+    PHO_OBJECT_POSE = 5  # defining operation type
 
 
 PHO_SCAN_BPS_REQUEST = 1
@@ -93,13 +97,13 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # class ServoJ:
 #     def __init__(self, robot):
 #         self.robot = robot
-        
+
 #         r=robot
 
 #     def servo_j(self, message):
 
 #         message = [x / 1000 for x in message]  # Scale values
-        
+
 #         x = message[0] # Scale values
 #         y = message[1] # Scale values
 #         z = message[2] # Scale values
@@ -112,7 +116,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         quaternion_pose = new_message # [X, Y, Z, W, EX, EY, EZ]
 #         euler_pose = r.convert_quaternion_to_euler_pose(quaternion_pose)
 #         print(euler_pose)
-        
+
 #         # Activate servo interface
 #         r.activate_servo_interface('position')
 
@@ -147,7 +151,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #             r.servo_j(out.new_position, out.new_velocity, out.new_acceleration)
 #             out.pass_to_input(inp)
 #             time.sleep(0.001)
-            
+
 #             r.deactivate_servo_interface()
 #             # Perform additional movements
 #             r.move_joint("P34")
@@ -174,13 +178,13 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #     def __init__(self,robot): # initializing the robot
 #         self.robot = robot # setting the robot
 
-    
+
 #     def servo_x(self,message,*args,**kwargs): # defining servoX
 
 #         r=Robot()
- 
+
 #         message = [x/1000 for x in message] # converting the values to mm
-        
+
 #         x = message[0]  # setting the values
 #         y = message[1]  # setting the values
 #         z = message[2]  # setting the values
@@ -188,36 +192,36 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         b = message[4]  # setting the values
 #         c = message[5]  # setting the values
 #         d = message[6]  # setting the values
-        
+
 #         print(message) # printing the message
-        
+
 #         new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
 #         print(new_message) # printing the new ordered message
 
 #         # #Switch to external servo mode
 #         r.activate_servo_interface('position') # activating the servo interface
 
-#         cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz  
+#         cart_pose_length = 7 #X,Y,Z,qw,qx,qy,qz
 
 #         otg = Ruckig(cart_pose_length, 0.001)  # control cycle
 #         inp = InputParameter(cart_pose_length) # setting the inputparameter with cart pose length
 #         out = OutputParameter(cart_pose_length) # setting the outputparmeter with cart pose length
 
 #         inp.current_position = r.get_current_cartesian_pose() # getting the current cartesian poses
-#         inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght 
+#         inp.current_velocity = [0.]*cart_pose_length # mutliplying the initial velocity with cart pose lenght
 #         inp.current_acceleration = [0.]*cart_pose_length # mutliplying the current acceleration with cart pose length
 
-#         # target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+#         # target = copy.deepcopy(inp.current_position) # copying the current position of the robot
 #         # inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
 #         # inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
-#         target = copy.deepcopy(inp.current_position) # copying the current position of the robot 
+#         target = copy.deepcopy(inp.current_position) # copying the current position of the robot
 #         inp.target_position = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]] # providing the target position
 #         # inp.target_position = new_message
 #         inp.target_velocity = [0.]*cart_pose_length # defning the target velocity
 #         inp.target_acceleration = [0.]*cart_pose_length # definng the target acceleration
 
-#         inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght 
+#         inp.max_velocity = [0.8]*cart_pose_length # setting the maximum velocity with 0.5 times the cart pose lenght
 #         inp.max_acceleration = [3]*cart_pose_length #se tting the max acceleration with 3 times the cart pose length
 #         inp.max_jerk = [10.]*cart_pose_length # setting the jerk values
 
@@ -225,11 +229,11 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 
 #         velocity = [0.] * 8 #Since ruckig does not provide rotational velocity if quaternion is input, we can send 0 rotational feedforward velocity
 #         acceleration = [0.] * 8 #Since ruckig does not provide rotational acceleration if quaternion is input, we can send 0 rotational feedforward acceleration
-        
+
 #         res=Result.Working # setting the result
 
 #         while res == Result.Working: # while the result is working
-            
+
 #             error_code = 0 # setting the error code
 
 #             res = otg.update(inp, out) # updating the input and output
@@ -245,8 +249,8 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #             error_code = r.servo_x(position, zeros, zeros, servox_proportional_gain) # passing the error code variable with having servo_j function having position, velocity and acceleration
 #             scaling_factor = r.get_servo_trajectory_scaling_factor() # getting the servo trajectory scaling factors
 #             out.pass_to_input(inp)
-#             time.sleep(0.001) # setting time 
-            
+#             time.sleep(0.001) # setting time
+
 #         r.deactivate_servo_interface() # deactivating the servo interface
 #         r.gripper("off") # setting gripper close position
 #         r.move_joint("P19") # moving to p19
@@ -255,7 +259,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #         r.move_joint("P28") # moving to P28
 
 #         # r.stop() # stopping the robot
-    
+
 #     r.set_mode("Automatic") # setting the mode to automatic
 #     r.gripper("on") # setting the gripper on
 #     r.move_joint("P28") # moving to P28
@@ -264,17 +268,17 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 #                      MOVE_LINEAR (WORKING)
 # -------------------------------------------------------------------
 
-import copy # importing copy module
 
-class ServoX: # defining servoX
+class ServoX:  # defining servoX
 
-    def __init__(self,robot):
-        self.robot = robot # setting the robot
+    def __init__(self, robot):
+        self.robot = robot  # setting the robot
 
-    def movelinear_online(self,message,*args,**kwargs):# defining movelinear_online functionq
+    # defining movelinear_online functionq
+    def movelinear_online(self, message, *args, **kwargs):
 
-        message = [x/1000 for x in message] # converting the values to mm
-        
+        message = [x/1000 for x in message]  # converting the values to mm
+
         x = message[0]  # setting the values
         y = message[1]  # setting the values
         z = message[2]  # setting the values
@@ -282,105 +286,116 @@ class ServoX: # defining servoX
         b = message[4]  # setting the values
         c = message[5]  # setting the values
         d = message[6]  # setting the values
-        
-        print(message) # printing the message
-        
-        new_message = [x,y,z,d,a,b,c] # added new order for quaternion values
-        print(new_message) # printing the new ordered message
-        
-        #Switch to external servo mode
-        r.activate_servo_interface('position') # activating the servo interface
 
-        cart_pose_length = 7 # X,Y,Z,qw,qx,qy,qz
-        velocity = [0.2]*6 # setting the velocity 
-        acceleration = [2.0]*6 # setting the acceleration
-        target = copy.deepcopy(r.get_current_cartesian_pose()) # getting the current cartesian poses
-        time.sleep(1.0) # setting the time
+        print(message)  # printing the message
 
-        # target=new_message # setting the target position 
-        target = [new_message[0], new_message[1], new_message[2], target[3], target[4], target[5], target[6]]
-        error_code = r.movelinear_online(target, velocity, acceleration) # moving the robot
+        # added new order for quaternion values
+        new_message = [x, y, z, d, a, b, c]
+        print(new_message)  # printing the new ordered message
+
+        # Switch to external servo mode
+        # activating the servo interface
+        r.activate_servo_interface('position')
+
+        cart_pose_length = 7  # X,Y,Z,qw,qx,qy,qz
+        velocity = [0.2]*6  # setting the velocity
+        acceleration = [2.0]*6  # setting the acceleration
+        # getting the current cartesian poses
+        target = copy.deepcopy(r.get_current_cartesian_pose())
+        time.sleep(1.0)  # setting the time
+
+        # target=new_message # setting the target position
+        target = [new_message[0], new_message[1], new_message[2],
+                  target[3], target[4], target[5], target[6]]
+        error_code = r.movelinear_online(
+            target, velocity, acceleration)  # moving the robot
         r.gripper("on")
 
-        time.sleep(1.0) # setting the time
+        time.sleep(1.0)  # setting the time
 
-        r.deactivate_servo_interface() # deactivating the servo interface
-        r.gripper("off") # setting gripper close position
+        r.deactivate_servo_interface()  # deactivating the servo interface
+        r.gripper("off")  # setting gripper close position
         # r.move_joint("P50") # moving to P34
         # r.gripper("off") # setting gripper close position
-        r.move_joint("P54") # moving to P33
-        r.gripper("on") # setting gripper on
-        r.move_joint("P52") # moving to P32
+        r.move_joint("P54")  # moving to P33
+        r.gripper("on")  # setting gripper on
+        r.move_joint("P52")  # moving to P32
         # r.move_joint("P57") # moving to P32
         # r.stop() # stopping the robot
 
-r.set_mode("Automatic") # setting the mode to automatic
-r.gripper("on") # setting the gripper on
-r.move_joint("P52") # moving to P32
+
+r.set_mode("Automatic")  # setting the mode to automatic
+r.gripper("on")  # setting the gripper on
+r.move_joint("P52")  # moving to P32
 # r.move_joint("P57") # moving to P32
 
 # -------------------------------------------------------------------
 #                      CLASSES
 # -------------------------------------------------------------------
 
-class ResponseHeader: # class used for storing data
-    def __init__(self, request_id, sub_headers,number_of_messages): # initializing the class
-        self.request_id = request_id # setting the request id
-        self.sub_headers = sub_headers # setting the sub headers
-        self.number_of_messages = number_of_messages # setting the number of messages
 
-class ResponseData: # class used for storing data
-    def __init__(self): # initializing the class
-        self.response_id = 0 # setting the response id
-        self.number_of_messages = 0 # setting the number of messages
-        self.message_data = [] # setting the message data
+class ResponseHeader:  # class used for storing data
+    def __init__(self, request_id, sub_headers, number_of_messages):  # initializing the class
+        self.request_id = request_id  # setting the request id
+        self.sub_headers = sub_headers  # setting the sub headers
+        self.number_of_messages = number_of_messages  # setting the number of messages
+
+
+class ResponseData:  # class used for storing data
+    def __init__(self):  # initializing the class
+        self.response_id = 0  # setting the response id
+        self.number_of_messages = 0  # setting the number of messages
+        self.message_data = []  # setting the message data
 
 
 class ResponseData:  # class used for storing data
 
-    def __init__(self): # initializing the class
-        self.segment_id = 0 # stores the segment id
+    def __init__(self):  # initializing the class
+        self.segment_id = 0  # stores the segment id
 
     gripper_command = []  # stores gripper commands
     trajectory_data = []  # stores trajectory waypoints in 4 segments
 
-    def init_trajectory_data(self): # function to initialize the trajectory
+    def init_trajectory_data(self):  # function to initialize the trajectory
         # empty the variable for storing trajectory
-        self.trajectory_data = [] # empty the variable for storing trajectory
+        self.trajectory_data = []  # empty the variable for storing trajectory
         self.trajectory_data.append(np.empty((0, 6), dtype=float))
-        self.segment_id = 0 # reset the segment id
-        self.gripper_command = [] # reset the gripper command
+        self.segment_id = 0  # reset the segment id
+        self.gripper_command = []  # reset the gripper command
 
-    def add_waypoint(self, slice_index, row): # function to add waypoint
-        self.trajectory_data[slice_index] = np.vstack([self.trajectory_data[slice_index], row])
+    def add_waypoint(self, slice_index, row):  # function to add waypoint
+        self.trajectory_data[slice_index] = np.vstack(
+            [self.trajectory_data[slice_index], row])
 
-    def add_segment(self): #    function to add segment
-        self.trajectory_data.append(np.empty((0, 6), dtype=float)) # add empty segment
+    def add_segment(self):  # function to add segment
+        self.trajectory_data.append(
+            np.empty((0, 6), dtype=float))  # add empty segment
 
 
 # -------------------------------------------------------------------
 #                      ROBOT COMMUNICATION
 # -------------------------------------------------------------------
 
-class RobotRequestResponseCommunication: # class used for storing data
+class RobotRequestResponseCommunication:  # class used for storing data
 
     response_data = ResponseData()  # create object for storing data
 
-    def __init__(self,robot=None): # initializing the class
-        self.active_request = 0  # variable to check, if old request has finished and new one can be called
-        self.client = None # variable to store client
-        self.message = None # variable to store message
-        self.print_messages = True # True -> prints messages , False -> doesnt print messages
-        self.robot=robot
+    def __init__(self, robot=None):  # initializing the class
+        # variable to check, if old request has finished and new one can be called
+        self.active_request = 0
+        self.client = None  # variable to store client
+        self.message = None  # variable to store message
+        self.print_messages = True  # True -> prints messages , False -> doesnt print messages
+        self.robot = robot
 
-    def connect_to_server(self, CONTROLLER_IP, PORT): # function to connect to server
-        self.client = socket.socket() # create socket
-        self.client.connect((str(CONTROLLER_IP), PORT)) # connect to server
-        msg = build_hello_msg() # build hello message
-        self.client.send(msg) # send hello message
+    def connect_to_server(self, CONTROLLER_IP, PORT):  # function to connect to server
+        self.client = socket.socket()  # create socket
+        self.client.connect((str(CONTROLLER_IP), PORT))  # connect to server
+        msg = build_hello_msg()  # build hello message
+        self.client.send(msg)  # send hello message
 
-    def close_connection(self): # function to close connection
-        self.client.close() # close connection
+    def close_connection(self):  # function to close connection
+        self.client.close()  # close connection
 
 # -------------------------------------------------------------------
 #                      BIN PICKING REQUESTS
@@ -429,152 +444,203 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    def pho_request_ls_scan(self, vs_id_1,tool_pose=None,payload=None): # defining an function for locator scan (for trapezoid )
-        self.start_time=time.time()
+    # defining an function for locator scan (for trapezoid )
+    def pho_request_ls_scan(self, vs_id_1, tool_pose=None, payload=None):
+        self.start_time = time.time()  # setting the start time
 
-        valid_ids={1:"Trapezoid",2:"Pipe"} # setting the list for trapezoid and pipe
-    
-        if vs_id_1 not in valid_ids : # checking if the trapezoid is there in the list or not
+        # setting the list for trapezoid and pipe
+        valid_ids = {1: "Trapezoid", 2: "Pipe"}
 
-            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
-                  
-        payload_1 = [vs_id_1, 0, 0, 0] # setting the payload for vision system 1
-    
-        if tool_pose is not None: # checking if the tool pose is None or not
+        if vs_id_1 not in valid_ids:  # checking if the trapezoid is there in the list or not
 
-            assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the tool pose is 7
-            payload_1 = payload_1 + floatArray2bytes(tool_pose) # setting the payload 1
+            # if not raise the error
+            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
 
-        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1) # sending the request to the camera with vision system1
+        # setting the payload for vision system 1
+        payload_1 = [vs_id_1, 0, 0, 0]
 
+        if tool_pose is not None:  # checking if the tool pose is None or not
 
+            # checking if the tool pose is 7
+            assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            # setting the payload 1
+            payload_1 = payload_1 + floatArray2bytes(tool_pose)
+
+        # sending the request to the camera with vision system1
+        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)
 
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
-    def pho_ls_wait_for_scan(self,vs_id_1,payload_1=None): # defining the function for scan wait
-        self.start_time=time.time()
+    # defining the function for scan wait
+    def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None):
+        self.start_time = time.time()  # setting the start time
         try:
 
-            if payload_1 is None: # if the payload is None then
+            if payload_1 is None:  # if the payload is None then
 
-                payload_1 = [vs_id_1, 0, 0, 0] # setting the vision system 1
+                payload_1 = [vs_id_1, 0, 0, 0]  # setting the vision system 1
 
-            logging.info(f"Waiting for scan from Vision System {vs_id_1} ({'Trapezoid' if vs_id_1 == 1 else 'Pipe'})") # logging error
+            # logging error
+            logging.info(
+                f"Waiting for scan from Vision System {vs_id_1} ({'Trapezoid' if vs_id_1 == 1 else 'Pipe'})")
 
-            self.pho_receive_response(PHO_SCAN_LS_REQUEST) # sending the request to the camera
+            # sending the request to the camera
+            self.pho_receive_response(PHO_SCAN_LS_REQUEST)
             self.active_request = 0  # Request finished - response received
 
         except Exception as e:
-            logging.error(f"Error in pho_ls_wait_for_scan: {e}") # popping up the error 
+            # popping up the error
+            logging.error(f"Error in pho_ls_wait_for_scan: {e}")
 
-
-    def pho_request_get_objects(self, vs_id_1,number_of_objects_1): # defining the function for get objects
-        self.start_time=time.time()
+    # defining the function for get objects
+    def pho_request_get_objects(self, vs_id_1, number_of_objects_1):
+        self.start_time = time.time()  # setting the start time
         try:
             # Validate input types
-            if not all(isinstance(x, int) for x in [vs_id_1, number_of_objects_1]): # checking the element in the list of vision system 1 is integer or not
-                if number_of_objects_1 <= 0 : # checking if the number of objects is less that or equal to zero
-                    raise ValueError("number_of_objects must be greater than zero.") # if less raise the error
-        
-            payload_1 = [vs_id_1, 0, 0, 0, number_of_objects_1, 0, 0, 0] # setting the payload 1
-            
-            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1) # sending the request to the camera with the vision system 1
-            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST) # getting tne reponse from the camera
+            # checking the element in the list of vision system 1 is integer or not
+            if not all(isinstance(x, int) for x in [vs_id_1, number_of_objects_1]):
+                if number_of_objects_1 <= 0:  # checking if the number of objects is less that or equal to zero
+                    # if less raise the error
+                    raise ValueError(
+                        "number_of_objects must be greater than zero.")
+
+            payload_1 = [vs_id_1, 0, 0, 0, number_of_objects_1,
+                         0, 0, 0]  # setting the payload 1
+
+            # sending the request to the camera with the vision system 1
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1)
+            # getting tne reponse from the camera
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
 
         except Exception as e:
-            logging.error(f"Error in pho_request_get_objects: {e}") # logging error
+            # logging error
+            logging.error(f"Error in pho_request_get_objects: {e}")
 
-    def pho_request_ls_get_vision_system_status(self, vs_id_1,payload_1=None): # defining the function for getting the vision systeme status
-        self.start_time=time.time()
-    
-        if payload_1 is None: # setting if the payload is None 
-                
-            payload_1= [vs_id_1, 0, 0, 0] # setting the payload
-            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_1) # sending the request to the camera having the vision system
-            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
+    # defining the function for getting the vision systeme status
+    def pho_request_ls_get_vision_system_status(self, vs_id_1, payload_1=None):
+        self.start_time = time.time()  # setting the start time
 
-    def pho_request_ls_scan_2(self,vs_id_2,tool_pose=None,payload=None): # setting the function for request scan 2
-        self.start_time=time.time()
+        if payload_1 is None:  # setting if the payload is None
 
-        valid_ids={1:"Trapezoid",2:"Pipe"} # setting the list for trapezoid and pipe
-    
-        if vs_id_2 not in valid_ids : # checking if the pipe is there in the list or not
+            payload_1 = [vs_id_1, 0, 0, 0]  # setting the payload
+            # sending the request to the camera having the vision system
+            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_1)
+            # recieving the request from the camera
+            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
 
-            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
-                  
-        payload_2 = [vs_id_2, 0, 0, 0] # setting the payload for vision system 2
+    # setting the function for request scan 2
+    def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None):
+        self.start_time = time.time()  # setting the start time
 
-        if tool_pose is not None: # checking if the tool pose is None or not
+        # setting the list for trapezoid and pipe
+        valid_ids = {1: "Trapezoid", 2: "Pipe"}
 
-            assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the lenght of the tool pose is 7 or not
-            payload_2 = payload_2 + floatArray2bytes(tool_pose) # setting the payload_2
-  
-        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2) # sending the request to the camera with vision system2
-   
+        if vs_id_2 not in valid_ids:  # checking if the pipe is there in the list or not
+
+            # if not raise the error
+            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
+
+        # setting the payload for vision system 2
+        payload_2 = [vs_id_2, 0, 0, 0]
+
+        if tool_pose is not None:  # checking if the tool pose is None or not
+
+            # checking if the lenght of the tool pose is 7 or not
+            assert len(tool_pose) == 7, 'Wrong tool_pose size'
+            # setting the payload_2
+            payload_2 = payload_2 + floatArray2bytes(tool_pose)
+
+        # sending the request to the camera with vision system2
+        self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2)
+
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
-    def pho_ls_wait_for_scan_2(self,vs_id_2,payload_2=None): # defining the function for the wait for the scan for the object 2
-        self.start_time=time.time()
-        
+    # defining the function for the wait for the scan for the object 2
+    def pho_ls_wait_for_scan_2(self, vs_id_2, payload_2=None):
+        self.start_time = time.time()  # setting the start time
+
         try:
 
-            if payload_2 is None: # setting the payload2
-            
-                payload_2 = [vs_id_2, 0, 0, 0] # setting the vision system 2
+            if payload_2 is None:  # setting the payload2
 
-            logging.info(f"Waiting for scan from Vision System {vs_id_2} ({'Pipe' if vs_id_2 == 2 else 'Trapezoid'})") # logging error
+                payload_2 = [vs_id_2, 0, 0, 0]  # setting the vision system 2
 
-            self.pho_receive_response(PHO_SCAN_LS_REQUEST) # sending the request to the camera
+            # logging error
+            logging.info(
+                f"Waiting for scan from Vision System {vs_id_2} ({'Pipe' if vs_id_2 == 2 else 'Trapezoid'})")
+
+            # sending the request to the camera
+            self.pho_receive_response(PHO_SCAN_LS_REQUEST)
             self.active_request = 0  # Request finished - response received
 
         except Exception as e:
-            logging.error(f"Error in pho_ls_wait_for_scan: {e}") # logging error
+            # logging error
+            logging.error(f"Error in pho_ls_wait_for_scan: {e}")
 
-
-    def pho_request_get_objects_2(self,vs_id_2, number_of_objects_2): # defining the function for requesting the object for pipe
-        self.start_time=time.time()
+    # defining the function for requesting the object for pipe
+    def pho_request_get_objects_2(self, vs_id_2, number_of_objects_2):
+        self.start_time = time.time()  # setting the start time
         try:
             # Validate input types
-            if not all(isinstance(x, int) for x in [vs_id_2, number_of_objects_2]): # checking the element in the list of vision system 2 is integer or not
-                if number_of_objects_2 <= 0 : # checking if the number of objects is less that or equal to zero
-                    raise ValueError("vs_id and number_of_objects must be integers.")  # if less raise the errors
-            
-            payload_2 = [vs_id_2, 0, 0, 0, number_of_objects_2, 0, 0, 0] # setting the payload 2
-            
-            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_2) # sending the request to the camera with the vision system 2
-            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST) # recieving the response from the camera
+            # checking the element in the list of vision system 2 is integer or not
+            if not all(isinstance(x, int) for x in [vs_id_2, number_of_objects_2]):
+                if number_of_objects_2 <= 0:  # checking if the number of objects is less that or equal to zero
+                    # if less raise the errors
+                    raise ValueError(
+                        "vs_id and number_of_objects must be integers.")
+
+            payload_2 = [vs_id_2, 0, 0, 0, number_of_objects_2,
+                         0, 0, 0]  # setting the payload 2
+
+            # sending the request to the camera with the vision system 2
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_2)
+            # recieving the response from the camera
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
 
         except Exception as e:
-            logging.error(f"Error in pho_request_get_objects: {e}") # getting the logging error
+            # getting the logging error
+            logging.error(f"Error in pho_request_get_objects: {e}")
 
+    # defining the function for getting the vision systeme status
+    def pho_request_ls_get_vision_system_status_2(self, vs_id_2, payload_2=None):
 
-    def pho_request_ls_get_vision_system_status_2(self, vs_id_2,payload_2=None): # defining the function for getting the vision systeme status
-        
-        if payload_2 is None: # setting the payload2 as None
-             
-            payload_2= [vs_id_2, 0, 0, 0] # setting the payload
-            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2) # sending the request to the camera having the vision system
-            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
-            
-    def move_to_position(self, joint_angles, tolerance=0.01, timeout=30): # defining the function for moving to the position
+        if payload_2 is None:  # setting the payload2 as None
+
+            payload_2 = [vs_id_2, 0, 0, 0]  # setting the payload
+            # sending the request to the camera having the vision system
+            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2)
+            # recieving the request from the camera
+            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
+
+    # defining the function for moving to the position
+    def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
         try:
-            start_time = time.time() # setting the start time
+            start_time = time.time()  # setting the start time
             while True:
                 current_joint_angles = self.robot.pho_get_current_joint_angles()  # Placeholder method
-                distance = sum((current - target) ** 2 for current, target in zip(current_joint_angles, joint_angles)) ** 0.5 # setting the distance
+                distance = sum((current - target) ** 2 for current, target in zip(
+                    current_joint_angles, joint_angles)) ** 0.5  # setting the distance
 
-                if distance <= tolerance: # chceking if the distance is less than the tolerance
-                    logging.info(f"Robot reached target joint angles: {current_joint_angles}") # give the logging error
+                if distance <= tolerance:  # chceking if the distance is less than the tolerance
+                    # give the logging error
+                    logging.info(
+                        f"Robot reached target joint angles: {current_joint_angles}")
                     break
 
-                if time.time() - start_time > timeout: # if the start time is greater than timeout then
-                    raise TimeoutError("Robot did not reach the target joint angles in time.") # raise the error
+                if time.time() - start_time > timeout:  # if the start time is greater than timeout then
+                    # raise the error
+                    raise TimeoutError(
+                        "Robot did not reach the target joint angles in time.")
 
-                time.sleep(0.5) # setting the time
+                time.sleep(0.5)  # setting the time
 
         except AttributeError:
-            logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.") # logging error
+            # logging error
+            logging.error(
+                "The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")
         except Exception as e:
-            logging.error(f"An error occurred while moving the robot to joint position: {e}") # logging error
-    
+            # logging error
+            logging.error(
+                f"An error occurred while moving the robot to joint position: {e}")
+
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
@@ -626,12 +692,14 @@ class RobotRequestResponseCommunication: # class used for storing data
 #                     REQUEST RELATED FUNCTIONS
 # -------------------------------------------------------------------
 
-    def pho_send_request(self, request_id, payload=None): # defining the function for sending the request to the camera
+    # defining the function for sending the request to the camera
+    def pho_send_request(self, request_id, payload=None):
         # assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
-        self.active_request = request_id #setting the self.active_request to request_id
+        self.active_request = request_id  # setting the self.active_request to request_id
         msg = PHO_HEADER  # header - PHO
-        if payload is not None: # chhecking if the payload is not None
-            msg = msg + [int(len(payload) / PACKET_SIZE), 0, 0, 0]  # header - payload size
+        if payload is not None:  # chhecking if the payload is not None
+            msg = msg + [int(len(payload) / PACKET_SIZE), 0,
+                         0, 0]  # header - payload size
             msg = msg + [request_id, 0, 0, 0]  # header - request ID
             msg = msg + payload  # payload
         else:
@@ -640,68 +708,87 @@ class RobotRequestResponseCommunication: # class used for storing data
 
         self.client.send(bytearray(msg))
 
-
     def pho_receive_response(self, required_id=None, response=None):
         received_header = self.client.recv(HEADER_SIZE)
-        if len(received_header) < HEADER_SIZE: # checking if the header is empty
-            return[],[] # returning empty response
-        request_id = int.from_bytes(received_header[0:3], "little") # setting the request id
-        number_of_messages = int.from_bytes(received_header[4:7], "little") # setting the number of messages
-        assert len(received_header) == HEADER_SIZE, 'Wrong header size' # checking if the header size is correct
-        header = ResponseHeader(self,request_id, number_of_messages) # setting the header
+        if len(received_header) < HEADER_SIZE:  # checking if the header is empty
+            return [], []  # returning empty response
+        request_id = int.from_bytes(
+            received_header[0:3], "little")  # setting the request id
+        number_of_messages = int.from_bytes(
+            received_header[4:7], "little")  # setting the number of messages
+        # checking if the header size is correct
+        assert len(received_header) == HEADER_SIZE, 'Wrong header size'
+        header = ResponseHeader(
+            self, request_id, number_of_messages)  # setting the header
 
-        if request_id == PHO_TRAJECTORY_REQUEST: # if the request id is PHO_TRAJECTORY_REQUEST
-            self.response_data.init_trajectory_data()  # empty variable for receiving new trajectory
+        if request_id == PHO_TRAJECTORY_REQUEST:  # if the request id is PHO_TRAJECTORY_REQUEST
+            # empty variable for receiving new trajectory
+            self.response_data.init_trajectory_data()
 
-        for message_count in range(header.number_of_messages):  # Fix: using correct header field
+        # Fix: using correct header field
+        for message_count in range(header.number_of_messages):
             # Receive subheader
-            received_subheader = self.client.recv(SUBHEADER_SIZE) # receiving the subheader
-            operation_type = int.from_bytes(received_subheader[0:3], "little") # setting the operation type
-            operation_number = int.from_bytes(received_subheader[4:7], "little") # setting the operation number
-            data_size = int.from_bytes(received_subheader[8:11], "little") # setting the data size
-            assert len(received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size' #checking if the subheader size is correct
+            received_subheader = self.client.recv(
+                SUBHEADER_SIZE)  # receiving the subheader
+            operation_type = int.from_bytes(
+                received_subheader[0:3], "little")  # setting the operation type
+            operation_number = int.from_bytes(
+                received_subheader[4:7], "little")  # setting the operation number
+            data_size = int.from_bytes(
+                received_subheader[8:11], "little")  # setting the data size
+            # checking if the subheader size is correct
+            assert len(
+                received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size'
 
-            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
-                if self.response_data.segment_id >= len(self.response_data.trajectory_data): # checking if the segment id is greater than the length of the trajectory data
+            # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
+            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
+                # checking if the segment id is greater than the length of the trajectory data
+                if self.response_data.segment_id >= len(self.response_data.trajectory_data):
                     self.response_data.add_segment()
-                waypoints = [] # crating empty list for waypoints
+                waypoints = []  # crating empty list for waypoints
                 waypoint_size = 8 * PACKET_SIZE  # 2 + 6
-                for i in range(data_size): # iterating over the data size
+                for i in range(data_size):  # iterating over the data size
                     data = self.client.recv(waypoint_size)
                     waypoint_id = struct.unpack('<i', data[0:4])[0]
                     waypoint = struct.unpack('<6f', data[4:28])
                     check_sum = struct.unpack('<f', data[28:32])[0]
                     joint_sum = sum(waypoint)
-                    assert abs(joint_sum - check_sum) < 0.01, "Wrong joints sum"
-                    waypoints.append(waypoint) # appending the waypoint
-                    self.response_data.add_waypoint(self.response_data.segment_id, waypoint)
-                self.response_data.segment_id += 1 # incrementing the segment id
-                self.message = waypoints # setting the message
-                self.print_message(operation_type) # printing the message
+                    assert abs(
+                        joint_sum - check_sum) < 0.01, "Wrong joints sum"
+                    waypoints.append(waypoint)  # appending the waypoint
+                    self.response_data.add_waypoint(
+                        self.response_data.segment_id, waypoint)
+                self.response_data.segment_id += 1  # incrementing the segment id
+                self.message = waypoints  # setting the message
+                self.print_message(operation_type)  # printing the message
 
-            elif operation_type == OperationType.PHO_GRIPPER: # checking if the operation type is PHO_GRIPPER
-                data_size = data_size * 4 # setting the data size
-                data = self.client.recv(data_size) # receiving the data
-                self.response_data.gripper_command.append(int(data[0]))  # store gripper command
-                self.message = data # setting the message
-                self.print_message(operation_type) # printing the message
+            elif operation_type == OperationType.PHO_GRIPPER:  # checking if the operation type is PHO_GRIPPER
+                data_size = data_size * 4  # setting the data size
+                data = self.client.recv(data_size)  # receiving the data
+                self.response_data.gripper_command.append(
+                    int(data[0]))  # store gripper command
+                self.message = data  # setting the message
+                self.print_message(operation_type)  # printing the message
 
-            elif operation_type == OperationType.PHO_ERROR: # checking if the operation type PHO.error
-                data_size = data_size * 4 # setting the data size
-                data = self.client.recv(data_size) # receiving the data
-                error_code = int.from_bytes(data[0:3], "little") # setting the error code
-                self.message = error_code # setting the message
-                self.print_message(operation_type) # printing the message
+            elif operation_type == OperationType.PHO_ERROR:  # checking if the operation type PHO.error
+                data_size = data_size * 4  # setting the data size
+                data = self.client.recv(data_size)  # receiving the data
+                error_code = int.from_bytes(
+                    data[0:3], "little")  # setting the error code
+                self.message = error_code  # setting the message
+                self.print_message(operation_type)  # printing the message
 
-            elif operation_type == OperationType.PHO_INFO: # checking if the operation type is PHO_INFO
-                data = self.client.recv(data_size * PACKET_SIZE) # receiving the data
-                self.message = data # setting the message
-                self.print_message(operation_type) # printing the message
+            elif operation_type == OperationType.PHO_INFO:  # checking if the operation type is PHO_INFO
+                data = self.client.recv(
+                    data_size * PACKET_SIZE)  # receiving the data
+                self.message = data  # setting the message
+                self.print_message(operation_type)  # printing the message
 
-            elif operation_type == OperationType.PHO_OBJECT_POSE:  # checking if the operation type is PHO_OBJECT_POSE
+            # checking if the operation type is PHO_OBJECT_POSE
+            elif operation_type == OperationType.PHO_OBJECT_POSE:
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
-                self.message = object_pose # setting the object_pose
+                self.message = object_pose  # setting the object_pose
             #     a = self.print_message(operation_type) # creating object pose
             #     X0 = np.array(object_pose[:3])  # Convert to meters
             #     velocity = np.array([0.00853,0.01727,0])*4000 # Define a velocity
@@ -756,90 +843,104 @@ class RobotRequestResponseCommunication: # class used for storing data
 
             self.active_request = 0  # request finished - response from request received
 
-    def print_message(self, operation_type): #defining the print_message function
-        if self.print_messages is not True: # checking if the print messages is not true
-            return [] # return the list values
+    def print_message(self, operation_type):  # defining the print_message function
+        if self.print_messages is not True:  # checking if the print messages is not true
+            return []  # return the list values
 
-        if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # setting the operation type
-            waypoints_size = int((len(self.message) + 1) / 6) # setting the waypoints_size
-            for x in range(waypoints_size): # checking the waypointsize in a loop
+        if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:  # setting the operation type
+            # setting the waypoints_size
+            waypoints_size = int((len(self.message) + 1) / 6)
+            for x in range(waypoints_size):  # checking the waypointsize in a loop
                 print('\033[94m' + "ROBOT: " + '\033[0m' + "[" + str(round(self.message[x * 6 + 0], 2)) + "," + str(
                     round(self.message[x * 6 + 1], 2)) + "," + str(round(self.message[x * 6 + 2], 2)) + "," + str(
                     round(self.message[x * 6 + 3], 2)) + "," + str(
                     round(self.message[x * 6 + 4], 2)) + "," + str(round(self.message[x * 6 + 5], 2)) + "]")
-        elif operation_type == OperationType.PHO_GRIPPER: # setting the operaiton type to Gripper
-            print('\033[94m' + "ROBOT GRIPPER: " + '\033[0m' + "[" + str(self.message[0]) + "]")
-        elif operation_type == OperationType.PHO_ERROR: # setting the operationtype to Photoneo Error
-            print('\033[94m' + "ERROR CODE: " + '\033[0m' + "[" + str(self.message) + "]")
-        elif operation_type == OperationType.PHO_INFO: # setting the operation type photoeneo.info
-            data_size = int((len(self.message) + 1) / 4) # setting the datasize having the integer 
-            for iterator in range(data_size): # checkign the iterator in the range for data size
-                assert len(self.message) == data_size * PACKET_SIZE # checking if the lenght of the self.message is equal to the data_size * PACKET_SIZE
-                info = int.from_bytes(self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
-                print('\033[94m' + "INFO: " + '\033[0m' + "[" + str(info) + "]")
-        elif operation_type == OperationType.PHO_OBJECT_POSE: # setting the operation type to the Photoneo object pose
-                print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
-                    round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
-                    round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
-                    round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
-                
-        return self.message # returning the self.messsage
+        elif operation_type == OperationType.PHO_GRIPPER:  # setting the operaiton type to Gripper
+            print('\033[94m' + "ROBOT GRIPPER: " +
+                  '\033[0m' + "[" + str(self.message[0]) + "]")
+        elif operation_type == OperationType.PHO_ERROR:  # setting the operationtype to Photoneo Error
+            print('\033[94m' + "ERROR CODE: " +
+                  '\033[0m' + "[" + str(self.message) + "]")
+        elif operation_type == OperationType.PHO_INFO:  # setting the operation type photoeneo.info
+            # setting the datasize having the integer
+            data_size = int((len(self.message) + 1) / 4)
+            # checkign the iterator in the range for data size
+            for iterator in range(data_size):
+                # checking if the lenght of the self.message is equal to the data_size * PACKET_SIZE
+                assert len(self.message) == data_size * PACKET_SIZE
+                info = int.from_bytes(
+                    self.message[0 + iterator * PACKET_SIZE:3 + iterator * PACKET_SIZE], "little")
+                print('\033[94m' + "INFO: " +
+                      '\033[0m' + "[" + str(info) + "]")
+        # setting the operation type to the Photoneo object pose
+        elif operation_type == OperationType.PHO_OBJECT_POSE:
+            print('\033[94m' + "OBJECT: " + '\033[0m' + "[" + str(round(self.message[0], 3)) + "," + str(
+                round(self.message[1], 3)) + "," + str(round(self.message[2], 3)) + "," + str(
+                round(self.message[3], 3)) + "," + str(round(self.message[4], 3)) + "," + str(
+                round(self.message[5], 3)) + "," + str(round(self.message[6], 3)) + "]")
+
+        return self.message  # returning the self.messsage
 
 # -------------------------------------------------------------------
 #                     OTHER FUNCTIONS
 # -------------------------------------------------------------------
 
-def floatArray2bytes(array): # function to convert float array to bytes
-    msg = [] # creating the message
-    for value in array: # iterating through the array
-        msg = msg + list(struct.pack('<f', value)) # converting to bytes
-    return msg # returning the message
+
+def floatArray2bytes(array):  # function to convert float array to bytes
+    msg = []  # creating the message
+    for value in array:  # iterating through the array
+        msg = msg + list(struct.pack('<f', value))  # converting to bytes
+    return msg  # returning the message
 
 
-def build_hello_msg(): # function to build the hello message
-    return bytearray(BRAND_IDENTIFICATION.encode('utf-8')) # returning the message
+def build_hello_msg():  # function to build the hello message
+    # returning the message
+    return bytearray(BRAND_IDENTIFICATION.encode('utf-8'))
 
 
-def build_state_server_hello_msg(): # function to build the state server hello message
-    return bytearray(BRAND_IDENTIFICATION_SERVER.encode('utf-8')) # returning the message
+def build_state_server_hello_msg():  # function to build the state server hello message
+    # returning the message
+    return bytearray(BRAND_IDENTIFICATION_SERVER.encode('utf-8'))
 
 
 # -------------------------------------------------------------------
 #                      STATE SERVER FUNCTIONS
 # -------------------------------------------------------------------
 
-class RobotStateCommunication: # class for state server
-    def __init__(self): # initializing the class
-        self.client = None # client
-        self.server = None # server
+class RobotStateCommunication:  # class for state server
+    def __init__(self):  # initializing the class
+        self.client = None  # client
+        self.server = None  # server
 
-    def create_server(self, ROBOT_CONTROLLER_IP, PORT): # defining the server
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # create socket
-        self.server.bind((ROBOT_CONTROLLER_IP, PORT)) # bind
+    def create_server(self, ROBOT_CONTROLLER_IP, PORT):  # defining the server
+        self.server = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM)  # create socket
+        self.server.bind((ROBOT_CONTROLLER_IP, PORT))  # bind
         # Listen for incoming connections
-        self.server.listen(1) # listen
-        print('Server is running, waiting for client...') # print the message
+        self.server.listen(1)  # listen
+        print('Server is running, waiting for client...')  # print the message
 
-    def wait_for_client(self): # waiting for client
-        self.client, client_address = self.server.accept() # accept connection
-        print('Connection established...') # print the message
+    def wait_for_client(self):  # waiting for client
+        self.client, client_address = self.server.accept()  # accept connection
+        print('Connection established...')  # print the message
         # Send hello string
-        self.client.send(build_state_server_hello_msg()) # send the message
+        self.client.send(build_state_server_hello_msg())  # send the message
 
-    def close_connection(self): # closing the connection
-        self.server.close() # close the connection
+    def close_connection(self):  # closing the connection
+        self.server.close()  # close the connection
 
-    def send_joint_state(self): # sending the joint state
-        msg = deepcopy(PHO_HEADER) # creating the message
+    def send_joint_state(self):  # sending the joint state
+        msg = deepcopy(PHO_HEADER)  # creating the message
         msg = msg + [6, 0, 0, 0]  # Data size # Data size
         msg = msg + [JOINT_STATE_TYPE, 0, 0, 0]  # Type
-        msg = msg + floatArray2bytes(get_joint_state(init_joint_state)) # sending the joint state
-        self.client.send(bytearray(msg)) # sending the message
+        # sending the joint state
+        msg = msg + floatArray2bytes(get_joint_state(init_joint_state))
+        self.client.send(bytearray(msg))  # sending the message
 
-    def send_tool_pose(self): # sending the tool pose
-        msg = deepcopy(PHO_HEADER) # creating the message
+    def send_tool_pose(self):  # sending the tool pose
+        msg = deepcopy(PHO_HEADER)  # creating the message
         msg = msg + [7, 0, 0, 0]  # Data size
         msg = msg + [TOOL_POSE_TYPE, 0, 0, 0]  # Type
-        msg = msg + floatArray2bytes(get_tool_pose(base_quat)) # sending the tool pose
-        self.client.send(bytearray(msg)) # sending the message
-
+        # sending the tool pose
+        msg = msg + floatArray2bytes(get_tool_pose(base_quat))
+        self.client.send(bytearray(msg))  # sending the message
