@@ -445,8 +445,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    # defining an function for locator scan (for trapezoid )
-    def pho_request_ls_scan(self, vs_id_1, tool_pose=None, payload=None):
+
+    def pho_request_ls_scan(self, vs_id_1, tool_pose=None, payload=None): # defining an function for locator scan (for trapezoid )
         self.start_time = time.time()  # setting the start time
 
         # setting the list for trapezoid and pipe
@@ -472,8 +472,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
 
-    # defining the function for scan wait
-    def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None):
+
+    def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None): # defining the function for scan wait
         self.start_time = time.time()  # setting the start time
         try:
 
@@ -493,8 +493,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
             # popping up the error
             logging.error(f"Error in pho_ls_wait_for_scan: {e}")
 
-    # defining the function for get objects
-    def pho_request_get_objects(self, vs_id_1, number_of_objects_1):
+
+    def pho_request_get_objects(self, vs_id_1, number_of_objects_1): # defining the function for get objects
         self.start_time = time.time()  # setting the start time
         try:
             # Validate input types
@@ -517,8 +517,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
             # logging error
             logging.error(f"Error in pho_request_get_objects: {e}")
 
-    # defining the function for getting the vision systeme status
-    def pho_request_ls_get_vision_system_status(self, vs_id_1, payload_1=None):
+
+    def pho_request_ls_get_vision_system_status(self, vs_id_1, payload_1=None): # defining the function for getting the vision system status
         self.start_time = time.time()  # setting the start time
 
         if payload_1 is None:  # setting if the payload is None
@@ -529,8 +529,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
             # recieving the request from the camera
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
 
-    # setting the function for request scan 2
-    def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None):
+
+    def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None): # setting the function for request scan 2
         self.start_time = time.time()  # setting the start time
 
         # setting the list for trapezoid and pipe
@@ -555,9 +555,9 @@ class RobotRequestResponseCommunication:  # class used for storing data
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2)
 
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
-    # defining the function for the wait for the scan for the object 2
 
-    def pho_ls_wait_for_scan_2(self, vs_id_2, payload_2=None):
+
+    def pho_ls_wait_for_scan_2(self, vs_id_2, payload_2=None): # defining the function for the wait for the scan for the object 2
         self.start_time = time.time()  # setting the start time
 
         try:
@@ -578,43 +578,37 @@ class RobotRequestResponseCommunication:  # class used for storing data
             # logging error
             logging.error(f"Error in pho_ls_wait_for_scan: {e}")
 
-    # defining the function for requesting the object for pipe
-    def pho_request_get_objects_2(self, vs_id_2, number_of_objects_2):
+
+    def pho_request_get_objects_2(self, vs_id_2, number_of_objects_2): # defining the function for requesting the object for pipe
         self.start_time = time.time()  # setting the start time
         try:
-            # Validate input types
-            # checking the element in the list of vision system 2 is integer or not
             if not all(isinstance(x, int) for x in [vs_id_2, number_of_objects_2]):
                 if number_of_objects_2 <= 0:  # checking if the number of objects is less that or equal to zero
                     # if less raise the errors
                     raise ValueError(
                         "vs_id and number_of_objects must be integers.")
 
-            payload_2 = [vs_id_2, 0, 0, 0, number_of_objects_2,
-                         0, 0, 0]  # setting the payload 2
+            payload_2 = [vs_id_2, 0, 0, 0, number_of_objects_2,0, 0, 0]  # setting the payload 2
 
-            # sending the request to the camera with the vision system 2
-            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_2)
-            # recieving the response from the camera
-            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)
+            self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_2) # sending the request to the camera with the vision system 2
+
+            self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)  # recieving the response from the camera
 
         except Exception as e:
-            # getting the logging error
-            logging.error(f"Error in pho_request_get_objects: {e}")
 
-    # defining the function for getting the vision systeme status
-    def pho_request_ls_get_vision_system_status_2(self, vs_id_2, payload_2=None):
+            logging.error(f"Error in pho_request_get_objects: {e}") # getting the logging error
+
+
+    def pho_request_ls_get_vision_system_status_2(self, vs_id_2, payload_2=None): # defining the function for getting the vision systeme status
 
         if payload_2 is None:  # setting the payload2 as None
 
             payload_2 = [vs_id_2, 0, 0, 0]  # setting the payload
-            # sending the request to the camera having the vision system
-            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2)
-            # recieving the request from the camera
-            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)
+            self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2)  # sending the request to the camera having the vision system
+            self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
 
-    # defining the function for moving to the position
-    def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):
+
+    def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):  # defining the function for moving to the position
         try:
             start_time = time.time()  # setting the start time
             while True:
@@ -623,25 +617,20 @@ class RobotRequestResponseCommunication:  # class used for storing data
                     current_joint_angles, joint_angles)) ** 0.5  # setting the distance
 
                 if distance <= tolerance:  # chceking if the distance is less than the tolerance
-                    # give the logging error
-                    logging.info(
-                        f"Robot reached target joint angles: {current_joint_angles}")
+
+                    logging.info(f"Robot reached target joint angles: {current_joint_angles}")# give the logging error
                     break
 
                 if time.time() - start_time > timeout:  # if the start time is greater than timeout then
-                    # raise the error
-                    raise TimeoutError(
-                        "Robot did not reach the target joint angles in time.")
+
+                    raise TimeoutError("Robot did not reach the target joint angles in time.") # raise the error
 
                 time.sleep(0.5)  # setting the time
 
         except AttributeError:
-            logging.error(
-                "The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")  # logging error
+            logging.error("The method 'pho_get_current_joint_angles' does not exist in CommunicationLibrary.")  # logging error
         except Exception as e:
-
-            logging.error(
-                f"An error occurred while moving the robot to joint position: {e}")  # logging error
+            logging.error(f"An error occurred while moving the robot to joint position: {e}")  # logging error
 
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
