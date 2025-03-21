@@ -309,6 +309,7 @@ class ServoX:  # defining servoX
                   target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(
             target, velocity, acceleration)  # moving the robot
+        print(error_code)  # printing the error code value
         r.gripper("on")
 
         time.sleep(1.0)  # setting the time
