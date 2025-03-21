@@ -471,6 +471,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)
 
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
+
     # defining the function for scan wait
     def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None):
         self.start_time = time.time()  # setting the start time
@@ -555,6 +556,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
         # def pho_ls_wait_for_scan(self,vs_id,pay_load_1=None,pay_load_2=None):
     # defining the function for the wait for the scan for the object 2
+
     def pho_ls_wait_for_scan_2(self, vs_id_2, payload_2=None):
         self.start_time = time.time()  # setting the start time
 
