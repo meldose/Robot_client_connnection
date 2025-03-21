@@ -710,10 +710,9 @@ class RobotRequestResponseCommunication:  # class used for storing data
             assert len(
                 received_subheader) == SUBHEADER_SIZE, 'Wrong subheader size'
 
-            # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
-            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:
-                # checking if the segment id is greater than the length of the trajectory data
-                if self.response_data.segment_id >= len(self.response_data.trajectory_data):
+            if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE: # checking if the operation type is PHO_TRAJECTORY_CNT or PHO_TRAJECTORY_FINE
+
+                if self.response_data.segment_id >= len(self.response_data.trajectory_data): # checking if the segment id is greater than the length of the trajectory data
                     self.response_data.add_segment()
                 waypoints = []  # crating empty list for waypoints
                 waypoint_size = 8 * PACKET_SIZE  # 2 + 6
@@ -754,8 +753,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
                 self.message = data  # setting the message
                 self.print_message(operation_type)  # printing the message
 
-            # checking if the operation type is PHO_OBJECT_POSE
-            elif operation_type == OperationType.PHO_OBJECT_POSE:
+            elif operation_type == OperationType.PHO_OBJECT_POSE: # checking if the operation type is PHO_OBJECT_POSE
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose  # setting the object_pose
