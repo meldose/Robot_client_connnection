@@ -452,16 +452,16 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
             raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
 
-        # setting the payload for vision system 1
-        payload_1 = [vs_id_1, 0, 0, 0]
+
+        payload_1 = [vs_id_1, 0, 0, 0] # setting the payload for vision system 1
 
         if tool_pose is not None:  # checking if the tool pose is None or not
 
-            # checking if the tool pose is 7
-            assert len(tool_pose) == 7, 'Wrong tool_pose size'
-            # setting the payload 1
-            payload_1 = payload_1 + floatArray2bytes(tool_pose)
 
+            assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the tool pose is 7
+
+            payload_1 = payload_1 + floatArray2bytes(tool_pose)  # setting the payload 1
+ 
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)# sending the request to the camera with vision system1
 
     def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None): # defining the function for scan wait
@@ -515,13 +515,13 @@ class RobotRequestResponseCommunication:  # class used for storing data
     def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None): # setting the function for request scan 2
         self.start_time = time.time()  # setting the start time
 
-        # setting the list for trapezoid and pipe
-        valid_ids = {1: "Trapezoid", 2: "Pipe"}
+
+        valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
 
         if vs_id_2 not in valid_ids:  # checking if the pipe is there in the list or not
 
-            # if not raise the error
-            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.")
+
+            raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
 
         # setting the payload for vision system 2
         payload_2 = [vs_id_2, 0, 0, 0]
