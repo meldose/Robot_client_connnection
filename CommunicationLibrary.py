@@ -75,10 +75,10 @@ JOINT_STATE_TYPE = 1
 TOOL_POSE_TYPE = 2
 
 # sizes
-HEADER_SIZE = 12
-SUBHEADER_SIZE = 12
-PACKET_SIZE = 4
-OBJECT_POSE_SIZE = 28
+HEADER_SIZE = 12 # setting the header size
+SUBHEADER_SIZE = 12 # setting the subheader size
+PACKET_SIZE = 4 # setting the packet size
+OBJECT_POSE_SIZE = 28 # setting the object pose size
 
 # Photoneo header
 PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
