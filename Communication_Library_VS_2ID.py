@@ -380,8 +380,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
     response_data = ResponseData()  # create object for storing data
 
     def __init__(self, robot=None):  # initializing the class
-        # variable to check, if old request has finished and new one can be called
-        self.active_request = 0
+
+        self.active_request = 0 # variable to check, if old request has finished and new one can be called
         self.client = None  # variable to store client
         self.message = None  # variable to store message
         self.print_messages = True  # True -> prints messages , False -> doesnt print messages
@@ -457,7 +457,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
         if tool_pose is not None:  # checking if the tool pose is None or not
 
-
             assert len(tool_pose) == 7, 'Wrong tool_pose size' # checking if the tool pose is 7
 
             payload_1 = payload_1 + floatArray2bytes(tool_pose)  # setting the payload 1
@@ -519,7 +518,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
 
         if vs_id_2 not in valid_ids:  # checking if the pipe is there in the list or not
-
 
             raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
 
