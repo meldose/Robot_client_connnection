@@ -738,7 +738,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
                 a = self.print_message(operation_type) # creating object pose
                 X0 = np.array(object_pose[:3])  # Convert to meters
                 velocity = np.array([0.00853,0.01727,0])*4000 # Define a velocity
-                X = np.zeros(3)
+                X = np.zeros(3)#setting the X position
                 object_not_grasped = True # condition for object not grapsed as True
                 timeout = 60 # Set a timeout to avoid infinite loops
                 old_start = time.time() # setting the old time

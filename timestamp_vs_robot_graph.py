@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt # importing matplotlib.pyplot as plt
 # Function to generate speed graph
 def generate_speed_graph(change_in_time, robot_velocities, conveyor_speeds): # defining the function
     time_stamps = np.linspace(t1, t2, len(conveyor_speeds)) # setting the time stamps
-    
 
     robot_pick_speed = [np.linalg.norm(v) for v in robot_velocities] # Extract robot velocity magnitudes
     
@@ -23,7 +22,7 @@ def generate_speed_graph(change_in_time, robot_velocities, conveyor_speeds): # d
 # Example input
 t1, t2 = 1742319295.47,1742319299.702 # setting the time t1 and t2
 change_in_time= t2-t1 # change in time
-robot_velocities = [np.array([0.00853,0.01727,0])*6500 for _ in range(100)]  # Example constant velocities
+robot_velocities = [np.array([0.00853,0.01727,0])*4000 for _ in range(100)]  # Example constant velocities
 conveyor_speeds = np.linspace(1.0, 2.0, 100)  # Example conveyor speeds
 
 generate_speed_graph(change_in_time, robot_velocities, conveyor_speeds) # calling the function
