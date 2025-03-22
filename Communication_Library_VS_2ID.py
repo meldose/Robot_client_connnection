@@ -794,8 +794,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
             return []  # return the list values
 
         if operation_type == OperationType.PHO_TRAJECTORY_CNT or operation_type == OperationType.PHO_TRAJECTORY_FINE:  # setting the operation type
-            # setting the waypoints_size
-            waypoints_size = int((len(self.message) + 1) / 6)
+
+            waypoints_size = int((len(self.message) + 1) / 6) # setting the waypoints_size
             for x in range(waypoints_size):  # checking the waypointsize in a loop
                 print('\033[94m' + "ROBOT: " + '\033[0m' + "[" + str(round(self.message[x * 6 + 0], 2)) + "," + str(
                     round(self.message[x * 6 + 1], 2)) + "," + str(round(self.message[x * 6 + 2], 2)) + "," + str(
