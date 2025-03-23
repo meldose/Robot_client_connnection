@@ -304,7 +304,6 @@ class ServoX:  # defining servoX
         target = copy.deepcopy(r.get_current_cartesian_pose())
         time.sleep(1.0)  # setting the time
 
-        # target=new_message # setting the target position
         target = [new_message[0], new_message[1], new_message[2],target[3], target[4], target[5], target[6]]
         error_code = r.movelinear_online(target, velocity, acceleration)  # moving the robot
         print(error_code)  # printing the error code value
