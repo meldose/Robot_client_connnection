@@ -521,8 +521,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
             raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
 
-        # setting the payload for vision system 2
-        payload_2 = [vs_id_2, 0, 0, 0]
+
+        payload_2 = [vs_id_2, 0, 0, 0] # setting the payload for vision system 2
 
         if tool_pose is not None:  # checking if the tool pose is None or not
 
