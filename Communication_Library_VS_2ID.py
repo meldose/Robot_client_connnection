@@ -399,42 +399,42 @@ class RobotRequestResponseCommunication:  # class used for storing data
 # -------------------------------------------------------------------
 #                      BIN PICKING REQUESTS
 # -------------------------------------------------------------------
-    def pho_request_init(self, vs_id, start, end):
+    def pho_request_init(self, vs_id, start, end): # definition of pho_request_init
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         payload = payload + floatArray2bytes(start)  # payload - start
         payload = payload + floatArray2bytes(end)  # payload - end
         self.pho_send_request(PHO_INIT_REQUEST, payload)
         self.pho_receive_response(PHO_INIT_REQUEST)
 
-    def pho_request_bps_scan(self, vs_id):
+    def pho_request_bps_scan(self, vs_id): # definition of pho_request_bps_scan
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         self.pho_send_request(PHO_SCAN_BPS_REQUEST, payload)
 
-    def pho_bps_wait_for_scan(self):
+    def pho_bps_wait_for_scan(self): # definition of pho_bps_wait_for_scan
         self.pho_receive_response(PHO_SCAN_BPS_REQUEST)
         self.active_request = 0  # request finished - response from request received
 
-    def pho_request_trajectory(self, vs_id):
+    def pho_request_trajectory(self, vs_id): # definition of pho_request_trajectory
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         self.pho_send_request(PHO_TRAJECTORY_REQUEST, payload)
         self.pho_receive_response(PHO_TRAJECTORY_REQUEST)
 
-    def pho_request_pick_failed(self, vs_id):
+    def pho_request_pick_failed(self, vs_id): # definition of pho_request_pick_failed
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         self.pho_send_request(PHO_PICK_FAILED_REQUEST, payload)
         self.pho_receive_response(PHO_PICK_FAILED_REQUEST)
 
-    def pho_request_get_object(self, vs_id):
+    def pho_request_get_object(self, vs_id): # definition of pho_request_get_object
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         self.pho_send_request(PHO_GET_OBJECT_BPS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_OBJECT_BPS_REQUEST)
 
-    def pho_request_change_scene_status(self, scene_status_id):
+    def pho_request_change_scene_status(self, scene_status_id): # definition of pho_request_change_scene_status
         payload = [scene_status_id, 0, 0, 0]  # payload - status scene ID
         self.pho_send_request(PHO_CHANGE_SCENE_STATE_REQUEST, payload)
         self.pho_receive_response(PHO_CHANGE_SCENE_STATE_REQUEST)
 
-    def pho_request_bsp_get_vision_system_status(self, vs_id):
+    def pho_request_bsp_get_vision_system_status(self, vs_id): # definition of pho_request_bsp_get_vision_system_status
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
         self.pho_send_request(PHO_GET_VISION_SYSTEM_BPS_REQUEST, payload)
         self.pho_receive_response(PHO_GET_VISION_SYSTEM_BPS_REQUEST)
