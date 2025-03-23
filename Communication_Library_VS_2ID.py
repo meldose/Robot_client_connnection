@@ -511,8 +511,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
 
     def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None): # setting the function for request scan 2
+        
         self.start_time = time.time()  # setting the start time
-
 
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
 
