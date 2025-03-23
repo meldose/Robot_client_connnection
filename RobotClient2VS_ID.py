@@ -99,8 +99,6 @@ def format_coordinates(coords_mm): # function for formatting coordinates
 def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
     
     try:
-        # Replace 'pho_request_move_to_position' with the actual method name
-        # and adjust parameters as required by your CommunicationLibrary
         robot.pho_request_move_to_position(coords[0], coords[1], coords[2]) # requesting the robot to move postion with respective coords
         logging.info(f"Sent move command to position: {coords}") # logging info 
     except AttributeError:
