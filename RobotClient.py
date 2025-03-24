@@ -51,10 +51,6 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01) # setting time sleep
     robot.pho_request_get_running_solution() # get running solution
     time.sleep(0.01) # setting time sleep
-    #robot.pho_request_move_to_position()
-    # time.sleep(0.2)
-    # robot.pho_request_stop_solution()
-    # time.sleep(2)
     robot.pho_request_get_available_solution() # get available solution
     robot.close_connection()  #communication needs to be closed
     time.sleep(0.01)
