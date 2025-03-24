@@ -29,7 +29,7 @@ def create_grid(size=5, step=0.5):
 pose = [-0.495, -0.307, 0.055, 0.07675785323856764, -3.122286946395002, 1.0561112514591882] # x, y, z in meters, angles in degrees
 
 # Extract position and orientation
-x, y, z, roll, pitch, yaw = pose
+x, y, z, roll, pitch, yaw = pose 
 
 # Convert Euler angles (Roll=X, Pitch=Y, Yaw=Z) to a rotation matrix
 rotation_matrix = R.from_euler('xyz', [roll, pitch, yaw], degrees=True).as_matrix()
