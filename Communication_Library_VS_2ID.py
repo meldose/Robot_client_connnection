@@ -489,7 +489,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
             payload_1 = [vs_id_1, 0, 0, 0, number_of_objects_1,0, 0, 0]  # setting the payload 1
 
-
             self.pho_send_request(PHO_GET_OBJECT_LS_REQUEST, payload_1) # sending the request to the camera with the vision system 1
 
             self.pho_receive_response(PHO_GET_OBJECT_LS_REQUEST)# getting the reponse from the camera
