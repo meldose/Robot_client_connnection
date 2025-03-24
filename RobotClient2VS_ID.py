@@ -6,11 +6,10 @@ import Communication_Library_VS_2ID # importing communication library
 import time # importing time
 import json # importing json
 import logging # importing logging
-from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
 from Communication_Library_VS_2ID import ServoX,RobotRequestResponseCommunication,RobotStateCommunication # for running robot and camera
-# from CommunicationLibrary import RobotRequestResponseCommunication,RobotStateCommunication # for running camera only
+from neurapy.robot import Robot # importing robot module
 r = Robot() #settig r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
