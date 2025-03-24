@@ -462,6 +462,8 @@ class RobotRequestResponseCommunication:  # class used for storing data
  
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)# sending the request to the camera with vision system1
         return True  # Indicate successful request
+    
+
     def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None): # defining the function for scan wait
         # self.start_time = time.time()  # setting the start time
         try:
@@ -495,7 +497,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
         except Exception as e:
             logging.error(f"Error in pho_request_get_objects: {e}")# logging error
-
+        return True
 
     def pho_request_ls_get_vision_system_status(self, vs_id_1, payload_1=None): # defining the function for getting the vision system status
         # self.start_time = time.time()  # setting the start time
@@ -563,6 +565,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         except Exception as e:
 
             logging.error(f"Error in pho_request_get_objects: {e}") # getting the logging error
+        return True
 
     def pho_request_ls_get_vision_system_status_2(self, vs_id_2, payload_2=None): # defining the function for getting the vision systeme status
 
