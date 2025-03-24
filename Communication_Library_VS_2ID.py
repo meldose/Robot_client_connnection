@@ -269,7 +269,7 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # -------------------------------------------------------------------
 
 
-class ServoX:  # defining servoX
+class ServoX:  # defining Class servoX
 
     def __init__(self, robot):
         self.robot = robot  # setting the robot
