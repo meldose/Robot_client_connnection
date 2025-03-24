@@ -732,7 +732,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose  # setting the object_pose
-                # a = self.print_message(operation_type) # creating object pose
+                a = self.print_message(operation_type) # creating object pose
                 # X0 = np.array(object_pose[:3])  # Convert to meters
                 # velocity = np.array([0.00853,0.01727,0])*4000 # Define a velocity
                 # X = np.zeros(3)#setting the X position
