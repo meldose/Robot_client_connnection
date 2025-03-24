@@ -443,7 +443,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 # -------------------------------------------------------------------
 
     def pho_request_ls_scan(self, vs_id_1, tool_pose=None, payload=None): #defining an function for locator scan (for trapezoid )
-        self.start_time = time.time()  # setting the start time
+        # self.start_time = time.time()  # setting the start time
 
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
 
@@ -463,7 +463,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)# sending the request to the camera with vision system1
 
     def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None): # defining the function for scan wait
-        self.start_time = time.time()  # setting the start time
+        # self.start_time = time.time()  # setting the start time
         try:
 
             if payload_1 is None:  # if the payload is None then
@@ -498,7 +498,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
 
     def pho_request_ls_get_vision_system_status(self, vs_id_1, payload_1=None): # defining the function for getting the vision system status
-        self.start_time = time.time()  # setting the start time
+        # self.start_time = time.time()  # setting the start time
 
         if payload_1 is None:  # setting if the payload is None
 
@@ -511,7 +511,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
     def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None): # setting the function for request scan 2
         
-        self.start_time = time.time()  # setting the start time
+        # self.start_time = time.time()  # setting the start time
 
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
 
@@ -530,7 +530,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
             self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_2) # sending the request to the camera with vision system2
 
     def pho_ls_wait_for_scan_2(self, vs_id_2, payload_2=None): # defining the function for the wait for the scan for the object 2
-        self.start_time = time.time()  # setting the start time
+        # self.start_time = time.time()  # setting the start time
 
         try:
 
