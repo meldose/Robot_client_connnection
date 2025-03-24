@@ -13,7 +13,7 @@ import time  # importing times
 import logging  # importing logging
 # importing ruckig . output parameter,InputParameter and Result
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
-from neurapy.robot import Robot  # importing robot
+from neurapy.robot import Robot
 r = Robot()  # defining the robot
 
 # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
@@ -267,7 +267,6 @@ PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
 # -------------------------------------------------------------------
 #                      MOVE_LINEAR (WORKING)
 # -------------------------------------------------------------------
-
 
 class ServoX:  # defining Class servoX
 
