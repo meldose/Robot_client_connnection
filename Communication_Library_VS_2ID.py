@@ -442,7 +442,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 #                      LOCATOR REQUESTS
 # -------------------------------------------------------------------
 
-    def pho_request_ls_scan(self, vs_id_1, tool_pose=None, payload=None): # defining an function for locator scan (for trapezoid )
+    def pho_request_ls_scan(self, vs_id_1, tool_pose=None, payload=None): #defining an function for locator scan (for trapezoid )
         self.start_time = time.time()  # setting the start time
 
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
