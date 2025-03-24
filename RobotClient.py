@@ -26,31 +26,31 @@ def test_ls(): # main function for calling every function.
 
 
     robot.pho_request_ls_scan(1) # ls scan completion 
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_ls_wait_for_scan() # waiting for scan for calibration
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_get_objects(1,2)
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_start_solution(252) # starting the solution#
-    time.sleep(0.01)
-    robot.pho_request_ls_scan(1)
-    time.sleep(0.01) # ls scan completion 
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_scan(1) # ls scan completion 
+    time.sleep(0.01) # setting time sleep 
     robot.pho_ls_wait_for_scan() # waiting for scan for calibration
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_get_objects(1,2)
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_get_vision_system_status(1) # get vision system status
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_change_solution(253) # change solution
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_scan(1) # ls scan
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_ls_wait_for_scan() # waiting for scan completion for calibration
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_get_objects(1, 2) # get objects
-    time.sleep(0.01) # sleep
+    time.sleep(0.01) # setting time sleep
     robot.pho_request_get_running_solution() # get running solution
-    time.sleep(0.01)
+    time.sleep(0.01) # setting time sleep
     #robot.pho_request_move_to_position()
     # time.sleep(0.2)
     # robot.pho_request_stop_solution()
