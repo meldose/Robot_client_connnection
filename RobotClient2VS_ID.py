@@ -2,7 +2,7 @@
 # -------------------------------------------------------------------
 #                      IMPORTS
 # -------------------------------------------------------------------
-import Communication_Library_VS_2ID # importing communication library
+import Communication_library # importing communication library
 import time # importing time
 import json # importing json
 import logging # importing logging
@@ -21,7 +21,7 @@ PORT = 11003 # #port number
 #                      MAIN FUNCTION
 # -------------------------------------------------------------------
 def test_ls(): # main function for calling every function.    
-    robot = Communication_Library_VS_2ID.RobotRequestResponseCommunication()  # object is created
+    robot = Communication_library.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
     robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
