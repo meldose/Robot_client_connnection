@@ -621,7 +621,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         self.pho_receive_response(PHO_CHANGE_SOLUTION_REQUEST)# recieving the response from the camera for change solution
 
     def pho_request_start_solution(self, sol_id): # define function for starting the solution
-        payload = [sol_id, 0, 0, 0]  # payload - vision system id
+        payload = [sol_id, 0, 0, 0]  # payload - vision system id 
         self.pho_send_request(PHO_START_SOLUTION_REQUEST, payload)# sending the request ot the camera
         self.pho_receive_response(PHO_START_SOLUTION_REQUEST) # recieving the response from the camera for start solution
 
