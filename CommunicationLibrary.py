@@ -27,7 +27,6 @@ class OperationType: # defining operation type
     PHO_INFO = 4 # defining operation type
     PHO_OBJECT_POSE = 5 # defining operation type
 
-
 PHO_SCAN_BPS_REQUEST = 1
 PHO_SCAN_LS_REQUEST = 19
 PHO_TRAJECTORY_REQUEST = 2
