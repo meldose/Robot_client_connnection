@@ -382,7 +382,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
         self.client = None  # variable to store client
         self.message = None  # variable to store message
         self.print_messages = True  # True -> prints messages , False -> doesnt print messages
-        self.robot = robot
+        self.robot = robot # initialising the robot
 
     def connect_to_server(self, CONTROLLER_IP, PORT):  # function to connect to server
         self.client = socket.socket()  # create socket
