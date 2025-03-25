@@ -28,25 +28,25 @@ class OperationType: # defining operation type
     PHO_OBJECT_POSE = 5 # defining operation type
 
 
-PHO_SCAN_BPS_REQUEST = 1
-PHO_SCAN_LS_REQUEST = 19
-PHO_TRAJECTORY_REQUEST = 2
-PHO_INIT_REQUEST = 4
-PHO_ADD_CAL_POINT_REQUEST = 5
-PHO_PICK_FAILED_REQUEST = 7
-PHO_GET_OBJECT_BPS_REQUEST = 8
-PHO_CHANGE_SOLUTION_REQUEST = 9
-PHO_START_SOLUTION_REQUEST = 10
-PHO_STOP_SOLUTION_REQUEST = 11
-PHO_GET_RUNNING_SOLUTION_REQUEST = 12
-PHO_GET_AVAILABLE_SOLUTION_REQUEST = 13
-PHO_CHANGE_SCENE_STATE_REQUEST = 15
-PHO_GET_OBJECT_LS_REQUEST = 20
-PHO_GET_VISION_SYSTEM_BPS_REQUEST = 21
-PHO_GET_VISION_SYSTEM_LS_REQUEST = 22
-PHO_START_AUTO_CAL_REQUEST = 25
-PHO_STOP_AUTO_CAL_REQUEST = 26
-PHO_SAVE_AUTO_CAL_REQUEST = 27
+PHO_SCAN_BPS_REQUEST = 1 # setting the bps request
+PHO_SCAN_LS_REQUEST = 19 # setting the ls request
+PHO_TRAJECTORY_REQUEST = 2 # setting the trajectory request
+PHO_INIT_REQUEST = 4 # setting the init request
+PHO_ADD_CAL_POINT_REQUEST = 5 # setting the calibration point request
+PHO_PICK_FAILED_REQUEST = 7 # setting up the pikc failed request
+PHO_GET_OBJECT_BPS_REQUEST = 8 # setting up the bps request
+PHO_CHANGE_SOLUTION_REQUEST = 9 # setting request for change in request
+PHO_START_SOLUTION_REQUEST = 10 # setting the request for start solution
+PHO_STOP_SOLUTION_REQUEST = 11 # setting the stop solution request
+PHO_GET_RUNNING_SOLUTION_REQUEST = 12 # setting the running solution request
+PHO_GET_AVAILABLE_SOLUTION_REQUEST = 13 # rqeuest for gettting the available solution
+PHO_CHANGE_SCENE_STATE_REQUEST = 15 # request for change in scene for state request
+PHO_GET_OBJECT_LS_REQUEST = 20 # request for gettting the object in ls
+PHO_GET_VISION_SYSTEM_BPS_REQUEST = 21 # request for getting the vision system for bps
+PHO_GET_VISION_SYSTEM_LS_REQUEST = 22 # request for getting the vision for LS
+PHO_START_AUTO_CAL_REQUEST = 25 # request for auto calibration 
+PHO_STOP_AUTO_CAL_REQUEST = 26 # request for auto calibration
+PHO_SAVE_AUTO_CAL_REQUEST = 27 # request for saving auto calibration 
 
 request_name = {
     PHO_SCAN_BPS_REQUEST: "SCAN", # requesting for bps request 
