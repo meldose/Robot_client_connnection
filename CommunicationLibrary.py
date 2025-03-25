@@ -333,13 +333,11 @@ class ResponseHeader: # class used for storing data
         self.request_id = request_id # setting the request id
         self.sub_headers = sub_headers # setting the sub headers
 
-
 class ResponseData: # class used for storing data
     def __init__(self): # initializing the class
         self.response_id = 0 # setting the response id
         self.number_of_messages = 0 # setting the number of messages
         self.message_data = [] # setting the message data
-
 
 class ResponseData:  # class used for storing data
 
