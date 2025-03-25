@@ -121,6 +121,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
+    
     # Load the JSON data
     file_path = 'extrinsic_calib_points.json'
     json_data = load_json_file(file_path)
@@ -130,13 +131,13 @@ def calibration_extrinsic(): # function for extrinsic calibration
         translation_mm = point["translation"] # translation
         quaternion = point["quaternion"] # quaternion
         translation_m = [x * 1000 for x in translation_mm] # mm to m
-        tool_pose = translation_m + quaternion
+        tool_pose = translation_m + quaternion # setting the tool_pose
 
         robot.pho_request_add_calibration_point(tool_pose) # add calibration point
-        time.sleep(2)
+        time.sleep(2) # setting the time sleep
 
     robot.pho_request_save_automatic_calibration() # save automatic calibration
-    time.sleep(2)
+    time.sleep(2) # setting the time sleep
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
 # -------------------------------------------------------------------
@@ -147,6 +148,7 @@ def calibration_handeye(): # function for handeye calibration
     robot.connect_to_server(CONTROLLER_IP, PORT)  # communication between VC and robot is created
 
     robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
+
     # Load the JSON data
     file_path = 'handeye_calib_points.json'
     json_data = load_json_file(file_path)
@@ -162,7 +164,7 @@ def calibration_handeye(): # function for handeye calibration
         time.sleep(2) # sleep for 2 seconds
 
     robot.pho_request_save_automatic_calibration() # save automatic calibration
-    time.sleep(2)
+    time.sleep(2) # setting time sleep
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
 
