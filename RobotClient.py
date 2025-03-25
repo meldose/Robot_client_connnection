@@ -20,41 +20,37 @@ PORT = 11003 # #port number
 # -------------------------------------------------------------------
 #                      MAIN FUNCTION
 # -------------------------------------------------------------------
-def test_ls(): # main function for calling every function.
+def test_ls(): # main function for calling every function.    
     robot = CommunicationLibrary.RobotRequestResponseCommunication()  # object is created
     robot.connect_to_server(CONTROLLER_IP,PORT)  # communication between VC and robot is created
 
+    robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
+    time.sleep(0.01) # setting time sleep
+    robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_get_objects(vs_id_1=1,number_of_objects_1=1) # get objects for first object trapezoid and vision system 1
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
+    time.sleep(0.01) # setting time sleep
+    robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_get_objects(vs_id_1=1,number_of_objects_1=1) # get objects for first object trapezoid and vision system 1
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
+    time.sleep(0.3) # setting time sleep
+    robot.pho_request_ls_scan_2(vs_id_2=2) # ls scan for vision system 2 (pipe)
+    time.sleep(0.01) # setting time sleep
+    robot.pho_ls_wait_for_scan_2(vs_id_2=2) # waiting for scan for vision system2 
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_get_objects_2(vs_id_2=2,number_of_objects_2=2)
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
+    time.sleep(0.01) # setting time sleep
 
-    robot.pho_request_ls_scan(1) # ls scan completion 
-    time.sleep(0.01) # setting time sleep
-    robot.pho_ls_wait_for_scan() # waiting for scan for calibration
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_get_objects(1,2)
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_start_solution(252) # starting the solution#
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_ls_scan(1) # ls scan completion 
-    time.sleep(0.01) # setting time sleep 
-    robot.pho_ls_wait_for_scan() # waiting for scan for calibration
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_get_objects(1,2)
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_ls_get_vision_system_status(1) # get vision system status
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_change_solution(253) # change solution
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_ls_scan(1) # ls scan
-    time.sleep(0.01) # setting time sleep
-    robot.pho_ls_wait_for_scan() # waiting for scan completion for calibration
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_get_objects(1, 2) # get objects
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_get_running_solution() # get running solution
-    time.sleep(0.01) # setting time sleep
-    robot.pho_request_get_available_solution() # get available solution
-    robot.close_connection()  #communication needs to be closed
-    time.sleep(0.01)
-
+    # robot.close_connection()  #communication needs to be closed
+    # time.sleep(0.01) # setting time sleep
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
         # Replace 'objects' and 'coordinates' with actual attribute names from your response
