@@ -487,7 +487,7 @@ class RobotRequestResponseCommunication:  # class used for storing data
 
         except Exception as e:
             logging.error(f"Error in pho_request_get_objects: {e}")# logging error
-        return True
+        return True # indicate successful request
 
     def pho_request_ls_get_vision_system_status(self, vs_id_1, payload_1=None): # defining the function for getting the vision system status
 
