@@ -355,12 +355,10 @@ class ResponseData:  # class used for storing data
         self.gripper_command = []  # reset the gripper command
 
     def add_waypoint(self, slice_index, row):  # function to add waypoint
-        self.trajectory_data[slice_index] = np.vstack(
-            [self.trajectory_data[slice_index], row])
+        self.trajectory_data[slice_index] = np.vstack([self.trajectory_data[slice_index], row])
 
     def add_segment(self):  # function to add segment
-        self.trajectory_data.append(
-            np.empty((0, 6), dtype=float))  # add empty segment
+        self.trajectory_data.append(np.empty((0, 6), dtype=float))  # add empty segment
 
 
 # -------------------------------------------------------------------
