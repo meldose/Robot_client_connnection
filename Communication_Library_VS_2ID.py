@@ -563,7 +563,6 @@ class RobotRequestResponseCommunication:  # class used for storing data
             self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2) # sending the request to the camera having the vision system
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
 
-
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):  # defining the function for moving to the position
         try:
             start_time = time.time()  # setting the start time
