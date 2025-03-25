@@ -70,8 +70,8 @@ request_name = {
 }
 
 # STATE SERVER Requests
-JOINT_STATE_TYPE = 1
-TOOL_POSE_TYPE = 2
+JOINT_STATE_TYPE = 1 # setting the joint state type
+TOOL_POSE_TYPE = 2 # setting the tool pose type
 
 # sizes
 HEADER_SIZE = 12 # setting the header size
