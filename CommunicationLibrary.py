@@ -376,7 +376,7 @@ class RobotRequestResponseCommunication: # class used for storing data
         self.active_request = 0  # variable to check, if old request has finished and new one can be called
         self.client = None # variable to store client
         self.message = None # variable to store message
-        self.print_messages = True # True -> prints messages , False -> doesnt print messages
+        self.print_messages = True # True -> prints messages , False -> does not print messages
 
     def connect_to_server(self, CONTROLLER_IP, PORT): # function to connect to server
         self.client = socket.socket() # create socket
@@ -394,12 +394,12 @@ class RobotRequestResponseCommunication: # class used for storing data
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
         payload = payload + floatArray2bytes(start)  # payload - start
         payload = payload + floatArray2bytes(end)  # payload - end
-        self.pho_send_request(PHO_INIT_REQUEST, payload)
-        self.pho_receive_response(PHO_INIT_REQUEST)
+        self.pho_send_request(PHO_INIT_REQUEST, payload) # sending the request for initialising
+        self.pho_receive_response(PHO_INIT_REQUEST) # receiving the response
 
     def pho_request_bps_scan(self, vs_id): # defining function for bps scan
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
-        self.pho_send_request(PHO_SCAN_BPS_REQUEST, payload)
+        self.pho_send_request(PHO_SCAN_BPS_REQUEST, payload) # sending the request for bps scanning
 
     def pho_bps_wait_for_scan(self): # defining function for bps wait scan
         self.pho_receive_response(PHO_SCAN_BPS_REQUEST)
@@ -407,28 +407,28 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_request_trajectory(self, vs_id): # define function for request trajectory
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
-        self.pho_send_request(PHO_TRAJECTORY_REQUEST, payload)
-        self.pho_receive_response(PHO_TRAJECTORY_REQUEST)
+        self.pho_send_request(PHO_TRAJECTORY_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_TRAJECTORY_REQUEST) # receiving the response
 
     def pho_request_pick_failed(self, vs_id): # defining function for pick failed
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
-        self.pho_send_request(PHO_PICK_FAILED_REQUEST, payload)
-        self.pho_receive_response(PHO_PICK_FAILED_REQUEST)
+        self.pho_send_request(PHO_PICK_FAILED_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_PICK_FAILED_REQUEST) # receiving the response
 
     def pho_request_get_object(self, vs_id): # defining function for getting objects
         payload = [vs_id, 0, 0, 0]  # payload - vision system ID
-        self.pho_send_request(PHO_GET_OBJECT_BPS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_OBJECT_BPS_REQUEST)
+        self.pho_send_request(PHO_GET_OBJECT_BPS_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_GET_OBJECT_BPS_REQUEST) # receiving the response
 
     def pho_request_change_scene_status(self, scene_status_id): # defining function for changing the scene status
         payload = [scene_status_id, 0, 0, 0]  # payload - status scene ID
-        self.pho_send_request(PHO_CHANGE_SCENE_STATE_REQUEST, payload)
-        self.pho_receive_response(PHO_CHANGE_SCENE_STATE_REQUEST)
+        self.pho_send_request(PHO_CHANGE_SCENE_STATE_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_CHANGE_SCENE_STATE_REQUEST) # receiving the response
 
     def pho_request_bsp_get_vision_system_status(self, vs_id): # defining the function for getting the bps vision status system status
         payload = [vs_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_GET_VISION_SYSTEM_BPS_REQUEST, payload)
-        self.pho_receive_response(PHO_GET_VISION_SYSTEM_BPS_REQUEST)
+        self.pho_send_request(PHO_GET_VISION_SYSTEM_BPS_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_GET_VISION_SYSTEM_BPS_REQUEST)# receiving the request
 
 # -------------------------------------------------------------------
 #                      LOCATOR REQUESTS
