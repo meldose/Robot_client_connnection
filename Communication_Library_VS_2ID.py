@@ -844,17 +844,14 @@ class RobotStateCommunication:  # class for state server
         self.server = None  # server
 
     def create_server(self, ROBOT_CONTROLLER_IP, PORT):  # defining the server
-        self.server = socket.socket(
-            socket.AF_INET, socket.SOCK_STREAM)  # create socket
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # create socket
         self.server.bind((ROBOT_CONTROLLER_IP, PORT))  # bind
-        # Listen for incoming connections
         self.server.listen(1)  # listen
         print('Server is running, waiting for client...')  # print the message
 
     def wait_for_client(self):  # waiting for client
         self.client, client_address = self.server.accept()  # accept connection
         print('Connection established...')  # print the message
-        # Send hello string
         self.client.send(build_state_server_hello_msg())  # send the message
 
     def close_connection(self):  # closing the connection
@@ -864,14 +861,12 @@ class RobotStateCommunication:  # class for state server
         msg = deepcopy(PHO_HEADER)  # creating the message
         msg = msg + [6, 0, 0, 0]  # Data size # Data size
         msg = msg + [JOINT_STATE_TYPE, 0, 0, 0]  # Type
-        # sending the joint state
-        msg = msg + floatArray2bytes(get_joint_state(init_joint_state))
+        msg = msg + floatArray2bytes(get_joint_state(init_joint_state)) # sending the joint state
         self.client.send(bytearray(msg))  # sending the message
 
     def send_tool_pose(self):  # sending the tool pose
         msg = deepcopy(PHO_HEADER)  # creating the message
         msg = msg + [7, 0, 0, 0]  # Data size
         msg = msg + [TOOL_POSE_TYPE, 0, 0, 0]  # Type
-        # sending the tool pose
-        msg = msg + floatArray2bytes(get_tool_pose(base_quat))
+        msg = msg + floatArray2bytes(get_tool_pose(base_quat)) # sending the tool pose
         self.client.send(bytearray(msg))  # sending the message
