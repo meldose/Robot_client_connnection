@@ -362,7 +362,6 @@ class ResponseData:  # class used for storing data
     def add_segment(self): #    function to add segment
         self.trajectory_data.append(np.empty((0, 6), dtype=float)) # add empty segment
 
-
 # -------------------------------------------------------------------
 #                      ROBOT COMMUNICATION
 # -------------------------------------------------------------------
