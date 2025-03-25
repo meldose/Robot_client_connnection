@@ -599,47 +599,47 @@ class RobotRequestResponseCommunication:  # class used for storing data
 # -------------------------------------------------------------------
     def pho_request_add_calibration_point(self, tool_pose): # define function for adding the calibration point
         payload = floatArray2bytes(tool_pose)  # payload - start
-        self.pho_send_request(PHO_ADD_CAL_POINT_REQUEST, payload)
-        self.pho_receive_response(PHO_ADD_CAL_POINT_REQUEST)
+        self.pho_send_request(PHO_ADD_CAL_POINT_REQUEST, payload) # adding the calibration point request
+        self.pho_receive_response(PHO_ADD_CAL_POINT_REQUEST) # getting the recieve response form camera
 
     def pho_request_start_automatic_calibration(self, sol_id, vs_id):# define function for starting the automatic calibration
         payload = [sol_id, 0, 0, 0]  # payload - solution id
         payload = payload + [vs_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_START_AUTO_CAL_REQUEST, payload)
-        self.pho_receive_response(PHO_START_AUTO_CAL_REQUEST)
+        self.pho_send_request(PHO_START_AUTO_CAL_REQUEST, payload) # send the request to the camera
+        self.pho_receive_response(PHO_START_AUTO_CAL_REQUEST) # recieving the response form the camera
 
     def pho_request_save_automatic_calibration(self): # define function for saving the automatic calibration 
-        self.pho_send_request(PHO_SAVE_AUTO_CAL_REQUEST)
-        self.pho_receive_response(PHO_SAVE_AUTO_CAL_REQUEST)
+        self.pho_send_request(PHO_SAVE_AUTO_CAL_REQUEST) # sending the request to the camera
+        self.pho_receive_response(PHO_SAVE_AUTO_CAL_REQUEST) # recieveing the response from the camera
 
     def pho_request_stop_automatic_calibration(self):# define function for stopping the automatic calibration
-        self.pho_send_request(PHO_STOP_AUTO_CAL_REQUEST)
-        self.pho_receive_response(PHO_STOP_AUTO_CAL_REQUEST)
+        self.pho_send_request(PHO_STOP_AUTO_CAL_REQUEST) # sending the request ot the camera
+        self.pho_receive_response(PHO_STOP_AUTO_CAL_REQUEST) # recieving the response from the camera
 
 # -------------------------------------------------------------------
 #                      SOLUTION REQUESTS
 # -------------------------------------------------------------------
     def pho_request_change_solution(self, sol_id): # define function for changing the solution
         payload = [sol_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_CHANGE_SOLUTION_REQUEST, payload)
-        self.pho_receive_response(PHO_CHANGE_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_CHANGE_SOLUTION_REQUEST, payload) # sending the request ot the camera
+        self.pho_receive_response(PHO_CHANGE_SOLUTION_REQUEST)# recieving the response from the camera for change solution
 
     def pho_request_start_solution(self, sol_id): # define function for starting the solution
         payload = [sol_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_START_SOLUTION_REQUEST, payload)
-        self.pho_receive_response(PHO_START_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_START_SOLUTION_REQUEST, payload)# sending the request ot the camera
+        self.pho_receive_response(PHO_START_SOLUTION_REQUEST) # recieving the response from the camera for start solution
 
     def pho_request_stop_solution(self): # define function for stopping the solution
-        self.pho_send_request(PHO_STOP_SOLUTION_REQUEST)
-        self.pho_receive_response(PHO_STOP_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_STOP_SOLUTION_REQUEST)  # sending the request ot the camera
+        self.pho_receive_response(PHO_STOP_SOLUTION_REQUEST)# recieving the response from the camera for stop solution
 
     def pho_request_get_running_solution(self): # defining function for getting the running solution
-        self.pho_send_request(PHO_GET_RUNNING_SOLUTION_REQUEST)
-        self.pho_receive_response(PHO_GET_RUNNING_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_GET_RUNNING_SOLUTION_REQUEST)  # sending the request ot the camera
+        self.pho_receive_response(PHO_GET_RUNNING_SOLUTION_REQUEST) # recieving the response from the camera for running the solution
 
     def pho_request_get_available_solution(self): # definig function for getting the available solution
-        self.pho_send_request(PHO_GET_AVAILABLE_SOLUTION_REQUEST)
-        self.pho_receive_response(PHO_GET_AVAILABLE_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_GET_AVAILABLE_SOLUTION_REQUEST)  # sending the request ot the camera
+        self.pho_receive_response(PHO_GET_AVAILABLE_SOLUTION_REQUEST) # recieving the response from the camera for getting the available solution request
 
 # -------------------------------------------------------------------
 #                     REQUEST RELATED FUNCTIONS
