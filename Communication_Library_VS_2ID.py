@@ -292,7 +292,6 @@ class ServoX:  # defining Class servoX
         new_message = [x, y, z, d, a, b, c]
         print(new_message)  # printing the new ordered message
 
-        # Switch to external servo mode
         # activating the servo interface
         r.activate_servo_interface('position')
 
@@ -300,10 +299,10 @@ class ServoX:  # defining Class servoX
         velocity = [0.2]*6  # setting the velocity
         acceleration = [2.0]*6  # setting the acceleration
         # getting the current cartesian poses
-        target = copy.deepcopy(r.get_current_cartesian_pose())
+        target = copy.deepcopy(r.get_current_cartesian_pose()) # copy the values of the target
         time.sleep(1.0)  # setting the time
 
-        target = [new_message[0], new_message[1], new_message[2],target[3], target[4], target[5], target[6]]
+        target = [new_message[0], new_message[1], new_message[2],target[3], target[4], target[5], target[6]] # setting the target position
         error_code = r.movelinear_online(target, velocity, acceleration)  # moving the robot
         print(error_code)  # printing the error code value
         r.gripper("on") # setting the gripper on position
