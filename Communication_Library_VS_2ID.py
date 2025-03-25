@@ -32,46 +32,45 @@ class OperationType:  # defining operation type
     PHO_OBJECT_POSE = 5  # defining operation type
 
 
-PHO_SCAN_BPS_REQUEST = 1
-PHO_SCAN_LS_REQUEST = 19
-PHO_TRAJECTORY_REQUEST = 2
-PHO_INIT_REQUEST = 4
-PHO_ADD_CAL_POINT_REQUEST = 5
-PHO_PICK_FAILED_REQUEST = 7
-PHO_GET_OBJECT_BPS_REQUEST = 8
-PHO_CHANGE_SOLUTION_REQUEST = 9
-PHO_START_SOLUTION_REQUEST = 10
-PHO_STOP_SOLUTION_REQUEST = 11
-PHO_GET_RUNNING_SOLUTION_REQUEST = 12
-PHO_GET_AVAILABLE_SOLUTION_REQUEST = 13
-PHO_CHANGE_SCENE_STATE_REQUEST = 15
-PHO_GET_OBJECT_LS_REQUEST = 20
-PHO_GET_VISION_SYSTEM_BPS_REQUEST = 21
-PHO_GET_VISION_SYSTEM_LS_REQUEST = 22
-PHO_START_AUTO_CAL_REQUEST = 25
-PHO_STOP_AUTO_CAL_REQUEST = 26
-PHO_SAVE_AUTO_CAL_REQUEST = 27
+PHO_SCAN_BPS_REQUEST = 1 # setting the bps request
+PHO_SCAN_LS_REQUEST = 19 # setting the scan for ls request
+PHO_TRAJECTORY_REQUEST = 2 # setting the trajectory request
+PHO_INIT_REQUEST = 4 # setting the init request
+PHO_ADD_CAL_POINT_REQUEST = 5 # setting the calibration point request
+PHO_PICK_FAILED_REQUEST = 7 # setting the failed request
+PHO_GET_OBJECT_BPS_REQUEST = 8 # setting the request for getting the object 
+PHO_CHANGE_SOLUTION_REQUEST = 9 # setting the solution request
+PHO_START_SOLUTION_REQUEST = 10 # setting the solution request
+PHO_STOP_SOLUTION_REQUEST = 11 # setting the stop solution request
+PHO_GET_RUNNING_SOLUTION_REQUEST = 12 # settig the running solution request
+PHO_GET_AVAILABLE_SOLUTION_REQUEST = 13 # setting the available solution request
+PHO_CHANGE_SCENE_STATE_REQUEST = 15 # setting the change of the scene of state request
+PHO_GET_VISION_SYSTEM_BPS_REQUEST = 21 # setting the vision system for bps request
+PHO_GET_VISION_SYSTEM_LS_REQUEST = 22 # setting the vision locator request
+PHO_START_AUTO_CAL_REQUEST = 25 # setting the auto start calibration request
+PHO_STOP_AUTO_CAL_REQUEST = 26 # setting the auto stop calibration request
+PHO_SAVE_AUTO_CAL_REQUEST = 27 # setting the auto save calibration request
 
 request_name = {
-    PHO_SCAN_BPS_REQUEST: "SCAN",
-    PHO_SCAN_LS_REQUEST: "SCAN",
-    PHO_TRAJECTORY_REQUEST: "TRAJECTORY",
-    PHO_INIT_REQUEST: "INIT",
-    PHO_ADD_CAL_POINT_REQUEST: "ADD CALIBRATION POINT",
-    PHO_PICK_FAILED_REQUEST: "PICK FAILED",
-    PHO_GET_OBJECT_BPS_REQUEST: "GET OBJECT",
-    PHO_CHANGE_SOLUTION_REQUEST: "CHANGE SOLUTION",
-    PHO_START_SOLUTION_REQUEST: "START SOLUTION",
-    PHO_STOP_SOLUTION_REQUEST: "STOP SOLUTION",
-    PHO_GET_RUNNING_SOLUTION_REQUEST: "GET RUNNING SOLUTION",
-    PHO_GET_AVAILABLE_SOLUTION_REQUEST: "GET AVAILABLE SOLUTION",
-    PHO_CHANGE_SCENE_STATE_REQUEST: "CHANGE SCENE",
-    PHO_GET_OBJECT_LS_REQUEST: "GET OBJECTS",
-    PHO_GET_VISION_SYSTEM_BPS_REQUEST: "GET VISION SYSTEM",
-    PHO_GET_VISION_SYSTEM_LS_REQUEST: "GET VISION SYSTEM",
-    PHO_START_AUTO_CAL_REQUEST: "START AUTOMATIC CALIBRATION",
-    PHO_STOP_AUTO_CAL_REQUEST: "STOP AUTOMATIC CALIBRATION",
-    PHO_SAVE_AUTO_CAL_REQUEST: "SAVE AUTOMATIC CALIBRATION",
+    PHO_SCAN_BPS_REQUEST: "SCAN", # requesting for bps request
+    PHO_SCAN_LS_REQUEST: "SCAN", # requesting for ls request
+    PHO_TRAJECTORY_REQUEST: "TRAJECTORY", # requesting for trajectory request
+    PHO_INIT_REQUEST: "INIT", # setttig the init request
+    PHO_ADD_CAL_POINT_REQUEST: "ADD CALIBRATION POINT", # adding the calibration point request
+    PHO_PICK_FAILED_REQUEST: "PICK FAILED", # settign the pick failed request
+    PHO_GET_OBJECT_BPS_REQUEST: "GET OBJECT", # reqeust for getting the object for bps
+    PHO_CHANGE_SOLUTION_REQUEST: "CHANGE SOLUTION", # request for changes of solution request
+    PHO_START_SOLUTION_REQUEST: "START SOLUTION", # request for start for start of solution
+    PHO_STOP_SOLUTION_REQUEST: "STOP SOLUTION", # request for stop solution
+    PHO_GET_RUNNING_SOLUTION_REQUEST: "GET RUNNING SOLUTION", # request for running the solution
+    PHO_GET_AVAILABLE_SOLUTION_REQUEST: "GET AVAILABLE SOLUTION", # request for getting the available solution
+    PHO_CHANGE_SCENE_STATE_REQUEST: "CHANGE SCENE", # request for gettign the change in state
+    PHO_GET_OBJECT_LS_REQUEST: "GET OBJECTS", # rqeuest for getting the object
+    PHO_GET_VISION_SYSTEM_BPS_REQUEST: "GET VISION SYSTEM", # request for getting the Bps request
+    PHO_GET_VISION_SYSTEM_LS_REQUEST: "GET VISION SYSTEM", # request for getting the ls 
+    PHO_START_AUTO_CAL_REQUEST: "START AUTOMATIC CALIBRATION", # request for auto calibration request
+    PHO_STOP_AUTO_CAL_REQUEST: "STOP AUTOMATIC CALIBRATION", # request for getting the stop automatic calibration
+    PHO_SAVE_AUTO_CAL_REQUEST: "SAVE AUTOMATIC CALIBRATION", # request for saving auto calibration request
 }
 
 # STATE SERVER Requests
