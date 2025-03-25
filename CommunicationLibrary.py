@@ -596,13 +596,14 @@ class RobotRequestResponseCommunication: # class used for storing data
                 data = self.client.recv(data_size * PACKET_SIZE)
                 self.message = data
                 self.print_message(operation_type)
+                
             elif operation_type == OperationType.PHO_OBJECT_POSE:
                 data = self.client.recv(OBJECT_POSE_SIZE)
                 object_pose = struct.unpack('<7f', data[0:28])
                 self.message = object_pose # setting the object_pose
                 a = self.print_message(operation_type) # creating object pose
                 X0 = np.array(object_pose[:3])  # Convert to meters
-                velocity = np.array([0.00853,0.01727,0])*6500 # Define a velocity
+                velocity = np.array([0.00853,0.01727,0])*4500 # Define a velocity
                 X = np.zeros(3)
                 object_not_grasped = True # condition for object not grapsed as True
                 timeout = 60 # Set a timeout to avoid infinite loops
