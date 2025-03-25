@@ -27,6 +27,8 @@ class OperationType: # defining operation type
     PHO_INFO = 4 # defining operation type
     PHO_OBJECT_POSE = 5 # defining operation type
 
+
+# defining request types
 PHO_SCAN_BPS_REQUEST = 1
 PHO_SCAN_LS_REQUEST = 19
 PHO_TRAJECTORY_REQUEST = 2
@@ -47,6 +49,7 @@ PHO_START_AUTO_CAL_REQUEST = 25
 PHO_STOP_AUTO_CAL_REQUEST = 26
 PHO_SAVE_AUTO_CAL_REQUEST = 27
 
+# defining request names
 request_name = {
     PHO_SCAN_BPS_REQUEST: "SCAN",
     PHO_SCAN_LS_REQUEST: "SCAN",
