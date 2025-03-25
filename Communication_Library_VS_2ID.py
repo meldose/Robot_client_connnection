@@ -65,7 +65,7 @@ request_name = {
     PHO_GET_RUNNING_SOLUTION_REQUEST: "GET RUNNING SOLUTION", # request for running the solution
     PHO_GET_AVAILABLE_SOLUTION_REQUEST: "GET AVAILABLE SOLUTION", # request for getting the available solution
     PHO_CHANGE_SCENE_STATE_REQUEST: "CHANGE SCENE", # request for gettign the change in state
-    PHO_GET_OBJECT_LS_REQUEST: "GET OBJECTS", # rqeuest for getting the object
+    PHO_GET_OBJECT_LS_REQUEST: "GET OBJECTS", # request for getting the object 
     PHO_GET_VISION_SYSTEM_BPS_REQUEST: "GET VISION SYSTEM", # request for getting the Bps request
     PHO_GET_VISION_SYSTEM_LS_REQUEST: "GET VISION SYSTEM", # request for getting the ls 
     PHO_START_AUTO_CAL_REQUEST: "START AUTOMATIC CALIBRATION", # request for auto calibration request
