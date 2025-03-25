@@ -30,9 +30,9 @@ def test_ls(): # main function for calling every function.
     robot.pho_request_get_objects(vs_id_1=1,number_of_objects_1=1) # get objects for first object trapezoid and vision system 1
     time.sleep(0.01) # setting time sleep
     robot.pho_request_start_solution(252) # starting the solution
-    time.sleep(0.05) # setting the time sleep
+    time.sleep(0.01) # setting the time sleep
     robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
-    time.sleep(0.05) # setting time sleep
+    time.sleep(0.01) # setting time sleep
     # robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
     # time.sleep(0.01) # setting time sleep
     # robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
