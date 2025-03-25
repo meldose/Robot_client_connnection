@@ -12,8 +12,8 @@ from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_q
 import time  # importing times
 import logging  # importing logging
 # importing ruckig . output parameter,InputParameter and Result
-from ruckig import InputParameter, OutputParameter, Result, Ruckig
-from neurapy.robot import Robot
+from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing modules Inputparameter , Outputparameter , Result and Ruckig from ruckig
+from neurapy.robot import Robot # importing neurapy
 r = Robot()  # defining the robot
 
 # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
