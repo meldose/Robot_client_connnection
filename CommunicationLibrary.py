@@ -442,7 +442,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 
             raise ValueError("Invalid vs_id! Use 1 for Pipe, 2 for Trapezoid.") # if not raise the error
 
-
         payload_1 = [vs_id_1, 0, 0, 0] # setting the payload for vision system 1
 
         if tool_pose is not None:  # checking if the tool pose is None or not
@@ -472,6 +471,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
     def pho_request_get_objects(self, vs_id_1, number_of_objects_1): # defining the function for get objects
         self.start_time = time.time()  # setting the start time
+        
         try:
 
             if not all(isinstance(x, int) for x in [vs_id_1, number_of_objects_1]): # checking the element in the list of vision system 1 is integer or not
@@ -589,55 +589,55 @@ class RobotRequestResponseCommunication: # class used for storing data
 # -------------------------------------------------------------------
 #                      CALIBRATION REQUESTS
 # -------------------------------------------------------------------
-    def pho_request_add_calibration_point(self, tool_pose):
+    def pho_request_add_calibration_point(self, tool_pose): # defining the function for adding the calibration point
         payload = floatArray2bytes(tool_pose)  # payload - start
-        self.pho_send_request(PHO_ADD_CAL_POINT_REQUEST, payload)
-        self.pho_receive_response(PHO_ADD_CAL_POINT_REQUEST)
+        self.pho_send_request(PHO_ADD_CAL_POINT_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_ADD_CAL_POINT_REQUEST) # receiving the response
 
-    def pho_request_start_automatic_calibration(self, sol_id, vs_id):
+    def pho_request_start_automatic_calibration(self, sol_id, vs_id): # defining the function for starting the automatic calibration
         payload = [sol_id, 0, 0, 0]  # payload - solution id
         payload = payload + [vs_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_START_AUTO_CAL_REQUEST, payload)
-        self.pho_receive_response(PHO_START_AUTO_CAL_REQUEST)
+        self.pho_send_request(PHO_START_AUTO_CAL_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_START_AUTO_CAL_REQUEST) # receiving the response
 
-    def pho_request_save_automatic_calibration(self):
-        self.pho_send_request(PHO_SAVE_AUTO_CAL_REQUEST)
-        self.pho_receive_response(PHO_SAVE_AUTO_CAL_REQUEST)
+    def pho_request_save_automatic_calibration(self): # defining the function for saving the automatic calibration
+        self.pho_send_request(PHO_SAVE_AUTO_CAL_REQUEST) # sending the request
+        self.pho_receive_response(PHO_SAVE_AUTO_CAL_REQUEST) # receiving the response
 
-    def pho_request_stop_automatic_calibration(self):
-        self.pho_send_request(PHO_STOP_AUTO_CAL_REQUEST)
-        self.pho_receive_response(PHO_STOP_AUTO_CAL_REQUEST)
+    def pho_request_stop_automatic_calibration(self): # defining the function for stopping the automatic calibration
+        self.pho_send_request(PHO_STOP_AUTO_CAL_REQUEST) # sending the request
+        self.pho_receive_response(PHO_STOP_AUTO_CAL_REQUEST) # receiving the response
 
 # -------------------------------------------------------------------
 #                      SOLUTION REQUESTS
 # -------------------------------------------------------------------
-    def pho_request_change_solution(self, sol_id):
+    def pho_request_change_solution(self, sol_id): # defining the function for changing the solution
         payload = [sol_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_CHANGE_SOLUTION_REQUEST, payload)
-        self.pho_receive_response(PHO_CHANGE_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_CHANGE_SOLUTION_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_CHANGE_SOLUTION_REQUEST) # receiving the response
 
     def pho_request_start_solution(self, sol_id):
         payload = [sol_id, 0, 0, 0]  # payload - vision system id
-        self.pho_send_request(PHO_START_SOLUTION_REQUEST, payload)
-        self.pho_receive_response(PHO_START_SOLUTION_REQUEST)
+        self.pho_send_request(PHO_START_SOLUTION_REQUEST, payload) # sending the request
+        self.pho_receive_response(PHO_START_SOLUTION_REQUEST) # receiving the response
 
-    def pho_request_stop_solution(self):
-        self.pho_send_request(PHO_STOP_SOLUTION_REQUEST)
-        self.pho_receive_response(PHO_STOP_SOLUTION_REQUEST)
+    def pho_request_stop_solution(self): # defining the function for stopping the solution
+        self.pho_send_request(PHO_STOP_SOLUTION_REQUEST) # sending the request
+        self.pho_receive_response(PHO_STOP_SOLUTION_REQUEST) # receiving the response
 
-    def pho_request_get_running_solution(self):
-        self.pho_send_request(PHO_GET_RUNNING_SOLUTION_REQUEST)
-        self.pho_receive_response(PHO_GET_RUNNING_SOLUTION_REQUEST)
+    def pho_request_get_running_solution(self): # defining the function for getting the running solution
+        self.pho_send_request(PHO_GET_RUNNING_SOLUTION_REQUEST) # sending the request
+        self.pho_receive_response(PHO_GET_RUNNING_SOLUTION_REQUEST) # receiving the response
 
-    def pho_request_get_available_solution(self):
-        self.pho_send_request(PHO_GET_AVAILABLE_SOLUTION_REQUEST)
-        self.pho_receive_response(PHO_GET_AVAILABLE_SOLUTION_REQUEST)
+    def pho_request_get_available_solution(self): # defining the function for getting the available solution
+        self.pho_send_request(PHO_GET_AVAILABLE_SOLUTION_REQUEST) # sending the request
+        self.pho_receive_response(PHO_GET_AVAILABLE_SOLUTION_REQUEST) # receiving the response
 
 # -------------------------------------------------------------------
 #                     REQUEST RELATED FUNCTIONS
 # -------------------------------------------------------------------
 
-    def pho_send_request(self, request_id, payload=None):
+    def pho_send_request(self, request_id, payload=None): # defining the function for sending the request
         assert self.active_request == 0, "Request " + request_name[self.active_request] + " not finished"
         self.active_request = request_id
         msg = PHO_HEADER  # header - PHO
@@ -651,7 +651,7 @@ class RobotRequestResponseCommunication: # class used for storing data
 
         self.client.send(bytearray(msg))
 
-    def pho_receive_response(self, required_id):
+    def pho_receive_response(self, required_id): # defining the function for recieving the response
         received_header = self.client.recv(HEADER_SIZE)
         request_id = int.from_bytes(received_header[0:3], "little")
         number_of_messages = int.from_bytes(received_header[4:7], "little")
