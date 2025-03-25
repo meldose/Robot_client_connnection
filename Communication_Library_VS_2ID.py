@@ -1,7 +1,6 @@
 # -------------------------------------------------------------------
 #                      IMPORTS
 # -------------------------------------------------------------------
-
 import socket # importing socket
 from copy import deepcopy # importing copy
 import struct # importing struct
