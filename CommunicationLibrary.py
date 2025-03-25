@@ -495,7 +495,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)# recieving the request from the camera
 
-
     def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None): # setting the function for request scan 2
         
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
