@@ -2,57 +2,54 @@
 #                      IMPORTS
 # -------------------------------------------------------------------
 
-import copy  # importing copy module
-import socket  # importing socket
-from copy import deepcopy  # importing copy
-import struct  # importing struct
-import math  # importing math
-import numpy as np  # importing numpy
-from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat
-import time  # importing times
-import logging  # importing logging
-# importing ruckig . output parameter,InputParameter and Result
-from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing modules Inputparameter , Outputparameter , Result and Ruckig from ruckig
-from neurapy.robot import Robot # importing neurapy
-r = Robot()  # defining the robot
+import socket # importing socket
+from copy import deepcopy # importing copy
+import struct # importing struct
+import math # importing math
+import numpy as np # importing numpy
+from StateServer import get_joint_state, get_tool_pose, init_joint_state, base_quat # from StateServer import init_joint_state, base_quat
+import time # importing times
+import logging # importing logging
+from ruckig import InputParameter, OutputParameter, Result, Ruckig  # importing ruckig . output parameter,InputParameter and Result
+from neurapy.robot import Robot # importing robot
+r=Robot() # defining the robot
 
-# "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
-BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX" # setting the Brand identification
-BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX" # setting the Brand identification server
+BRAND_IDENTIFICATION = "ABB_IRB/1.8.0XXXXXXXXXXX"  # "DOOSAN/1.7.0_XXXXXXXXXXX" "UNIVERSAL_ROBOTS/v1.8.0X" # "KAWASAKI/1.8.0XXXXXXXXXX" # "KUKA_SUNRISE/1.8.0XXXXXX" # "KUKA_KRC/1.8.0XXXXX" #  "BPS_EXT_DEVICE/1.8.0XXXX"  "KUKA_KRC/1.8.0XXXXX"  #  "ABB_IRB/1.8.0XXXXXXXXXXX"
+BRAND_IDENTIFICATION_SERVER = "ABB_IRB/1.8.0XXXXXXXXXXX"
 
-DEG2RAD = math.pi / 180  # converting degrees to radians
+DEG2RAD = math.pi / 180 # converting degrees to radians
 
-
-class OperationType:  # defining operation type
-    PHO_TRAJECTORY_CNT = 0  # defining operation type
-    PHO_TRAJECTORY_FINE = 1  # defining operation type
-    PHO_GRIPPER = 2  # defining operation type
-    PHO_ERROR = 3  # defining operation type
-    PHO_INFO = 4  # defining operation type
-    PHO_OBJECT_POSE = 5  # defining operation type
+class OperationType: # defining operation type
+    PHO_TRAJECTORY_CNT = 0  # defining operation type    
+    PHO_TRAJECTORY_FINE = 1 # defining operation type
+    PHO_GRIPPER = 2 # defining operation type
+    PHO_ERROR = 3 # defining operation type
+    PHO_INFO = 4 # defining operation type
+    PHO_OBJECT_POSE = 5 # defining operation type
 
 
-PHO_SCAN_BPS_REQUEST = 1 # setting the bps request
-PHO_SCAN_LS_REQUEST = 19 # setting the scan for ls request
-PHO_TRAJECTORY_REQUEST = 2 # setting the trajectory request
-PHO_INIT_REQUEST = 4 # setting the init request
-PHO_ADD_CAL_POINT_REQUEST = 5 # setting the calibration point request
-PHO_PICK_FAILED_REQUEST = 7 # setting the failed request
-PHO_GET_OBJECT_BPS_REQUEST = 8 # setting the request for getting the object 
-PHO_CHANGE_SOLUTION_REQUEST = 9 # setting the solution request
-PHO_START_SOLUTION_REQUEST = 10 # setting the solution request
-PHO_STOP_SOLUTION_REQUEST = 11 # setting the stop solution request
-PHO_GET_RUNNING_SOLUTION_REQUEST = 12 # settig the running solution request
-PHO_GET_AVAILABLE_SOLUTION_REQUEST = 13 # setting the available solution request
-PHO_CHANGE_SCENE_STATE_REQUEST = 15 # setting the change of the scene of state request
-PHO_GET_VISION_SYSTEM_BPS_REQUEST = 21 # setting the vision system for bps request
-PHO_GET_VISION_SYSTEM_LS_REQUEST = 22 # setting the vision locator request
-PHO_START_AUTO_CAL_REQUEST = 25 # setting the auto start calibration request
-PHO_STOP_AUTO_CAL_REQUEST = 26 # setting the auto stop calibration request
-PHO_SAVE_AUTO_CAL_REQUEST = 27 # setting the auto save calibration request
+PHO_SCAN_BPS_REQUEST = 1
+PHO_SCAN_LS_REQUEST = 19
+PHO_TRAJECTORY_REQUEST = 2
+PHO_INIT_REQUEST = 4
+PHO_ADD_CAL_POINT_REQUEST = 5
+PHO_PICK_FAILED_REQUEST = 7
+PHO_GET_OBJECT_BPS_REQUEST = 8
+PHO_CHANGE_SOLUTION_REQUEST = 9
+PHO_START_SOLUTION_REQUEST = 10
+PHO_STOP_SOLUTION_REQUEST = 11
+PHO_GET_RUNNING_SOLUTION_REQUEST = 12
+PHO_GET_AVAILABLE_SOLUTION_REQUEST = 13
+PHO_CHANGE_SCENE_STATE_REQUEST = 15
+PHO_GET_OBJECT_LS_REQUEST = 20
+PHO_GET_VISION_SYSTEM_BPS_REQUEST = 21
+PHO_GET_VISION_SYSTEM_LS_REQUEST = 22
+PHO_START_AUTO_CAL_REQUEST = 25
+PHO_STOP_AUTO_CAL_REQUEST = 26
+PHO_SAVE_AUTO_CAL_REQUEST = 27
 
 request_name = {
-    PHO_SCAN_BPS_REQUEST: "SCAN", # requesting for bps request
+    PHO_SCAN_BPS_REQUEST: "SCAN", # requesting for bps request 
     PHO_SCAN_LS_REQUEST: "SCAN", # requesting for ls request
     PHO_TRAJECTORY_REQUEST: "TRAJECTORY", # requesting for trajectory request
     PHO_INIT_REQUEST: "INIT", # setttig the init request
@@ -63,7 +60,7 @@ request_name = {
     PHO_START_SOLUTION_REQUEST: "START SOLUTION", # request for start for start of solution
     PHO_STOP_SOLUTION_REQUEST: "STOP SOLUTION", # request for stop solution
     PHO_GET_RUNNING_SOLUTION_REQUEST: "GET RUNNING SOLUTION", # request for running the solution
-    PHO_GET_AVAILABLE_SOLUTION_REQUEST: "GET AVAILABLE SOLUTION", # request for getting the available solution
+    PHO_GET_AVAILABLE_SOLUTION_REQUEST: "GET AVAILABLE SOLUTION",  # request for getting the available solution
     PHO_CHANGE_SCENE_STATE_REQUEST: "CHANGE SCENE", # request for gettign the change in state
     PHO_GET_OBJECT_LS_REQUEST: "GET OBJECTS", # request for getting the object 
     PHO_GET_VISION_SYSTEM_BPS_REQUEST: "GET VISION SYSTEM", # request for getting the Bps request
@@ -78,10 +75,10 @@ JOINT_STATE_TYPE = 1
 TOOL_POSE_TYPE = 2
 
 # sizes
-HEADER_SIZE = 12
-SUBHEADER_SIZE = 12
-PACKET_SIZE = 4
-OBJECT_POSE_SIZE = 28
+HEADER_SIZE = 12 # setting the header size
+SUBHEADER_SIZE = 12 # setting the subheader size
+PACKET_SIZE = 4 # setting the packet size
+OBJECT_POSE_SIZE = 28 # setting the object pose size
 
 # Photoneo header
 PHO_HEADER = [80, 0, 0, 0, 72, 0, 0, 0, 79, 0, 0, 0]  # P, H, O
