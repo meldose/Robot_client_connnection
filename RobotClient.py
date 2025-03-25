@@ -48,6 +48,15 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
     time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_scan_2(vs_id_2=2) # ls scan for vision system 2 (pipe)
+    time.sleep(0.01) # setting time sleep
+    robot.pho_ls_wait_for_scan_2(vs_id_2=2) # waiting for scan for vision system2 
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_get_objects_2(vs_id_2=2,number_of_objects_2=2)
+    time.sleep(0.01) # setting time sleep
+    robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
+    time.sleep(0.01) # setting time sleep
+
 
     # robot.close_connection()  #communication needs to be closed
     # time.sleep(0.01) # setting time sleep
