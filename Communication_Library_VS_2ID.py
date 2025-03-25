@@ -829,13 +829,13 @@ def floatArray2bytes(array):  # function to convert float array to bytes
 
 
 def build_hello_msg():  # function to build the hello message
-    # returning the message
-    return bytearray(BRAND_IDENTIFICATION.encode('utf-8'))
+
+    return bytearray(BRAND_IDENTIFICATION.encode('utf-8')) # returning the message
 
 
 def build_state_server_hello_msg():  # function to build the state server hello message
-    # returning the message
-    return bytearray(BRAND_IDENTIFICATION_SERVER.encode('utf-8'))
+
+    return bytearray(BRAND_IDENTIFICATION_SERVER.encode('utf-8')) # returning the message
 
 
 # -------------------------------------------------------------------
