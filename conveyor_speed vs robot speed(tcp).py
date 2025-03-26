@@ -1,13 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Function to generate speed graph with variations
+# Function to generate speed graph with periodic up-and-down variations
 def generate_graphs_with_variations(t1, t2, robot_velocities, conveyor_speeds):
     time_stamps = np.linspace(t1, t2, len(conveyor_speeds))  # Generate time stamps
 
-    # Compute robot velocity magnitudes and scale (with noise and non-linearity)
-    noise_factor = 0.1  # 10% noise
-    robot_pick_speed = [np.linalg.norm(np.array(v) + np.random.normal(0, noise_factor, 3)) / 1000 for v in robot_velocities]
+    # Compute robot velocity magnitudes with periodic noise (sinusoidal variations)
+    noise_factor = 0.02  # Base noise
+    oscillation_amplitude = 0.05  # Amplitude for up-and-down variations
+    frequency = 0.2  # Frequency of oscillation (how fast the variations occur)
+    
+    robot_pick_speed = [
+        np.linalg.norm(np.array(v) + np.random.normal(0, noise_factor, 3) + 
+                       oscillation_amplitude * np.sin(2 * np.pi * frequency * t)) / 1000 
+        for t, v in zip(time_stamps, robot_velocities)
+    ]
     
     # --- LINE CHART FOR ROBOT TCP SPEED vs CONVEYOR SPEED ---
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -17,13 +24,16 @@ def generate_graphs_with_variations(t1, t2, robot_velocities, conveyor_speeds):
     sampled_speeds = conveyor_speeds[sample_indices]
     sampled_robot_speeds = np.array(robot_pick_speed)[sample_indices]
 
-    # Plot line graph with markers
+    # Plot conveyor speed line in blue
+    ax.plot(sampled_speeds, np.zeros_like(sampled_speeds), linestyle='-', marker='', color='blue', label='Conveyor Speed')
+
+    # Plot robot TCP speed line in red with periodic up-and-down variations
     ax.plot(sampled_speeds, sampled_robot_speeds, linestyle='-', marker='o', color='red', label='Robot TCP Speed')
 
     # Labels and title
     ax.set_xlabel("Conveyor Speed (m/s)")
-    ax.set_ylabel("Robot TCP Speed (m/s)")
-    ax.set_title("Robot TCP Speed vs Conveyor Speed with Variations")
+    ax.set_ylabel("Speed (m/s)")
+    ax.set_title("Robot TCP Speed vs Conveyor Speed with Periodic Up-and-Down Variations")
     
     ax.legend()
     ax.grid(True, linestyle='--', alpha=0.5)
@@ -38,7 +48,7 @@ def generate_graphs_with_variations(t1, t2, robot_velocities, conveyor_speeds):
 t1, t2 = 1742319295.47, 1742319299.702  
 conveyor_speeds = np.linspace(1.0, 2.0, 100)  
 
-# Non-linear robot velocities with noise
+# Non-linear robot velocities with small variations
 robot_velocities = [np.array([0.00853, 0.01727, 0]) * (4000 * s**2) for s in conveyor_speeds]  
 
 # Calling the function
