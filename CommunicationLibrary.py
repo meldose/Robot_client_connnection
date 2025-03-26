@@ -495,7 +495,6 @@ class RobotRequestResponseCommunication: # class used for storing data
 
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST)# recieving the request from the camera
 
-<<<<<<< HEAD
     def pho_request_ls_scan_2(self, vs_id_2, tool_pose=None, payload=None): # setting the function for request scan 2
         
         valid_ids = {1: "Trapezoid", 2: "Pipe"} # setting the list for trapezoid and pipe
@@ -559,8 +558,6 @@ class RobotRequestResponseCommunication: # class used for storing data
             self.pho_send_request(PHO_GET_VISION_SYSTEM_LS_REQUEST, payload_2) # sending the request to the camera having the vision system
             self.pho_receive_response(PHO_GET_VISION_SYSTEM_LS_REQUEST) # recieving the request from the camera
 
-=======
->>>>>>> 3b3438f0a36b4c88fcf4bf8492aa871af5e9a399
     def move_to_position(self, joint_angles, tolerance=0.01, timeout=30):  # defining the function for moving to the position
         try:
             start_time = time.time()  # setting the start time
