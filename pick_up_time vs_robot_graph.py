@@ -7,8 +7,8 @@ def generate_graph(conveyor_speeds, avg_pick_times):
     plt.figure(figsize=(10, 5))
     
     # Plot Conveyor Speed vs Average Pick Time
-    plt.plot(conveyor_speeds, avg_pick_times, label='Avg Pick Time (s)', color='red', marker='o', linestyle='-')
-    
+    plt.plot(conveyor_speeds, avg_pick_times, label='Avg Pick Time (s)', color='red', linestyle='-', marker='o')
+
     # Labels and title
     plt.xlabel('Conveyor Speed (m/s)')
     plt.ylabel('Average Pick Time (s)')
@@ -22,8 +22,8 @@ def generate_graph(conveyor_speeds, avg_pick_times):
     plt.show()
 
 # Example input
-conveyor_speeds = np.linspace(1.0, 2.0, 100)  # Conveyor speeds in m/s
-avg_pick_times = np.linspace(0.5, 1.5, 100)  # Simulated pick times (assumed to increase slightly)
+conveyor_speeds = np.linspace(0.00853, 0.01727, 10) * 5000  # Generate 10 conveyor speeds in m/s
+avg_pick_times = np.linspace(108.24, 112, 10)  # Simulate increasing pick times
 
 # Calling the function
 generate_graph(conveyor_speeds, avg_pick_times)
