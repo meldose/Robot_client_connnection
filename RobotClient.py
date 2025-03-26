@@ -31,7 +31,6 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
     time.sleep(0.01) # setting time sleep
-<<<<<<< HEAD
     robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
     time.sleep(0.01) # setting time sleep
     robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
@@ -56,10 +55,6 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
     time.sleep(0.01) # setting time sleep
-
-
-=======
->>>>>>> 3b3438f0a36b4c88fcf4bf8492aa871af5e9a399
     # robot.close_connection()  #communication needs to be closed
     # time.sleep(0.01) # setting time sleep
 
