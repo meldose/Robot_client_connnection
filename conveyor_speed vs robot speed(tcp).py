@@ -1,14 +1,14 @@
 import numpy as np  
 import matplotlib.pyplot as plt  
 
-# Function to generate speed graph and success rate graph
+# Function to generate speed graph
 def generate_graphs(t1, t2, robot_velocities, conveyor_speeds):
     time_stamps = np.linspace(t1, t2, len(conveyor_speeds))  # Generate time stamps
 
     # Compute robot velocity magnitudes and scale
     robot_pick_speed = [np.linalg.norm(v) / 1000 for v in robot_velocities]  
     
-    # --- BAR CHART FOR ROBOT TCP SPEED vs CONVEYOR SPEED ---
+    # --- LINE CHART FOR ROBOT TCP SPEED vs CONVEYOR SPEED ---
     fig, ax = plt.subplots(figsize=(10, 5))
 
     # Reduce data points for better visualization
@@ -16,18 +16,20 @@ def generate_graphs(t1, t2, robot_velocities, conveyor_speeds):
     sampled_speeds = conveyor_speeds[sample_indices]
     sampled_robot_speeds = np.array(robot_pick_speed)[sample_indices]
 
-    # Bar width and positions
-    bar_width = 0.04  
-    x = sampled_speeds  
+    # Plot line graph with markers
+    ax.plot(sampled_speeds, sampled_robot_speeds, linestyle='-', marker='o', color='red', label='Robot TCP Speed')
 
-    # Plot bar chart
-    ax.bar(x, sampled_robot_speeds, width=bar_width, color='red', alpha=0.7, label='Robot TCP Speed')
-
+    # Labels and title
     ax.set_xlabel("Conveyor Speed (m/s)")
     ax.set_ylabel("Robot TCP Speed (m/s)")
     ax.set_title("Robot TCP Speed vs Conveyor Speed")
+    
     ax.legend()
-    ax.grid(axis='y')
+    ax.grid(True, linestyle='--', alpha=0.5)
+
+    # Improve x-axis ticks
+    ax.set_xticks(sampled_speeds)
+    ax.set_xticklabels([f"{s:.2f}" for s in sampled_speeds], rotation=45)
 
     plt.show()
 
