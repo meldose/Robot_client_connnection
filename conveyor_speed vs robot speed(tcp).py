@@ -32,8 +32,8 @@ def generate_graphs_with_variations(t1, t2, robot_velocities, conveyor_speeds):
 
     # Labels and title
     ax.set_xlabel("Conveyor Speed (m/s)")
-    ax.set_ylabel("Speed (m/s)")
-    ax.set_title("Robot TCP Speed vs Conveyor Speed with Periodic Up-and-Down Variations")
+    ax.set_ylabel("Mean TCP Speed (m/s)")
+    ax.set_title("Mean TCP Speed vs Conveyor Speed")
     
     ax.legend()
     ax.grid(True, linestyle='--', alpha=0.5)
