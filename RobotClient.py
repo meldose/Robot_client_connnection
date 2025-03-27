@@ -61,9 +61,6 @@ def test_ls(): # main function for calling every function.
 
 ########### LOGIC FOT USING TWO SOLUTIONS #######################################################
 
-
- # robot.pho_request_start_solution(sol_id=8)
-    # time.sleep(0.01)
     robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
     time.sleep(0.01) # setting time sleep
     robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
