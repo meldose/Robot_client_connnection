@@ -95,6 +95,7 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
     time.sleep(0.01) # setting time sleep
+    
 #############################################################################################################
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
