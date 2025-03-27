@@ -66,29 +66,29 @@ def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
         # Replace 'objects' and 'coordinates' with actual attribute names from your response
         objects = robot.response_data.objects  # Example attribute; adjust accordingly
         
-        if not objects:
-            logging.info("No objects are found")
-            return None
+        if not objects: # if objects are not found
+            logging.info("No objects are found") # print the statement
+            return None # return None
 
         # For simplicity, consider the first detected object
-        first_object = objects[0]
+        first_object = objects[0] # consider the first object
         object_coords = first_object.coordinates  # Example attribute; adjust accordingly
 
         logging.info(f"Extracted Object Coordinates: {object_coords}")
-        return object_coords
+        return object_coords # return the object coordinates
 
     except AttributeError:
-        logging.error("Failed to extract object coordinates. Check the response data structure.")
-        return None
+        logging.error("Failed to extract object coordinates. Check the response data structure.") # print the error
+        return None # return None
     except Exception as e:
-        logging.error(f"An error occurred while extracting object coordinates: {e}")
-        return None
+        logging.error(f"An error occurred while extracting object coordinates: {e}") # print the error
+        return None # return None
 
 def format_coordinates(coords_mm): # function for formatting coordinates
 
     try:
         coords_m = [x / 1000.0 for x in coords_mm]
-        return coords_m
+        return coords_m # return the coordinates
     except TypeError:
         logging.error("Invalid type for coordinates. Expected list or tuple.")
         return None
