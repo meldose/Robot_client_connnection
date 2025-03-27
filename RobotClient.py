@@ -61,7 +61,7 @@ def test_ls(): # main function for calling every function.
     # time.sleep(0.01) # setting time sleep
 
 
-########### LOGIC FOT USING TWO SOLUTIONS #############
+########### LOGIC FOT USING TWO SOLUTIONS #######################################################
 
 
  # robot.pho_request_start_solution(sol_id=8)
@@ -82,8 +82,8 @@ def test_ls(): # main function for calling every function.
     time.sleep(0.01) # setting time sleep
     robot.pho_request_ls_get_vision_system_status(vs_id_1=1) # get vision system status for first
     time.sleep(0.3) # setting time sleep
-    robot.pho_request_change_solution(sol_id=9)
-    time.sleep(0.01)
+    robot.pho_request_change_solution(sol_id=9) # request for changing the solution for the second object
+    time.sleep(0.01) # setting the time sleep
     robot.pho_request_ls_scan_2(vs_id_2=2) # ls scan for vision system 2 (pipe)
     time.sleep(0.01) # setting time sleep
     robot.pho_ls_wait_for_scan_2(vs_id_2=2) # waiting for scan for vision system2 
@@ -103,6 +103,7 @@ def test_ls(): # main function for calling every function.
     # robot.close_connection()  #communication needs to be closed
     # time.sleep(0.01) # setting time sleep
 
+#############################################################################################################
 
 def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
     try:
