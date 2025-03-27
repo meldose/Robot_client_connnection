@@ -56,7 +56,7 @@ def test_ls(): # main function for calling every function.
     # robot.pho_request_ls_get_vision_system_status_2(vs_id_2=2) # get vision system status for second
     # time.sleep(0.01) # setting time sleep
 
-########### LOGIC FOT USING TWO SOLUTIONS #######################################################
+########### LOGIC FOR USING TWO SOLUTIONS #######################################################
 
     # robot.pho_request_start_solution(sol_id=8)
     # time.sleep(0.01)
