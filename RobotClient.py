@@ -153,7 +153,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
         tool_pose = translation_m + quaternion
 
         robot.pho_request_add_calibration_point(tool_pose) # add calibration point
-        time.sleep(2)
+        time.sleep(2) # setting the time sleep
 
     robot.pho_request_save_automatic_calibration() # save automatic calibration
     time.sleep(2)
