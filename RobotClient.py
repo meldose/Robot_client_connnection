@@ -168,8 +168,8 @@ def calibration_handeye(): # function for handeye calibration
 
     robot.pho_request_start_automatic_calibration(6, 2) # start automatic calibration
     # Load the JSON data
-    file_path = 'handeye_calib_points.json'
-    json_data = load_json_file(file_path)
+    file_path = 'handeye_calib_points.json' # setting the file path
+    json_data = load_json_file(file_path) # loading the json file
 
     # add 9 calibration point
     for point in json_data: # for each point
@@ -185,7 +185,7 @@ def calibration_handeye(): # function for handeye calibration
     #robot.pho_request_save_automatic_calibration()
 
     robot.pho_request_save_automatic_calibration() # save automatic calibration
-    time.sleep(2)
+    time.sleep(2) #setting the time sleep
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
 
