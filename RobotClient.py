@@ -60,8 +60,8 @@ def test_ls(): # main function for calling every function.
 
     # robot.pho_request_start_solution(sol_id=8)
     # time.sleep(0.01)
-    robot.pho_request_change_solution(sol_id=8)
-    time.sleep(0.01)    
+    robot.pho_request_change_solution(sol_id=8) # function for change in solution
+    time.sleep(0.01) # setting time sleep  
     robot.pho_request_ls_scan(vs_id_1=1) # ls scan for object 1 (trapezoid)    
     time.sleep(0.01) # setting time sleep
     robot.pho_ls_wait_for_scan(vs_id_1=1) # waiting for scan for object 1 (trapezoid)
@@ -127,12 +127,12 @@ def format_coordinates(coords_mm): # function for formatting coordinates
     try:
         coords_m = [x / 1000.0 for x in coords_mm]
         return coords_m # return the coordinates
-    except TypeError:
-        logging.error("Invalid type for coordinates. Expected list or tuple.")
-        return None
+    except TypeError: 
+        logging.error("Invalid type for coordinates. Expected list or tuple.") # print the error
+        return None # return None
     except Exception as e:
-        logging.error(f"An error occurred while formatting coordinates: {e}")
-        return None
+        logging.error(f"An error occurred while formatting coordinates: {e}") # print the error
+        return None # return None
 
 def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
     
@@ -141,10 +141,10 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
         # and adjust parameters as required by your CommunicationLibrary
         robot.pho_request_move_to_position(coords[0], coords[1], coords[2])
         logging.info(f"Sent move command to position: {coords}")
-    except AttributeError:
-        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.")
+    except AttributeError: 
+        logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.") # print the error
     except Exception as e:
-        logging.error(f"An error occurred while sending move command: {e}")
+        logging.error(f"An error occurred while sending move command: {e}") # print the error
 
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
 
@@ -159,17 +159,17 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
             distance = ((current_coords[0] - target_coords[0]) ** 2 +
                         (current_coords[1] - target_coords[1]) ** 2 +
                         (current_coords[2] - target_coords[2]) ** 2) ** 0.5
-            if distance <= tolerance:
-                logging.info(f"Robot reached target position: {current_coords}")
+            if distance <= tolerance: # if the distance is less than the tolerance
+                logging.info(f"Robot reached target position: {current_coords}") # give the logging info
                 break
-            if time.time() - start_time > timeout:
-                raise TimeoutError("Robot did not reach the target position in time.")
-            time.sleep(0.5)
+            if time.time() - start_time > timeout: # if the time to pick the item is greater than timeout then
+                raise TimeoutError("Robot did not reach the target position in time.") # raise the timeout Error
+            time.sleep(0.5) # setting the time sleep
     except AttributeError:
-        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.")
+        logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.") # print the error 
     except Exception as e:
-        logging.error(f"An error occurred while moving the robot: {e}")
-    return servo
+        logging.error(f"An error occurred while moving the robot: {e}") # print the error
+    return servo # servoX fucntion called
 
 # -------------------------------------------------------------------
 #                      EXTRINSIC CALIBRATION
