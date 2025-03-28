@@ -150,7 +150,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # 
     try:
         start_time = time.time() # setting the the start time
         while True:
-            # Replace 'get_current_position' with the actual method to retrieve the robot's current position
+            
             current_coords = robot.pho_get_current_position()
             distance = ((current_coords[0] - target_coords[0]) ** 2 +
                         (current_coords[1] - target_coords[1]) ** 2 +
