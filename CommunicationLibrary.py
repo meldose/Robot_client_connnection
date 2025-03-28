@@ -447,6 +447,7 @@ class RobotRequestResponseCommunication: # class used for storing data
             payload_1 = payload_1 + floatArray2bytes(tool_pose)  # setting the payload 1
  
         self.pho_send_request(PHO_SCAN_LS_REQUEST, payload_1)# sending the request to the camera with vision system1
+        
         return True  # Indicate successful request
 
     def pho_ls_wait_for_scan(self, vs_id_1, payload_1=None): # defining the function for scan wait
