@@ -14,7 +14,7 @@ r = Robot() #setting r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
 CONTROLLER_IP = "192.168.1.5" # IP address of the controller
-PORT = 11003 # #port number
+PORT = 11003 #port number
 
 # -------------------------------------------------------------------
 #                      MAIN FUNCTION
