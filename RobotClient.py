@@ -219,9 +219,6 @@ def calibration_handeye(): # function for handeye calibration
         robot.pho_request_add_calibration_point(tool_pose) # add calibration point
         time.sleep(2) # sleep for 2 seconds
 
-
-    #robot.pho_request_save_automatic_calibration()
-
     robot.pho_request_save_automatic_calibration() # save automatic calibration
     time.sleep(2) #setting the time sleep
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
