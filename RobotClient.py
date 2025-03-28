@@ -190,7 +190,7 @@ def calibration_extrinsic(): # function for extrinsic calibration
         time.sleep(2) # setting the time sleep
 
     robot.pho_request_save_automatic_calibration() # save automatic calibration
-    time.sleep(2)
+    time.sleep(2) # setting the time sleep
     robot.pho_request_stop_automatic_calibration() # stop automatic calibration
 
 # -------------------------------------------------------------------
