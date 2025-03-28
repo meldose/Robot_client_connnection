@@ -23,7 +23,6 @@ def generate_graphs(t1, t2, robot_velocities, conveyor_speeds, trapezoid_success
     # Create second y-axis for success rates
     ax2 = ax1.twinx()
     ax2.plot(time_stamps, trapezoid_success, label='Trapezoid Success Rate (%)', color='green', linestyle='dotted')
-    ax2.plot(time_stamps, pipe_success, label='Pipe Success Rate (%)', color='purple', linestyle='dashdot')
     ax2.set_ylabel('Success Rate (%)')
     ax2.legend(loc='upper right')
 
@@ -36,7 +35,6 @@ def generate_graphs(t1, t2, robot_velocities, conveyor_speeds, trapezoid_success
     sample_indices = np.linspace(0, len(conveyor_speeds) - 1, 10, dtype=int)
     sampled_speeds = conveyor_speeds[sample_indices]
     sampled_trap_success = trapezoid_success[sample_indices]
-    sampled_pipe_success = pipe_success[sample_indices]
 
     # Bar width and positions
     bar_width = 0.04  
@@ -44,7 +42,6 @@ def generate_graphs(t1, t2, robot_velocities, conveyor_speeds, trapezoid_success
 
     # Plot bar chart
     ax.bar(x - bar_width/2, sampled_trap_success, width=bar_width, label='Trapezoid Success Rate', color='green', alpha=0.7)
-    ax.bar(x + bar_width/2, sampled_pipe_success, width=bar_width, label='Pipe Success Rate', color='purple', alpha=0.7)
 
     ax.set_xlabel("Conveyor Speed (m/s)")
     ax.set_ylabel("Success Rate (%)")
