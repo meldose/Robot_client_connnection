@@ -2,13 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Define categories (items) and conditions (light/dark)
-items = ['Trapezoid', 'Pipe']
-conditions = ['Light', 'Dark']
+items = ["Trapezoid"]
+conditions = ["Light"]
 
 # Simulated success rates (in percentage)
 success_rates = {
-    'Trapezoid': {'Bright': 90, 'Dark': 80},
-    'Pipe': {'Bright': 80, 'Dark': 60}
+    'Trapezoid': {'Bright': 90, 'Dark': 80}
 }
 
 # Extract values for the bar plot
