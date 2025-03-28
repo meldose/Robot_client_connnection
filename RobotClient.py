@@ -123,7 +123,7 @@ def extract_object_coordinates(robot): # extract object coordinates [X,y,Z]
 def format_coordinates(coords_mm): # function for formatting coordinates
 
     try:
-        coords_m = [x / 1000.0 for x in coords_mm]
+        coords_m = [x / 1000.0 for x in coords_mm] # setting the coordinates
         return coords_m # return the coordinates
     except TypeError: 
         logging.error("Invalid type for coordinates. Expected list or tuple.") # print the error
