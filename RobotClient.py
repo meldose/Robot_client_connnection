@@ -10,7 +10,7 @@ from neurapy.robot import Robot # importing robot module
 import time # importing time module
 from ruckig import InputParameter, OutputParameter, Result, Ruckig # importing ruckig module
 from CommunicationLibrary import ServoX,RobotRequestResponseCommunication,RobotStateCommunication # servo X calling
-r = Robot() #settig r as the variable for the Robot
+r = Robot() #setting r as the variable for the Robot
 r.gripper("on") # setting gripper on
 
 CONTROLLER_IP = "192.168.1.5" # IP address of the controller
