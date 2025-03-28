@@ -145,7 +145,7 @@ def send_coordinates_to_robot(robot, coords): # function for sending coordinates
 def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # creating function for moving robot to an position
 
     robot=RobotRequestResponseCommunication() # object is created
-    servo=ServoX.servo_x() # calling servo function
+    servo=ServoX.movelinear_online() # calling servo function
     r.gripper("off") # setting gripper off
     try:
         start_time = time.time() # setting the the start time
