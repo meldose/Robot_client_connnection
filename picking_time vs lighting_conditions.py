@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 import numpy as np
 
 # Define categories (items) and conditions (light/dark)
