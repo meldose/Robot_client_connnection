@@ -176,8 +176,8 @@ def calibration_extrinsic(): # function for extrinsic calibration
 
     robot.pho_request_start_automatic_calibration(6,1) # start automatic calibration
     # Load the JSON data
-    file_path = 'extrinsic_calib_points.json'
-    json_data = load_json_file(file_path)
+    file_path = 'extrinsic_calib_points.json' # setting the file path
+    json_data = load_json_file(file_path) # loadin the json file
 
     # add 9 calibration point
     for point in json_data: # for each point
