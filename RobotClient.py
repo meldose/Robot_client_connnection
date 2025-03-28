@@ -135,22 +135,20 @@ def format_coordinates(coords_mm): # function for formatting coordinates
 def send_coordinates_to_robot(robot, coords): # function for sending coordinates to the robot
     
     try:
-        # Replace 'pho_request_move_to_position' with the actual method name
-        # and adjust parameters as required by your CommunicationLibrary
-        robot.pho_request_move_to_position(coords[0], coords[1], coords[2])
-        logging.info(f"Sent move command to position: {coords}")
+        robot.pho_request_move_to_position(coords[0], coords[1], coords[2]) # setting the function for moving the robot to required position
+        logging.info(f"Sent move command to position: {coords}") # logging info
     except AttributeError: 
         logging.error("The method 'pho_request_move_to_position' does not exist in CommunicationLibrary.") # print the error
     except Exception as e:
         logging.error(f"An error occurred while sending move command: {e}") # print the error
 
-def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
+def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30): # creating function for moving robot to an position
 
     robot=RobotRequestResponseCommunication() # object is created
     servo=ServoX.servo_x() # calling servo function
     r.gripper("off") # setting gripper off
     try:
-        start_time = time.time()
+        start_time = time.time() # setting the the start time
         while True:
             # Replace 'get_current_position' with the actual method to retrieve the robot's current position
             current_coords = robot.pho_get_current_position()
@@ -167,7 +165,7 @@ def move_robot_to_position(robot, target_coords, tolerance=0.01, timeout=30):
         logging.error("The method 'get_current_position' does not exist in CommunicationLibrary.") # print the error 
     except Exception as e:
         logging.error(f"An error occurred while moving the robot: {e}") # print the error
-    return servo # servoX fucntion called
+    return servo # servoX function called
 
 # -------------------------------------------------------------------
 #                      EXTRINSIC CALIBRATION
