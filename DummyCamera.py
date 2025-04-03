@@ -17,4 +17,4 @@ class DummyCamera(Camera):
             raise
 
     def get_pose(self) -> list:
-        return self.read_pose_from_file()
+        return self.read_pose_from_file() 
